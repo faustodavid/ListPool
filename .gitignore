@@ -3,3 +3,9 @@
 ################################################################################
 
 /.vs
+/ListPool/.vs/ListPool
+/ListPool/ListPool/obj
+/ListPool/ListPool/bin/Debug/netstandard2.1
+/ListPool/ListPool.Benchmarks/obj
+/ListPool/ListPool.UnitTests/obj
+/ListPool/ListPool.UnitTests/bin/Debug/netcoreapp3.1
