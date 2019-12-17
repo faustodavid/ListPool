@@ -12,7 +12,7 @@ namespace ListPool.Benchmarks
     public class ListPoolCreateBenchmarks
     {
         [Params(10, 100, 1000, 10000)]
-        public int N { get; set; 
+        public int N { get; set; }
 
         [Benchmark(Baseline = true)]
         public void List()
