@@ -7,10 +7,10 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
-  </ItemGroup>
+  </ItemGroup>   
 
   <ItemGroup>
-    <ProjectReference Include="..\ListPool\ListPool.csproj" />
+    <ProjectReference Include="..\..\src\ListPool\ListPool.csproj" />
   </ItemGroup>
 
 </Project>

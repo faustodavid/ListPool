@@ -12,3 +12,13 @@
 /ListPool/ListPool.Benchmarks/bin/Release/netcoreapp3.1
 /ListPool/ListPool/bin/Release/netstandard2.1
 /ListPool/ListPool.UnitTests/bin/Release/netcoreapp3.1
+/src/.vs/ListPool
+/perf/ListPool.Benchmarks/obj/Release/netcoreapp3.1
+/perf/ListPool.Benchmarks/obj
+/perf/ListPool.Benchmarks/bin/Release/netcoreapp3.1
+/perf/ListPool.Benchmarks/bin
+/tests/ListPool.UnitTests/obj
+/tests/ListPool.UnitTests/bin
+/tests/ListPool.UnitTests/ListPool.UnitTests.csproj
+/src/ListPool/obj
+/src/ListPool/bin
