@@ -5,7 +5,7 @@ This is a POC of a wrapper over ArrayPool<T> which implements IList or ICollecti
 
 I recommend using similiar approach when working with large arrays. At least bigger than 100 items.
 
-* Benchmarks.
+# Benchmarks.
 
 BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
 Intel Core i7-8750H CPU 2.20GHz (Coffee Lake), 1 CPU, 12 logical and 6 physical cores
@@ -15,7 +15,7 @@ Intel Core i7-8750H CPU 2.20GHz (Coffee Lake), 1 CPU, 12 logical and 6 physical 
 
 Concurrent=True  Server=True  
 
-** Create list
+## Create list
 
 
 ```
@@ -34,7 +34,7 @@ Concurrent=True  Server=True
 | ListPool | 10000 | 18,626.51 ns | 370.626 ns | 441.204 ns | 18,468.14 ns |  1.23 |    0.03 |    2 |      - |      - |     - |         - |
 
 
-** Create list and Insert items
+## Create list and Insert items
 
 ```
 |   Method |     N |         Mean |      Error |     StdDev |       Median | Ratio | RatioSD | Rank |  Gen 0 |  Gen 1 | Gen 2 | Allocated |
@@ -52,7 +52,7 @@ Concurrent=True  Server=True
 | ListPool | 10000 | 18,626.51 ns | 370.626 ns | 441.204 ns | 18,468.14 ns |  1.23 |    0.03 |    2 |      - |      - |     - |         - |
 
 
-** Enumerate with foreach
+## Enumerate with foreach
 
 ```
 |   Method |    N | CapacityFilled |        Mean |    Error |   StdDev | Ratio | Rank | Gen 0 | Gen 1 | Gen 2 | Allocated |
