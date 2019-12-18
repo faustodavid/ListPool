@@ -41,6 +41,25 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
+        public void ListPool_should_autogrow()
+        {
+            int expectedAtFirst = 5;
+            int expectedAtSecond = 7;
+            int expectedAtThird = 10;
+
+            using var sut = new ListPool<int>(1)
+            {
+                expectedAtFirst,
+                expectedAtSecond,
+                expectedAtThird
+            };
+
+            Assert.Equal(expectedAtFirst, sut[0]);
+            Assert.Equal(expectedAtSecond, sut[1]);
+            Assert.Equal(expectedAtThird, sut[2]);
+        }
+
+        [Fact]
         public void Create_list_and_add_values_after_remove()
         {
             const int expectedAtFirst = 5;
@@ -90,13 +109,13 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
-        public void ListPool_should_autogrow()
+        public void Create_list_and_add_values_after_clear()
         {
-            int expectedAtFirst = 5;
-            int expectedAtSecond = 7;
-            int expectedAtThird = 10;
+            const int expectedAtFirst = 5;
+            const int expectedAtSecond = 7;
+            const int expectedAtThird = 10;
 
-            using var sut = new ListPool<int>(1)
+            using var sut = new ListPool<int>(3)
             {
                 expectedAtFirst,
                 expectedAtSecond,
@@ -106,6 +125,117 @@ namespace ListPool.UnitTests
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
             Assert.Equal(expectedAtThird, sut[2]);
+
+            sut.Clear();
+            var actualFirst = sut.Contains(expectedAtFirst);
+            var actualSecond = sut.Contains(expectedAtSecond);
+            var actualThird = sut.Contains(expectedAtThird);
+
+            Assert.False(actualFirst);
+            Assert.False(actualSecond);
+            Assert.False(actualThird);
+            Assert.Empty(sut);
+        }
+
+        [Fact]
+        public void Create_list_and_add_values_and_call_contains()
+        {
+            const int expectedAtFirst = 5;
+            const int expectedAtSecond = 7;
+            const int expectedAtThird = 10;
+
+            using var sut = new ListPool<int>(3)
+            {
+                expectedAtFirst,
+                expectedAtSecond,
+                expectedAtThird
+            };
+
+            Assert.Equal(expectedAtFirst, sut[0]);
+            Assert.Equal(expectedAtSecond, sut[1]);
+            Assert.Equal(expectedAtThird, sut[2]);
+
+            var actualFirst = sut.Contains(expectedAtFirst);
+            var actualSecond = sut.Contains(expectedAtSecond);
+            var actualThird = sut.Contains(expectedAtThird);
+
+            Assert.NotEmpty(sut);
+            Assert.True(actualFirst);
+            Assert.True(actualSecond);
+            Assert.True(actualThird);
+        }
+
+        [Fact]
+        public void Create_list_and_add_values_and_call_copy_to()
+        {
+            const int expectedAtFirst = 5;
+            const int expectedAtSecond = 7;
+            const int expectedAtThird = 10;
+
+            using var sut = new ListPool<int>(3)
+            {
+                expectedAtFirst,
+                expectedAtSecond,
+                expectedAtThird
+            };
+
+            Assert.Equal(expectedAtFirst, sut[0]);
+            Assert.Equal(expectedAtSecond, sut[1]);
+            Assert.Equal(expectedAtThird, sut[2]);
+
+            var actualArray = new int[3];
+            sut.CopyTo(actualArray, 0);
+
+            Assert.Equal(sut.Count, actualArray.Length);
+
+            for (var i = 0; i < sut.Count; i++) 
+            {
+                Assert.Equal(sut[i], actualArray[i]);
+            }
+        }
+
+        [Fact]
+        public void Create_list_and_add_values_and_call_index_of()
+        {
+            const int expectedAtFirst = 5;
+            const int expectedAtSecond = 7;
+            const int expectedAtThird = 10;
+
+            using var sut = new ListPool<int>(3)
+            {
+                expectedAtFirst,
+                expectedAtSecond,
+                expectedAtThird
+            };
+
+            Assert.Equal(0, sut.IndexOf(expectedAtFirst));
+            Assert.Equal(1, sut.IndexOf(expectedAtSecond));
+            Assert.Equal(2, sut.IndexOf(expectedAtThird));
+        }
+
+        [Fact]
+        public void Create_list_and_add_values_and_call_insert()
+        {
+            const int expectedAtFirst = 5;
+            const int expectedAtSecond = 7;
+            const int expectedAtThird = 10;
+            const int expectedAtEight= 15;
+            const int expectedCount= 8;
+
+            using var sut = new ListPool<int>(3)
+            {
+                expectedAtFirst,
+                expectedAtSecond,
+                expectedAtThird
+            };
+
+            sut.Insert(7, expectedAtEight);
+
+            Assert.Equal(expectedAtFirst, sut[0]);
+            Assert.Equal(expectedAtSecond, sut[1]);
+            Assert.Equal(expectedAtThird, sut[2]);
+            Assert.Equal(expectedAtEight, sut[7]);
+            Assert.Equal(expectedCount, sut.Count);
         }
 
         [Fact]

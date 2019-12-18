@@ -10,7 +10,8 @@ namespace ListPool.Benchmarks
             //BenchmarkRunner.Run<ListPoolCreateAndInsertBenchmarks>();
             //BenchmarkRunner.Run<ListPoolCreateBenchmarks>();
             //BenchmarkRunner.Run<ListPoolEnumerateBenchmarks>();
-            BenchmarkRunner.Run<ToListPoolBenchmark>();
+            //BenchmarkRunner.Run<ToListPoolBenchmark>();
+            BenchmarkRunner.Run<ListPoolClearBenchmarks>();
 
             Console.ReadLine();
         }
