@@ -17,13 +17,13 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            var list = new List<int>(N);
+            _ = new List<int>(N);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            using var list = ListPool<int>.Rent(N);
+            using var list = new ListPool<int>(N);
         }
     }
 }

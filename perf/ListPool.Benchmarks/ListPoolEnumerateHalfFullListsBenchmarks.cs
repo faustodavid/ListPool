@@ -12,22 +12,27 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolEnumerateBenchmarks : IDisposable
     {
+        private List<int> list;
+        private ListPool<int> listPool;
+
         [Params(1000)]
         public int N { get; set; }
 
         [Params(0.10, 0.50, 0.80, 1)]
         public double CapacityFilled { get; set; }
 
-        private List<int> list;
-        private ListPool<int> listPool;
+        public void Dispose()
+        {
+            listPool.Dispose();
+        }
 
         [GlobalSetup]
         public void GlobalSetup()
         {
             list = new List<int>(N);
-            listPool = ListPool<int>.Rent(N);
+            listPool = new ListPool<int>();
 
-            for (int i = 0; i < N * CapacityFilled; i++)
+            for (var i = 0; i < N * CapacityFilled; i++)
             {
                 list.Add(1);
                 listPool.Add(1);
@@ -37,24 +42,17 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            foreach (var item in list)
+            foreach (var _ in list)
             {
-
             }
         }
 
         [Benchmark]
         public void ListPool()
         {
-            foreach (var item in listPool)
+            foreach (var _ in listPool)
             {
-
             }
-        }
-
-        public void Dispose()
-        {
-            this.listPool.Dispose();
         }
     }
 }

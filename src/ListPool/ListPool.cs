@@ -9,9 +9,9 @@ namespace ListPool
 {
     public struct ListPool<TSource> : IDisposable, IValueEnumerable<TSource>, IList<TSource>
     {
-        private readonly TSource[] _buffer;
+        private readonly ArrayPool<TSource> _arrayPool;
+        private TSource[] _buffer;
         private int _itemsCount;
-        private int _size;
 
         public readonly int Count => _itemsCount;
         public readonly bool IsReadOnly { get; }
@@ -23,9 +23,9 @@ namespace ListPool
                 throw new InvalidOperationException("ListPool is readonly.");
             }
 
-            if (_itemsCount >= _size)
+            if (_itemsCount >= _buffer.Length)
             {
-                throw new Exception("Array overflow");
+                GrowBuffer();
             }
 
             _buffer[_itemsCount] = item;
@@ -121,9 +121,9 @@ namespace ListPool
                 throw new InvalidOperationException("ListPool is readonly.");
             }
 
-            if (index < 0 || index >= _size) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index < 0 || index >= _buffer.Length) throw new ArgumentOutOfRangeException(nameof(index));
 
-            if (index == _size - 1)
+            if (index == _buffer.Length - 1)
             {
                 if (_buffer[index] != null)
                 {
@@ -146,7 +146,7 @@ namespace ListPool
 
             _buffer[index] = item;
 
-            for (var i = ++index; i < _size; i++)
+            for (var i = ++index; i < _buffer.Length; i++)
             {
                 var swap = _buffer[i];
                 _buffer[i] = save;
@@ -161,7 +161,7 @@ namespace ListPool
                 throw new InvalidOperationException("ListPool is readonly.");
             }
 
-            if (index < 0 || index >= _size) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index < 0 || index >= _buffer.Length) throw new ArgumentOutOfRangeException(nameof(index));
 
             if (index >= _itemsCount)
             {
@@ -176,25 +176,45 @@ namespace ListPool
             }
         }
 
-        private ListPool(in int size, in bool isReadOnly)
+        public ListPool(int length, bool isReadOnly = false, ArrayPool<TSource> arrayPool = null)
         {
-            _buffer = ArrayPool<TSource>.Shared.Rent(size);
+            _arrayPool = arrayPool ?? ArrayPool<TSource>.Shared;
+            _buffer = _arrayPool.Rent(length);
             _itemsCount = 0;
 
-            _size = size;
             IsReadOnly = isReadOnly;
         }
 
-        public static ListPool<TSource> Rent(in int length, bool isReadOnly = false)
+        public ListPool(IEnumerable<TSource> source, ArrayPool<TSource> arrayPool = null)
         {
-            return new ListPool<TSource>(in length, isReadOnly);
+            _arrayPool = arrayPool ?? ArrayPool<TSource>.Shared;
+
+            if (source is ICollection collection)
+            {
+                _buffer = _arrayPool.Rent(collection.Count);
+                _itemsCount = collection.Count;
+                IsReadOnly = false;
+                collection.CopyTo(_buffer, 0);
+            }
+            else
+            {
+                _buffer = _arrayPool.Rent(100);
+                _itemsCount = 0;
+                IsReadOnly = false;
+
+                foreach (var item in source)
+                {
+                    Add(item);
+                }
+            }
         }
 
         public readonly TSource this[int index]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index < 0 || index >= _size)
+                if (index < 0 || index >= _buffer.Length)
                 {
                     throw new IndexOutOfRangeException(nameof(index));
                 }
@@ -209,13 +229,23 @@ namespace ListPool
                     throw new InvalidOperationException("ListPool is readonly.");
                 }
 
-                if (index < 0 || index >= _size)
+                if (index < 0 || index >= _buffer.Length)
                 {
                     throw new IndexOutOfRangeException(nameof(index));
                 }
 
                 _buffer[index] = value;
             }
+        }
+
+        private void GrowBuffer()
+        {
+            var newLength = _buffer.Length * 2;
+            var newBuffer = _arrayPool.Rent(newLength);
+            var oldBuffer = _buffer;
+            Array.Copy(oldBuffer, 0, newBuffer, 0, _itemsCount);
+            _buffer = newBuffer;
+            _arrayPool.Return(oldBuffer);
         }
 
         [Pure]
