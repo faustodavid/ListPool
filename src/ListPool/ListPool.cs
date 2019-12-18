@@ -196,6 +196,16 @@ namespace ListPool
             }
         }
 
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly Enumerator<TSource> GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
+
+        readonly IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
+
+        readonly IEnumerator IEnumerable.GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
+
+        public readonly void Dispose() => ArrayPool<TSource>.Shared.Return(_buffer);
+
         private void GrowBuffer()
         {
             var newLength = _buffer.Length * 2;
@@ -207,15 +217,5 @@ namespace ListPool
             _buffer = newBuffer;
             _arrayPool.Return(oldBuffer);
         }
-
-        [Pure]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly Enumerator<TSource> GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
-
-        readonly IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
-
-        readonly IEnumerator IEnumerable.GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
-
-        public readonly void Dispose() => ArrayPool<TSource>.Shared.Return(_buffer);
     }
 }
