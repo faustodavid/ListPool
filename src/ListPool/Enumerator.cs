@@ -5,8 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace ListPool
 {
-    public struct Enumerator<TSource>
-        : IEnumerator<TSource>
+    public struct Enumerator<TSource> : IEnumerator<TSource>
     {
         private readonly TSource[] source;
         private readonly int itemsCount;

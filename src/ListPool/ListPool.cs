@@ -11,9 +11,10 @@ namespace ListPool
     {
         public readonly TSource this[int index]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index >= Length)
+                if (index >= buffer.Length)
                 {
                     throw new Exception("Array overflow");
                 }
@@ -22,37 +23,70 @@ namespace ListPool
             }
         }
 
-        public readonly int Length;
+        public int Length => buffer.Length;
 
-        private readonly TSource[] buffer;
+        private readonly ArrayPool<TSource> arrayPool;
+        private TSource[] buffer;
         private int itemsCount;
 
-        private ListPool(in int length)
+        public ListPool(int length, ArrayPool<TSource> arrayPool = null)
         {
-            buffer = ArrayPool<TSource>.Shared.Rent(length);
-            Length = length;
+            if (length < 1)
+            {
+                throw new Exception("Length should be bigger than 0");
+            }
+
+            this.arrayPool = arrayPool ?? ArrayPool<TSource>.Shared;
+            buffer = this.arrayPool.Rent(length);
             itemsCount = 0;
         }
 
-        public static ListPool<TSource> Rent(in int length)
+        public ListPool(IEnumerable<TSource> source, ArrayPool<TSource> arrayPool = null)
         {
-            return new ListPool<TSource>(in length);
+            this.arrayPool = arrayPool ?? ArrayPool<TSource>.Shared;
+
+            if (source is ICollection collection)
+            {
+                buffer = this.arrayPool.Rent(collection.Count);
+                collection.CopyTo(buffer, 0);
+                itemsCount = collection.Count;
+            }
+            else
+            {
+                buffer = this.arrayPool.Rent(100);
+                itemsCount = 0;
+
+                foreach (var item in source)
+                {
+                    Add(item);
+                }
+            }
         }
 
         public void Add(in TSource item)
         {
-            if (itemsCount >= Length)
+            if (itemsCount >= buffer.Length)
             {
-                throw new Exception("Array overflow");
+                GrowBuffer();
             }
 
             buffer[itemsCount] = item;
             itemsCount++;
         }
 
+        private void GrowBuffer()
+        {
+            var newLength = buffer.Length * 2;
+            var newBuffer = arrayPool.Rent(newLength);
+            var oldBuffer = buffer;
+            Array.Copy(oldBuffer, 0, newBuffer, 0, itemsCount);
+            buffer = newBuffer;
+            arrayPool.Return(oldBuffer);
+        }
+
         public void Dispose()
         {
-            ArrayPool<TSource>.Shared.Return(buffer);
+            arrayPool.Return(buffer);
         }
 
         [Pure]

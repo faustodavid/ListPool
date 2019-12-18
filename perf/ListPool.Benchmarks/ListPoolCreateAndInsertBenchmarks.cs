@@ -18,7 +18,7 @@ namespace ListPool.Benchmarks
         public void List()
         {
             var list = new List<int>(N);
-            for (int i = 0; i < N; i++)
+            for (var i = 0; i < N; i++)
             {
                 list.Add(1);
             }
@@ -27,8 +27,8 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            using var list = ListPool<int>.Rent(N);
-            for (int i = 0; i < N; i++)
+            using var list = new ListPool<int>();
+            for (var i = 0; i < N; i++)
             {
                 list.Add(1);
             }
