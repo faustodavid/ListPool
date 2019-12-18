@@ -23,7 +23,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            using var list = ListPool<int>.Rent(N);
+            using var list = new ListPool<int>(N);
         }
     }
 }

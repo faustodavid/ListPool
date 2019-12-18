@@ -11,10 +11,10 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ToListPoolBenchmark
     {
-        [Params(1000)]
+        [Params(10, 50 ,100, 1000)]
         public int N { get; set; }
 
-        [Params(0.10, 0.50, 0.80, 1)]
+        [Params(1)]
         public double CapacityFilled { get; set; }
 
         private int[] array;

@@ -13,10 +13,12 @@ namespace ListPool.UnitTests
             int expectedAtSecond = 7;
             int expectedAtThird = 10;
 
-            using var sut = new ListPool<int>(3);
-            sut.Add(expectedAtFirst);
-            sut.Add(expectedAtSecond);
-            sut.Add(expectedAtThird);
+            using var sut = new ListPool<int>(3)
+            {
+                expectedAtFirst,
+                expectedAtSecond,
+                expectedAtThird
+            };
 
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
