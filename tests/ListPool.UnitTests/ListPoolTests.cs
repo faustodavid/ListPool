@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace ListPool.UnitTests
@@ -219,23 +220,21 @@ namespace ListPool.UnitTests
             const int expectedAtFirst = 5;
             const int expectedAtSecond = 7;
             const int expectedAtThird = 10;
-            const int expectedAtEight= 15;
-            const int expectedCount= 8;
+            const int expectedAtForth= 15;
 
-            using var sut = new ListPool<int>(3)
+            var sut = new ListPool<int>(10)
             {
                 expectedAtFirst,
                 expectedAtSecond,
                 expectedAtThird
             };
 
-            sut.Insert(7, expectedAtEight);
+            sut.Insert(3, expectedAtForth);
 
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
             Assert.Equal(expectedAtThird, sut[2]);
-            Assert.Equal(expectedAtEight, sut[7]);
-            Assert.Equal(expectedCount, sut.Count);
+            Assert.Equal(expectedAtForth, sut[3]);
         }
 
         [Fact]

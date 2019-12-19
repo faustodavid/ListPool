@@ -53,10 +53,7 @@ namespace ListPool
 
         public void Add(TSource item)
         {
-            while (_itemsCount >= _buffer.Length)
-            {
-                GrowBuffer();
-            }
+            if (_itemsCount >= _buffer.Length) GrowBuffer();
 
             _buffer[_itemsCount] = item;
             _itemsCount++;
@@ -65,6 +62,8 @@ namespace ListPool
         public void Clear() => _itemsCount = 0;
 
         public readonly bool Contains(TSource item) => _itemsCount > 0 && IndexOf(item) > -1;
+
+        public readonly int IndexOf(TSource item) => Array.IndexOf(_buffer, item, 0, _itemsCount);
 
         public readonly void CopyTo(TSource[] array, int arrayIndex) => Array.Copy(_buffer, 0, array, arrayIndex, _itemsCount);
 
@@ -81,47 +80,16 @@ namespace ListPool
             return true;
         }
 
-        public readonly int IndexOf(TSource item) => Array.IndexOf(_buffer, item, 0, _itemsCount);
-
         public void Insert(int index, TSource item)
         {
-            if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index < 0 || index > _itemsCount) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index >= _buffer.Length) GrowBuffer();
 
-            while (index >= _buffer.Length)
-            {
-                GrowBuffer();
-            }
-
-            if (index >= _itemsCount) 
-            {
-                _buffer[index] = item;
-                _itemsCount = index + 1;
-                return;
-            }
-
-            if (index == _buffer.Length - 1)
-            {
-                if (_buffer[index] != null) throw new ArgumentOutOfRangeException(nameof(index));
-
-                _itemsCount++;
-                _buffer[index] = item;
-                return;
-            }
-
-            _itemsCount++;
-
-            if (index >= _itemsCount) _buffer[index] = item;
-
-            var save = _buffer[index];
+            if (index < _itemsCount)
+                Array.Copy(_buffer, index, _buffer, index + 1, _itemsCount - index);
 
             _buffer[index] = item;
-
-            for (var i = ++index; i < _buffer.Length; i++)
-            {
-                var swap = _buffer[i];
-                _buffer[i] = save;
-                save = swap;
-            }
+            _itemsCount++;
         }
 
         public void RemoveAt(int index)
@@ -132,10 +100,7 @@ namespace ListPool
 
             _itemsCount--;
 
-            for (var i = index; i < _itemsCount; i++)
-            {
-                _buffer[i] = _buffer[i + 1];
-            }
+            Array.Copy(_buffer, index + 1, _buffer, index, _itemsCount - index);
         }
 
         public readonly TSource this[int index]
@@ -150,7 +115,7 @@ namespace ListPool
 
             set
             {
-                if (index < 0 || index >= _buffer.Length) throw new IndexOutOfRangeException(nameof(index));
+                if (index < 0 || index >= _itemsCount) throw new IndexOutOfRangeException(nameof(index));
 
                 _buffer[index] = value;
             }
