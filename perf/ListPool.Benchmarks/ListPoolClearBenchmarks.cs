@@ -11,21 +11,44 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolClearBenchmarks
     {
-        [Params(10, 100, 1000, 10000)]
+        private List<int> _list;
+        private ListPool<int> _listPool;
+
+        [Params(1000)]
         public int N { get; set; }
+
+        [Params(0.10, 0.50, 0.80, 1)]
+        public double CapacityFilled { get; set; }
+
+        [IterationSetup]
+        public void IterationSetup()
+        {
+            _list = new List<int>(N);
+            _listPool = new ListPool<int>(N);
+
+            for (var i = 0; i < N * CapacityFilled; i++)
+            {
+                _list.Add(1);
+                _listPool.Add(1);
+            }
+        }
+
+        [IterationCleanup]
+        public void IterationCleanup()
+        {
+            _listPool.Dispose();
+        }
 
         [Benchmark(Baseline = true)]
         public void List()
         {
-            var list = new List<int>(N);
-            list.Clear();
+            _list.Clear();
         }
 
         [Benchmark]
         public void ListPool()
         {
-            using var list = new ListPool<int>(N);
-            list.Clear();
+            _listPool.Clear();
         }
     }
 }

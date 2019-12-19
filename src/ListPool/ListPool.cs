@@ -21,7 +21,7 @@ namespace ListPool
         public ListPool(int length)
         {
             _arrayPool = ArrayPool<TSource>.Shared;
-            _buffer = _arrayPool.Rent(length);
+            _buffer = _arrayPool.Rent(length < _minimumCapacity ? _minimumCapacity : length);
             _itemsCount = 0;
 
             IsReadOnly = false;
