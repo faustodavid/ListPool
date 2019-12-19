@@ -7,11 +7,11 @@ namespace ListPool.Benchmarks
     {
         static void Main()
         {
-            BenchmarkRunner.Run<ListPoolCreateBenchmarks>();
-            BenchmarkRunner.Run<ListPoolEnumerateBenchmarks>();
-            BenchmarkRunner.Run<ArrayToListPoolBenchmark>();
+            //BenchmarkRunner.Run<ListPoolCreateBenchmarks>();
+            //BenchmarkRunner.Run<ListPoolEnumerateBenchmarks>();
+            //BenchmarkRunner.Run<ArrayToListPoolBenchmark>();
             BenchmarkRunner.Run<EnumerableToListPoolBenchmark>();
-            BenchmarkRunner.Run<ListPoolClearBenchmarks>();
+            //BenchmarkRunner.Run<ListPoolClearBenchmarks>();
 
             Console.ReadLine();
         }

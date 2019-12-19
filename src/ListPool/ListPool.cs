@@ -41,19 +41,20 @@ namespace ListPool
                 _buffer = _arrayPool.Rent(_minimumCapacity);
                 _itemsCount = 0;
 
-                foreach (var item in source)
+                using IEnumerator<TSource> enumerator = source.GetEnumerator();
+                while (enumerator.MoveNext())
                 {
-                    Add(item);
+                    Add(enumerator.Current);
                 }
             }
         }
+
 
         public void Add(TSource item)
         {
             if (_itemsCount >= _buffer.Length) GrowBuffer();
 
-            _buffer[_itemsCount] = item;
-            _itemsCount++;
+            _buffer[_itemsCount++] = item;
         }
 
         public void Clear() => _itemsCount = 0;
@@ -80,8 +81,8 @@ namespace ListPool
         public void Insert(int index, TSource item)
         {
             if (index < 0 || index > _itemsCount) throw new ArgumentOutOfRangeException(nameof(index));
-            if (index >= _buffer.Length) GrowBuffer();
 
+            if (index >= _buffer.Length) GrowBuffer();
             if (index < _itemsCount)
                 Array.Copy(_buffer, index, _buffer, index + 1, _itemsCount - index);
 
@@ -102,6 +103,7 @@ namespace ListPool
 
         public readonly TSource this[int index]
         {
+            [Pure]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {

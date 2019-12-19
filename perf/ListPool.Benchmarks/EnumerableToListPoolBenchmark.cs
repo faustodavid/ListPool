@@ -15,9 +15,6 @@ namespace ListPool.Benchmarks
         [Params(10, 50 ,100, 1000)]
         public int N { get; set; }
 
-        [Params(1)]
-        public double CapacityFilled { get; set; }
-
         private IEnumerable<int> _items;
 
         [IterationSetup]
@@ -25,7 +22,7 @@ namespace ListPool.Benchmarks
         {
             var items = new int[N];
 
-            for (int i = 0; i < N * CapacityFilled; i++)
+            for (var i = 0; i < N - 1; i++)
             {
                 items[i] = 1;
             }
@@ -42,7 +39,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            using var listPool = _items.ToListPool();
+            using var _ = _items.ToListPool();
         }
     }
 }
