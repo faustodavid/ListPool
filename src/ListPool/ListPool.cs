@@ -60,15 +60,7 @@ namespace ListPool
             _itemsCount++;
         }
 
-        public void Clear()
-        {
-            _itemsCount = 0;
-
-            for (var i = 0; i < _itemsCount; i++)
-            {
-                _buffer[i] = default;
-            }
-        }
+        public void Clear() => _itemsCount = 0;
 
         public readonly bool Contains(TSource item)
         {
