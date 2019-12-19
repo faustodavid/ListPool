@@ -9,13 +9,13 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolClearBenchmarks
+    public class ListPoolAddBenchmarks
     {
-        [Params(10, 100, 1000, 10000)]
-        public int N { get; set; }
-
         private List<int> list;
         private ListPool<int> listPool;
+
+        [Params(10, 100, 1000)]
+        public int N { get; set; }
 
         [IterationSetup]
         public void IterationSetup()
@@ -33,13 +33,19 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            list.Clear();
+            for (var i = 0; i < N - 1; i++)
+            {
+                list.Add(i);
+            }
         }
 
         [Benchmark]
         public void ListPool()
         {
-            listPool.Clear();
+            for (var i = 0; i < N - 1; i++)
+            {
+                listPool.Add(i);
+            }
         }
     }
 }

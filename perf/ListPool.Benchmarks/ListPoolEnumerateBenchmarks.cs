@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
 
@@ -10,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolEnumerateBenchmarks : IDisposable
+    public class ListPoolEnumerateBenchmarks
     {
         private List<int> list;
         private ListPool<int> listPool;
@@ -21,22 +20,23 @@ namespace ListPool.Benchmarks
         [Params(0.10, 0.50, 0.80, 1)]
         public double CapacityFilled { get; set; }
 
-        public void Dispose()
-        {
-            listPool.Dispose();
-        }
-
-        [GlobalSetup]
-        public void GlobalSetup()
+        [IterationSetup]
+        public void IterationSetup()
         {
             list = new List<int>(N);
-            listPool = new ListPool<int>();
+            listPool = new ListPool<int>(N);
 
             for (var i = 0; i < N * CapacityFilled; i++)
             {
-                list.Add(1);
-                listPool.Add(1);
+                list.Add(i);
+                listPool.Add(i);
             }
+        }
+
+        [IterationCleanup]
+        public void IterationCleanup()
+        {
+            listPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]

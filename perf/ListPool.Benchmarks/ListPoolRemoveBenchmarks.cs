@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolClearBenchmarks
+    public class ListPoolRemoveBenchmarks
     {
         [Params(10, 100, 1000, 10000)]
         public int N { get; set; }
@@ -22,6 +22,12 @@ namespace ListPool.Benchmarks
         {
             list = new List<int>(N);
             listPool = new ListPool<int>(N);
+
+            for (var i = 1; i <= N; i++)
+            {
+                list.Add(i);
+                listPool.Add(i);
+            }
         }
 
         [IterationCleanup]
@@ -33,13 +39,19 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            list.Clear();
+            list.Remove(1);
+            list.Remove(N / 2);
+            list.Remove(N);
+            list.Remove(-1);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            listPool.Clear();
+            listPool.Remove(1);
+            listPool.Remove(N / 2);
+            listPool.Remove(N);
+            listPool.Remove(-1);
         }
     }
 }

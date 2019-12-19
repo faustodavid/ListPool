@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolCreateAndInsertBenchmarks
+    public class ListPoolCreateAndAddBenchmarks
     {
         [Params(10, 100, 1000, 10000)]
         public int N { get; set; }
@@ -20,17 +20,17 @@ namespace ListPool.Benchmarks
             var list = new List<int>(N);
             for (var i = 0; i < N; i++)
             {
-                list.Add(1);
+                list.Add(i);
             }
         }
 
         [Benchmark]
         public void ListPool()
         {
-            using var list = new ListPool<int>();
+            using var list = new ListPool<int>(N);
             for (var i = 0; i < N; i++)
             {
-                list.Add(1);
+                list.Add(i);
             }
         }
     }
