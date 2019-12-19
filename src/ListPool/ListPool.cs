@@ -16,24 +16,24 @@ namespace ListPool
         public readonly int Count => _itemsCount;
         public readonly bool IsReadOnly { get; }
 
-        public ListPool(int length, bool isReadOnly = false, ArrayPool<TSource> arrayPool = null)
+        public ListPool(int length, ArrayPool<TSource> arrayPool = null)
         {
             _arrayPool = arrayPool ?? ArrayPool<TSource>.Shared;
             _buffer = _arrayPool.Rent(length);
             _itemsCount = 0;
 
-            IsReadOnly = isReadOnly;
+            IsReadOnly = false;
         }
 
         public ListPool(IEnumerable<TSource> source, ArrayPool<TSource> arrayPool = null)
         {
             _arrayPool = arrayPool ?? ArrayPool<TSource>.Shared;
+            IsReadOnly = false;
 
             if (source is ICollection collection)
             {
                 _buffer = _arrayPool.Rent(collection.Count);
                 _itemsCount = collection.Count;
-                IsReadOnly = false;
 
                 collection.CopyTo(_buffer, 0);
             }
@@ -41,17 +41,20 @@ namespace ListPool
             {
                 _buffer = _arrayPool.Rent(100);
                 _itemsCount = 0;
-                IsReadOnly = false;
 
-                foreach (var item in source) Add(item);
+                foreach (var item in source)
+                {
+                    Add(item);
+                }
             }
         }
 
         public void Add(TSource item)
         {
-            if (IsReadOnly) throw new InvalidOperationException("ListPool is readonly.");
-
-            while (_itemsCount >= _buffer.Length) GrowBuffer();
+            while (_itemsCount >= _buffer.Length)
+            {
+                GrowBuffer();
+            }
 
             _buffer[_itemsCount] = item;
             _itemsCount++;
@@ -59,15 +62,12 @@ namespace ListPool
 
         public void Clear()
         {
-            if (IsReadOnly)
-            {
-                throw new InvalidOperationException("ListPool is readonly.");
-            }
-
             _itemsCount = 0;
 
             for (var i = 0; i < _itemsCount; i++)
+            {
                 _buffer[i] = default;
+            }
         }
 
         public readonly bool Contains(TSource item)
@@ -75,8 +75,9 @@ namespace ListPool
             if (item == null)
             {
                 for (var i = 0; i < _itemsCount; i++)
-                    if (_buffer[i] == null) 
-                        return true;
+                {
+                    if (_buffer[i] == null) return true;
+                }
 
                 return false;
             }
@@ -95,8 +96,6 @@ namespace ListPool
 
         public bool Remove(TSource item)
         {
-            if (IsReadOnly) throw new InvalidOperationException("ListPool is readonly.");
-
             if (item == null) return false;
 
             var index = IndexOf(item);
@@ -124,11 +123,12 @@ namespace ListPool
 
         public void Insert(int index, TSource item)
         {
-            if (IsReadOnly) throw new InvalidOperationException("ListPool is readonly.");
-
             if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
 
-            while (index >= _buffer.Length) GrowBuffer();
+            while (index >= _buffer.Length)
+            {
+                GrowBuffer();
+            }
 
             if (index >= _itemsCount) 
             {
@@ -164,16 +164,16 @@ namespace ListPool
 
         public void RemoveAt(int index)
         {
-            if (IsReadOnly) throw new InvalidOperationException("ListPool is readonly.");
-
             if (index < 0 || index >= _buffer.Length) throw new ArgumentOutOfRangeException(nameof(index));
 
             if (index >= _itemsCount) return;
 
             _itemsCount--;
 
-            for (var i = index; i < _itemsCount; i++) 
+            for (var i = index; i < _itemsCount; i++)
+            {
                 _buffer[i] = _buffer[i + 1];
+            }
         }
 
         public readonly TSource this[int index]
@@ -188,8 +188,6 @@ namespace ListPool
 
             set
             {
-                if (IsReadOnly) throw new InvalidOperationException("ListPool is readonly.");
-
                 if (index < 0 || index >= _buffer.Length) throw new IndexOutOfRangeException(nameof(index));
 
                 _buffer[index] = value;
