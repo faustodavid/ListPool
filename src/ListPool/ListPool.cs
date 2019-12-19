@@ -16,21 +16,18 @@ namespace ListPool
 
         public readonly int Count => _itemsCount;
         public readonly int Capacity => _buffer.Length;
-        public bool IsReadOnly { get; }
+        public readonly bool IsReadOnly => false;
 
         public ListPool(int length)
         {
             _arrayPool = ArrayPool<TSource>.Shared;
             _buffer = _arrayPool.Rent(length < _minimumCapacity ? _minimumCapacity : length);
             _itemsCount = 0;
-
-            IsReadOnly = false;
         }
 
         public ListPool(IEnumerable<TSource> source)
         {
             _arrayPool = ArrayPool<TSource>.Shared;
-            IsReadOnly = false;
 
             if (source is ICollection collection)
             {
