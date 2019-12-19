@@ -33,7 +33,7 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            var list = array.ToList();
+            _ = array.ToList();
         }
 
         [Benchmark]
