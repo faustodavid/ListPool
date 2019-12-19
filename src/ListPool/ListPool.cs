@@ -16,18 +16,18 @@ namespace ListPool
         public readonly int Count => _itemsCount;
         public readonly bool IsReadOnly { get; }
 
-        public ListPool(int length, ArrayPool<TSource> arrayPool = null)
+        public ListPool(int length)
         {
-            _arrayPool = arrayPool ?? ArrayPool<TSource>.Shared;
+            _arrayPool = ArrayPool<TSource>.Shared;
             _buffer = _arrayPool.Rent(length);
             _itemsCount = 0;
 
             IsReadOnly = false;
         }
 
-        public ListPool(IEnumerable<TSource> source, ArrayPool<TSource> arrayPool = null)
+        public ListPool(IEnumerable<TSource> source)
         {
-            _arrayPool = arrayPool ?? ArrayPool<TSource>.Shared;
+            _arrayPool = ArrayPool<TSource>.Shared;
             IsReadOnly = false;
 
             if (source is ICollection collection)
@@ -76,9 +76,7 @@ namespace ListPool
 
             for (var i = 0; i < _itemsCount; i++)
             {
-                if (_buffer[i] == null) continue;
-
-                if (_buffer[i].Equals(item)) return true;
+                if (_buffer[i]?.Equals(item) == true) return true;
             }
 
             return false;
@@ -105,9 +103,7 @@ namespace ListPool
 
             for (var i = 0; i < _itemsCount; i++)
             {
-                if(_buffer[i] == null) continue;
-
-                if (_buffer[i].Equals(item)) return i;
+                if (_buffer[i]?.Equals(item) == true) return i;
             }
 
             return -1;
