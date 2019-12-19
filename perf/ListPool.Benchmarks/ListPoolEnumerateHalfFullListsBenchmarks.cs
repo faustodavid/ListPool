@@ -42,7 +42,7 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            foreach (var item in list)
+            foreach (var _ in list)
             {
             }
         }
@@ -50,7 +50,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            foreach (var item in listPool)
+            foreach (var _ in listPool)
             {
             }
         }

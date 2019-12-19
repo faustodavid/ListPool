@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolCreateBenchmarks
+    public class ListPoolClearBenchmarks
     {
         [Params(10, 100, 1000, 10000)]
         public int N { get; set; }
@@ -17,13 +17,15 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _ = new List<int>(N);
+            var list = new List<int>(N);
+            list.Clear();
         }
 
         [Benchmark]
         public void ListPool()
         {
             using var list = new ListPool<int>(N);
+            list.Clear();
         }
     }
 }
