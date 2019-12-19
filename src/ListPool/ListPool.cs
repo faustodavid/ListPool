@@ -12,9 +12,11 @@ namespace ListPool
         private readonly ArrayPool<TSource> _arrayPool;
         private TSource[] _buffer;
         private int _itemsCount;
+        private const int _minimumCapacity = 100;
 
         public readonly int Count => _itemsCount;
-        public readonly bool IsReadOnly { get; }
+        public readonly int Capacity => _buffer.Length;
+        public bool IsReadOnly { get; }
 
         public ListPool(int length)
         {
@@ -39,7 +41,7 @@ namespace ListPool
             }
             else
             {
-                _buffer = _arrayPool.Rent(100);
+                _buffer = _arrayPool.Rent(_minimumCapacity);
                 _itemsCount = 0;
 
                 foreach (var item in source)
@@ -62,25 +64,7 @@ namespace ListPool
 
         public void Clear() => _itemsCount = 0;
 
-        public readonly bool Contains(TSource item)
-        {
-            if (item == null)
-            {
-                for (var i = 0; i < _itemsCount; i++)
-                {
-                    if (_buffer[i] == null) return true;
-                }
-
-                return false;
-            }
-
-            for (var i = 0; i < _itemsCount; i++)
-            {
-                if (_buffer[i]?.Equals(item) == true) return true;
-            }
-
-            return false;
-        }
+        public readonly bool Contains(TSource item) => _itemsCount > 0 && IndexOf(item) > -1;
 
         public readonly void CopyTo(TSource[] array, int arrayIndex) => Array.Copy(_buffer, 0, array, arrayIndex, _itemsCount);
 
@@ -97,17 +81,7 @@ namespace ListPool
             return true;
         }
 
-        public readonly int IndexOf(TSource item)
-        {
-            if (item == null) return -1;
-
-            for (var i = 0; i < _itemsCount; i++)
-            {
-                if (_buffer[i]?.Equals(item) == true) return i;
-            }
-
-            return -1;
-        }
+        public readonly int IndexOf(TSource item) => Array.IndexOf(_buffer, item, 0, _itemsCount);
 
         public void Insert(int index, TSource item)
         {
@@ -190,7 +164,7 @@ namespace ListPool
 
         readonly IEnumerator IEnumerable.GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
 
-        public readonly void Dispose() => ArrayPool<TSource>.Shared.Return(_buffer);
+        public readonly void Dispose() => _arrayPool.Return(_buffer);
 
         private void GrowBuffer()
         {
