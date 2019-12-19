@@ -7,38 +7,38 @@ namespace ListPool
 {
     public struct Enumerator<TSource> : IEnumerator<TSource>
     {
-        private readonly TSource[] source;
-        private readonly int itemsCount;
-        private int index;
+        private readonly TSource[] _source;
+        private readonly int _itemsCount;
+        private int _index;
 
         public Enumerator(in TSource[] source, in int itemsCount)
         {
-            this.source = source;
-            this.itemsCount = itemsCount;
-            index = -1;
+            _source = source;
+            _itemsCount = itemsCount;
+            _index = -1;
         }
 
         [MaybeNull]
         public readonly ref readonly TSource Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ref source[index];
+            get => ref _source[_index];
         }
 
         [MaybeNull]
-        readonly TSource IEnumerator<TSource>.Current => source[index];
+        readonly TSource IEnumerator<TSource>.Current => _source[_index];
 
-        readonly object? IEnumerator.Current => source[index];
+        readonly object? IEnumerator.Current => _source[_index];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext()
         {
-            return ++index < itemsCount;
+            return ++_index < _itemsCount;
         }
 
         public void Reset()
         {
-            index = -1;
+            _index = -1;
         }
 
         public readonly void Dispose()
