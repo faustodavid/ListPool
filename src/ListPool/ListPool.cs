@@ -12,7 +12,7 @@ namespace ListPool
         private readonly ArrayPool<TSource> _arrayPool;
         private TSource[] _buffer;
         private int _itemsCount;
-        private const int _minimumCapacity = 100;
+        private const int MinimumCapacity = 100;
 
         public readonly int Count => _itemsCount;
         public readonly int Capacity => _buffer.Length;
@@ -21,7 +21,7 @@ namespace ListPool
         public ListPool(int length)
         {
             _arrayPool = ArrayPool<TSource>.Shared;
-            _buffer = _arrayPool.Rent(length < _minimumCapacity ? _minimumCapacity : length);
+            _buffer = _arrayPool.Rent(length < MinimumCapacity ? MinimumCapacity : length);
             _itemsCount = 0;
         }
 
@@ -38,7 +38,7 @@ namespace ListPool
             }
             else
             {
-                _buffer = _arrayPool.Rent(_minimumCapacity);
+                _buffer = _arrayPool.Rent(MinimumCapacity);
                 _itemsCount = 0;
 
                 using IEnumerator<TSource> enumerator = source.GetEnumerator();
