@@ -41,7 +41,7 @@ namespace ListPool
                 _buffer = _arrayPool.Rent(MinimumCapacity);
                 _itemsCount = 0;
 
-                using IEnumerator<TSource> enumerator = source.GetEnumerator();
+                using var enumerator = source.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     Add(enumerator.Current);
@@ -119,9 +119,9 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Enumerator<TSource> GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
 
-        readonly IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
+        readonly IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => GetEnumerator();
 
-        readonly IEnumerator IEnumerable.GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
+        readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public readonly void Dispose() => _arrayPool.Return(_buffer);
 
