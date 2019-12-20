@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace ListPool
 {
-    public struct ListPool<TSource> : IDisposable, IValueEnumerable<TSource>, IList<TSource>
+    public struct ListPool<TSource> : IDisposable, IValueEnumerable<TSource>, IList<TSource>, IReadOnlyList<TSource>
     {
         private readonly ArrayPool<TSource> _arrayPool;
         private TSource[] _buffer;
