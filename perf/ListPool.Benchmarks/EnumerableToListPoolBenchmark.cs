@@ -18,7 +18,7 @@ namespace ListPool.Benchmarks
         private IEnumerable<int> _items;
 
         [IterationSetup]
-        public void GlobalSetup()
+        public void IterationSetup()
         {
             var items = new int[N];
 
