@@ -49,7 +49,7 @@ namespace ListPool
             }
         }
 
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(TSource item)
         {
             if (_itemsCount >= _buffer.Length) GrowBuffer();
@@ -112,12 +112,7 @@ namespace ListPool
                 return index >= _itemsCount ? default : _buffer[index];
             }
 
-            set
-            {
-                if (index < 0 || index >= _itemsCount) throw new IndexOutOfRangeException(nameof(index));
-
-                _buffer[index] = value;
-            }
+            set => Insert(index, value);
         }
 
         [Pure]
@@ -130,6 +125,7 @@ namespace ListPool
 
         public readonly void Dispose() => _arrayPool.Return(_buffer);
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         private void GrowBuffer()
         {
             var newLength = _buffer.Length * 2;
