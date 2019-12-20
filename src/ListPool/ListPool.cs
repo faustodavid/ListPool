@@ -12,7 +12,7 @@ namespace ListPool
         private readonly ArrayPool<TSource> _arrayPool;
         private TSource[] _buffer;
         private int _itemsCount;
-        private const int MinimumCapacity = 100;
+        private const int MinimumCapacity = 128;
 
         public readonly int Count => _itemsCount;
         public readonly int Capacity => _buffer.Length;
