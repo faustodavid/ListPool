@@ -9,14 +9,14 @@ namespace ListPool
 {
     public struct ListPool<TSource> : IDisposable, IValueEnumerable<TSource>, IList<TSource>, IReadOnlyList<TSource>
     {
+        public readonly int Capacity => _buffer.Length;
+        public readonly int Count => _itemsCount;
+        public readonly bool IsReadOnly => false;
+
         private readonly ArrayPool<TSource> _arrayPool;
         private TSource[] _buffer;
         private int _itemsCount;
         private const int MinimumCapacity = 128;
-
-        public readonly int Count => _itemsCount;
-        public readonly int Capacity => _buffer.Length;
-        public readonly bool IsReadOnly => false;
 
         public ListPool(int length)
         {
