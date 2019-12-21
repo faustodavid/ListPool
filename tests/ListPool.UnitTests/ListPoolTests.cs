@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace ListPool.UnitTests
@@ -23,6 +24,12 @@ namespace ListPool.UnitTests
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
             Assert.Equal(expectedAtThird, sut[2]);
+        }
+
+        [Fact]
+        public void Create_ListPool_from_IEnumerable()
+        {
+            var sut = Enumerable.Range(0, 10).Select(e => e).ToListPool();
         }
 
         [Fact]

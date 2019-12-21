@@ -33,13 +33,25 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _ = _items.ToList();
+            _ = new List<int>(_items);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            using var _ = _items.ToListPool();
+            using var _ = new ListPool<int>(_items);
+        }
+
+        [Benchmark]
+        public void ListPool_value()
+        {
+            using var _ = new ListPool<int>(_items,true);
+        }
+
+        [Benchmark]
+        public void Linq()
+        {
+            var _ = _items.AsEnumerable().ToList();
         }
     }
 }

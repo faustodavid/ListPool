@@ -29,7 +29,7 @@ namespace ListPool
         {
             _arrayPool = ArrayPool<TSource>.Shared;
 
-            if (source is ICollection collection)
+            if (source is ICollection<TSource> collection)
             {
                 _buffer = _arrayPool.Rent(collection.Count);
                 _itemsCount = collection.Count;
@@ -42,6 +42,30 @@ namespace ListPool
                 _itemsCount = 0;
 
                 using var enumerator = source.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    Add(enumerator.Current);
+                }
+            }
+        }
+
+        public ListPool(IEnumerable<TSource> source, bool a)
+        {
+            _arrayPool = ArrayPool<TSource>.Shared;
+
+            if (source is ICollection<TSource> collection)
+            {
+                _buffer = _arrayPool.Rent(collection.Count);
+                _itemsCount = collection.Count;
+
+                collection.CopyTo(_buffer, 0);
+            }
+            else
+            {
+                _buffer = _arrayPool.Rent(MinimumCapacity);
+                _itemsCount = 0;
+
+                using var enumerator = new ValueEnumerableWrapper<TSource>(source).GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     Add(enumerator.Current);
@@ -103,8 +127,6 @@ namespace ListPool
 
         public readonly TSource this[int index]
         {
-            [Pure]
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 if (index < 0 || index >= _buffer.Length) throw new IndexOutOfRangeException(nameof(index));
@@ -123,6 +145,8 @@ namespace ListPool
 
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void Dispose() => _arrayPool.Return(_buffer);
 
         [MethodImpl(MethodImplOptions.NoInlining)]
