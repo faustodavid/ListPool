@@ -1,7 +1,7 @@
 # ListPool
 ListPool is an allocation free implementation of IList using ArrayPool.
 
-# Benchmarks.
+## Benchmarks.
 
 BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
 Intel Core i7-8750H CPU 2.20GHz (Coffee Lake), 1 CPU, 12 logical and 6 physical cores
@@ -11,7 +11,7 @@ Intel Core i7-8750H CPU 2.20GHz (Coffee Lake), 1 CPU, 12 logical and 6 physical 
 
 Concurrent=True  Server=True  
 
-## Create list
+### Create list
 
 ```
 |   Method |     N |        Mean |     Error |    StdDev | Ratio | RatioSD | Rank |  Gen 0 |  Gen 1 | Gen 2 | Allocated |
@@ -29,7 +29,7 @@ Concurrent=True  Server=True
 |     List | 10000 | 2,796.47 ns | 14.119 ns | 13.207 ns |  1.00 |    0.00 |    2 | 0.7248 | 0.0229 |     - |   40056 B |
 ```
 
-## Insert items
+### Insert items
 
 ```
 |   Method |    N |        Mean |     Error |    StdDev |        Median | Ratio | RatioSD | Rank | Gen 0 | Gen 1 | Gen 2 | Allocated |
@@ -44,7 +44,7 @@ Concurrent=True  Server=True
 |     List | 1000 | 2,640.22 ns | 236.06 ns | 665.82 ns | 2,400.0000 ns |  1.00 |    0.00 |    1 |     - |     - |     - |         - |
 ```
 
-## Enumerate with foreach
+### Enumerate with foreach
 
 ```
 |   Method |    N | CapacityFilled |        Mean |     Error |    StdDev |        Median | Ratio | RatioSD | Rank | Gen 0 | Gen 1 | Gen 2 | Allocated |
@@ -62,7 +62,7 @@ Concurrent=True  Server=True
 |     List | 1000 |              1 | 3,550.00 ns | 227.41 ns | 641.43 ns | 3,350.0000 ns |  1.00 |    0.00 |    2 |     - |     - |     - |         - |
 ```
 
-## Array.ToList()
+### Array.ToList()
 
 ```
 |   Method |    N | CapacityFilled |      Mean |    Error |   StdDev | Ratio | Rank |  Gen 0 | Gen 1 | Gen 2 | Allocated |
@@ -80,7 +80,7 @@ Concurrent=True  Server=True
 |     List | 1000 |              1 | 446.56 ns | 2.449 ns | 2.291 ns |  1.00 |    2 | 0.0606 |     - |     - |    4056 B |
 ```
 
-## IEnumerable.ToList()
+### IEnumerable.ToList()
 
 ```
 |   Method |    N |      Mean |     Error |    StdDev |    Median | Ratio | RatioSD | Rank | Gen 0 | Gen 1 | Gen 2 | Allocated |
@@ -98,7 +98,7 @@ Concurrent=True  Server=True
 | ListPool | 1000 | 15.861 us | 1.3985 us | 4.0349 us | 14.400 us |  2.86 |    0.80 |    2 |     - |     - |     - |         - |
 ```
 
-## Clear
+### Clear
 
 ```
 |   Method |    N | CapacityFilled |       Mean |     Error |     StdDev |      Median |      P95 | Ratio | RatioSD | Rank | Gen 0 | Gen 1 | Gen 2 | Allocated |
