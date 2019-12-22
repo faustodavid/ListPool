@@ -49,30 +49,6 @@ namespace ListPool
             }
         }
 
-        public ListPool(IEnumerable<TSource> source, bool a)
-        {
-            _arrayPool = ArrayPool<TSource>.Shared;
-
-            if (source is ICollection<TSource> collection)
-            {
-                _buffer = _arrayPool.Rent(collection.Count);
-                _itemsCount = collection.Count;
-
-                collection.CopyTo(_buffer, 0);
-            }
-            else
-            {
-                _buffer = _arrayPool.Rent(MinimumCapacity);
-                _itemsCount = 0;
-
-                using var enumerator = new ValueEnumerableWrapper<TSource>(source).GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    Add(enumerator.Current);
-                }
-            }
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(TSource item)
         {
@@ -145,9 +121,11 @@ namespace ListPool
 
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        [Pure]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void Dispose() => _arrayPool.Return(_buffer);
+       public void Dispose()
+        {
+            _itemsCount = 0;
+            _arrayPool.Return(_buffer);
+        }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void GrowBuffer()
