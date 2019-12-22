@@ -33,7 +33,7 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            for (var i = 0; i < N; i++)
+            for (int i = 0; i < N; i++)
             {
                 _list.Add(i);
             }
@@ -42,7 +42,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            for (var i = 0; i < N; i++)
+            for (int i = 0; i < N; i++)
             {
                 _listPool.Add(i);
             }

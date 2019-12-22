@@ -63,13 +63,14 @@ namespace ListPool
 
         public readonly int IndexOf(TSource item) => Array.IndexOf(_buffer, item, 0, _itemsCount);
 
-        public readonly void CopyTo(TSource[] array, int arrayIndex) => Array.Copy(_buffer, 0, array, arrayIndex, _itemsCount);
+        public readonly void CopyTo(TSource[] array, int arrayIndex) =>
+            Array.Copy(_buffer, 0, array, arrayIndex, _itemsCount);
 
         public bool Remove(TSource item)
         {
             if (item == null) return false;
 
-            var index = IndexOf(item);
+            int index = IndexOf(item);
 
             if (index == -1) return false;
 
@@ -121,7 +122,7 @@ namespace ListPool
 
         readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-       public void Dispose()
+        public void Dispose()
         {
             _itemsCount = 0;
             _arrayPool.Return(_buffer);
@@ -130,7 +131,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void GrowBuffer()
         {
-            var newLength = _buffer.Length * 2;
+            int newLength = _buffer.Length * 2;
             var newBuffer = _arrayPool.Rent(newLength);
             var oldBuffer = _buffer;
 

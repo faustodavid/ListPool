@@ -12,17 +12,17 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class EnumerableToListPoolBenchmark
     {
-        [Params(10, 50 ,100, 1000)]
-        public int N { get; set; }
-
         private IEnumerable<int> _items;
+
+        [Params(10, 50, 100, 1000)]
+        public int N { get; set; }
 
         [IterationSetup]
         public void IterationSetup()
         {
             var items = new int[N];
 
-            for (var i = 0; i < N - 1; i++)
+            for (int i = 0; i < N - 1; i++)
             {
                 items[i] = 1;
             }
@@ -45,7 +45,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool_value()
         {
-            using var _ = new ListPool<int>(_items,true);
+            using var _ = new ListPool<int>(_items);
         }
 
         [Benchmark]

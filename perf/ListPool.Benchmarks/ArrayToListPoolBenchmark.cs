@@ -11,10 +11,10 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ArrayToListPoolBenchmark
     {
-        [Params(10, 50 ,100, 1000)]
-        public int N { get; set; }
-
         private int[] array;
+
+        [Params(10, 50, 100, 1000)]
+        public int N { get; set; }
 
         [GlobalSetup]
         public void GlobalSetup()

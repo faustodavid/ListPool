@@ -26,7 +26,7 @@ namespace ListPool.Benchmarks
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
 
-            for (var i = 0; i < N * CapacityFilled; i++)
+            for (int i = 0; i < N * CapacityFilled; i++)
             {
                 _list.Add(1);
                 _listPool.Add(1);

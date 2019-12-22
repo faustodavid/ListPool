@@ -26,7 +26,7 @@ namespace ListPool.Benchmarks
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
 
-            for (var i = 0; i < N * CapacityFilled; i++)
+            for (int i = 0; i < N * CapacityFilled; i++)
             {
                 _list.Add(1);
                 _listPool.Add(1);
@@ -42,7 +42,7 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            foreach (var _ in _list)
+            foreach (int _ in _list)
             {
             }
         }
@@ -50,7 +50,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            foreach (var _ in _listPool)
+            foreach (int _ in _listPool)
             {
             }
         }

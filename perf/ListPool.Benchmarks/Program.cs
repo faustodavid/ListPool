@@ -3,9 +3,9 @@ using BenchmarkDotNet.Running;
 
 namespace ListPool.Benchmarks
 {
-    class Program
+    internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             //BenchmarkRunner.Run<ListPoolCreateBenchmarks>();
             //BenchmarkRunner.Run<ListPoolEnumerateBenchmarks>();

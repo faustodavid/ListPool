@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -14,12 +13,7 @@ namespace ListPool.UnitTests
             const int expectedAtSecond = 7;
             const int expectedAtThird = 10;
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int>(3) {expectedAtFirst, expectedAtSecond, expectedAtThird};
 
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
@@ -27,44 +21,27 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
-        public void Create_ListPool_from_IEnumerable()
+        public void Create_list_and_add_values_after_clear()
         {
-            var sut = Enumerable.Range(0, 10).Select(e => e).ToListPool();
-        }
+            const int expectedAtFirst = 5;
+            const int expectedAtSecond = 7;
+            const int expectedAtThird = 10;
 
-        [Fact]
-        public void Enumerate_added_items_and_ignore_others()
-        {
-            const int listCapacity = 10;
-            const int expectedCount = 3;
-
-            using var sut = new ListPool<int>(listCapacity)
-            {
-                1,
-                2,
-                3
-            };
-
-            Assert.Equal(expectedCount, sut.Count);
-        }
-
-        [Fact]
-        public void ListPool_should_autogrow()
-        {
-            int expectedAtFirst = 5;
-            int expectedAtSecond = 7;
-            int expectedAtThird = 10;
-
-            using var sut = new ListPool<int>(1)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int>(3) {expectedAtFirst, expectedAtSecond, expectedAtThird};
 
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
             Assert.Equal(expectedAtThird, sut[2]);
+
+            sut.Clear();
+            bool actualFirst = sut.Contains(expectedAtFirst);
+            bool actualSecond = sut.Contains(expectedAtSecond);
+            bool actualThird = sut.Contains(expectedAtThird);
+
+            Assert.False(actualFirst);
+            Assert.False(actualSecond);
+            Assert.False(actualThird);
+            Assert.Empty(sut);
         }
 
         [Fact]
@@ -75,12 +52,7 @@ namespace ListPool.UnitTests
             const int expectedAtThird = 10;
             const int expectedCountAfterRemove = 2;
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int>(3) {expectedAtFirst, expectedAtSecond, expectedAtThird};
 
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
@@ -98,51 +70,17 @@ namespace ListPool.UnitTests
             const int expectedAtThird = 10;
             const int expectedCountAfterRemove = 2;
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int>(3) {expectedAtFirst, expectedAtSecond, expectedAtThird};
 
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
             Assert.Equal(expectedAtThird, sut[2]);
 
             sut.RemoveAt(1);
-            var actualResult = sut.Contains(expectedAtSecond);
+            bool actualResult = sut.Contains(expectedAtSecond);
 
             Assert.False(actualResult);
             Assert.Equal(expectedCountAfterRemove, sut.Count);
-        }
-
-        [Fact]
-        public void Create_list_and_add_values_after_clear()
-        {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
-
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
-
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
-
-            sut.Clear();
-            var actualFirst = sut.Contains(expectedAtFirst);
-            var actualSecond = sut.Contains(expectedAtSecond);
-            var actualThird = sut.Contains(expectedAtThird);
-
-            Assert.False(actualFirst);
-            Assert.False(actualSecond);
-            Assert.False(actualThird);
-            Assert.Empty(sut);
         }
 
         [Fact]
@@ -152,20 +90,15 @@ namespace ListPool.UnitTests
             const int expectedAtSecond = 7;
             const int expectedAtThird = 10;
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int>(3) {expectedAtFirst, expectedAtSecond, expectedAtThird};
 
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
             Assert.Equal(expectedAtThird, sut[2]);
 
-            var actualFirst = sut.Contains(expectedAtFirst);
-            var actualSecond = sut.Contains(expectedAtSecond);
-            var actualThird = sut.Contains(expectedAtThird);
+            bool actualFirst = sut.Contains(expectedAtFirst);
+            bool actualSecond = sut.Contains(expectedAtSecond);
+            bool actualThird = sut.Contains(expectedAtThird);
 
             Assert.NotEmpty(sut);
             Assert.True(actualFirst);
@@ -180,12 +113,7 @@ namespace ListPool.UnitTests
             const int expectedAtSecond = 7;
             const int expectedAtThird = 10;
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int>(3) {expectedAtFirst, expectedAtSecond, expectedAtThird};
 
             Assert.Equal(expectedAtFirst, sut[0]);
             Assert.Equal(expectedAtSecond, sut[1]);
@@ -196,7 +124,7 @@ namespace ListPool.UnitTests
 
             Assert.Equal(sut.Count, actualArray.Length);
 
-            for (var i = 0; i < sut.Count; i++) 
+            for (int i = 0; i < sut.Count; i++)
             {
                 Assert.Equal(sut[i], actualArray[i]);
             }
@@ -209,12 +137,7 @@ namespace ListPool.UnitTests
             const int expectedAtSecond = 7;
             const int expectedAtThird = 10;
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int>(3) {expectedAtFirst, expectedAtSecond, expectedAtThird};
 
             Assert.Equal(0, sut.IndexOf(expectedAtFirst));
             Assert.Equal(1, sut.IndexOf(expectedAtSecond));
@@ -227,14 +150,9 @@ namespace ListPool.UnitTests
             const int expectedAtFirst = 5;
             const int expectedAtSecond = 7;
             const int expectedAtThird = 10;
-            const int expectedAtForth= 15;
+            const int expectedAtForth = 15;
 
-            var sut = new ListPool<int>(10)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            var sut = new ListPool<int>(10) {expectedAtFirst, expectedAtSecond, expectedAtThird};
 
             sut.Insert(3, expectedAtForth);
 
@@ -242,6 +160,37 @@ namespace ListPool.UnitTests
             Assert.Equal(expectedAtSecond, sut[1]);
             Assert.Equal(expectedAtThird, sut[2]);
             Assert.Equal(expectedAtForth, sut[3]);
+        }
+
+        [Fact]
+        public void Create_ListPool_from_IEnumerable()
+        {
+            var sut = Enumerable.Range(0, 10).Select(e => e).ToListPool();
+        }
+
+        [Fact]
+        public void Enumerate_added_items_and_ignore_others()
+        {
+            const int listCapacity = 10;
+            const int expectedCount = 3;
+
+            using var sut = new ListPool<int>(listCapacity) {1, 2, 3};
+
+            Assert.Equal(expectedCount, sut.Count);
+        }
+
+        [Fact]
+        public void ListPool_should_autogrow()
+        {
+            int expectedAtFirst = 5;
+            int expectedAtSecond = 7;
+            int expectedAtThird = 10;
+
+            using var sut = new ListPool<int>(1) {expectedAtFirst, expectedAtSecond, expectedAtThird};
+
+            Assert.Equal(expectedAtFirst, sut[0]);
+            Assert.Equal(expectedAtSecond, sut[1]);
+            Assert.Equal(expectedAtThird, sut[2]);
         }
 
         [Fact]
