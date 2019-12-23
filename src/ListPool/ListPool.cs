@@ -6,8 +6,9 @@ using System.Runtime.CompilerServices;
 
 namespace ListPool
 {
-    public struct ListPool<TSource> : IDisposable, IValueEnumerable<TSource>, IList<TSource>,
-                                      IReadOnlyList<TSource>
+    public struct ListPool<TSource> : IList<TSource>, IReadOnlyList<TSource>, IDisposable,
+                                      IValueEnumerable<TSource>
+
     {
         public readonly int Capacity => _bufferOwner.Buffer.Length;
         public readonly int Count => _itemsCount;
