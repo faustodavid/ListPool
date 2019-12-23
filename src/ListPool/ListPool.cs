@@ -79,6 +79,7 @@ namespace ListPool
             return true;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Insert(int index, TSource item)
         {
             if (index < 0 || index > _itemsCount) throw new ArgumentOutOfRangeException(nameof(index));
