@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 using Xunit;
 
 namespace ListPool.UnitTests
@@ -166,6 +167,23 @@ namespace ListPool.UnitTests
         public void Create_ListPool_from_IEnumerable()
         {
             var sut = Enumerable.Range(0, 10).Select(e => e).ToListPool();
+        }
+
+        [Fact]
+        public void Create_ListPool_with_parametess_constructor_should_add_and_get_items()
+        {
+            int expected0 = RandomNumberGenerator.GetInt32(0, 1000);
+            int expected1 = RandomNumberGenerator.GetInt32(0, 1000);
+            int expected2 = RandomNumberGenerator.GetInt32(0, 1000);
+
+            using var sut = new ListPool<int>();
+            sut.Add(expected0);
+            sut.Add(expected1);
+            sut.Add(expected2);
+
+            Assert.Equal(expected0, sut[0]);
+            Assert.Equal(expected1, sut[1]);
+            Assert.Equal(expected2, sut[2]);
         }
 
         [Fact]
