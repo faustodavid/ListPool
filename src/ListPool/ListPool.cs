@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -7,38 +6,35 @@ using System.Runtime.CompilerServices;
 
 namespace ListPool
 {
-    public struct ListPool<TSource> : IDisposable, IValueEnumerable<TSource>, IList<TSource>, IReadOnlyList<TSource>
+    public struct ListPool<TSource> : IDisposable, IValueEnumerable<TSource>, IList<TSource>,
+                                      IReadOnlyList<TSource>
     {
-        public readonly int Capacity => _buffer.Length;
+        public readonly int Capacity => _bufferOwner.Buffer.Length;
         public readonly int Count => _itemsCount;
         public readonly bool IsReadOnly => false;
 
-        private readonly ArrayPool<TSource> _arrayPool;
-        private TSource[] _buffer;
+        private BufferOwner<TSource> _bufferOwner;
         private int _itemsCount;
         private const int MinimumCapacity = 128;
 
         public ListPool(int length)
         {
-            _arrayPool = ArrayPool<TSource>.Shared;
-            _buffer = _arrayPool.Rent(length < MinimumCapacity ? MinimumCapacity : length);
+            _bufferOwner = new BufferOwner<TSource>(length < MinimumCapacity ? MinimumCapacity : length);
             _itemsCount = 0;
         }
 
         public ListPool(IEnumerable<TSource> source)
         {
-            _arrayPool = ArrayPool<TSource>.Shared;
-
             if (source is ICollection<TSource> collection)
             {
-                _buffer = _arrayPool.Rent(collection.Count);
+                _bufferOwner = new BufferOwner<TSource>(collection.Count);
                 _itemsCount = collection.Count;
 
-                collection.CopyTo(_buffer, 0);
+                collection.CopyTo(_bufferOwner.Buffer, 0);
             }
             else
             {
-                _buffer = _arrayPool.Rent(MinimumCapacity);
+                _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
                 _itemsCount = 0;
 
                 using var enumerator = source.GetEnumerator();
@@ -52,19 +48,20 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(TSource item)
         {
-            if (_itemsCount >= _buffer.Length) GrowBuffer();
+            if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
+            if (_itemsCount >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
 
-            _buffer[_itemsCount++] = item;
+            _bufferOwner.Buffer[_itemsCount++] = item;
         }
 
         public void Clear() => _itemsCount = 0;
 
         public readonly bool Contains(TSource item) => _itemsCount > 0 && IndexOf(item) > -1;
 
-        public readonly int IndexOf(TSource item) => Array.IndexOf(_buffer, item, 0, _itemsCount);
+        public readonly int IndexOf(TSource item) => Array.IndexOf(_bufferOwner.Buffer, item, 0, _itemsCount);
 
         public readonly void CopyTo(TSource[] array, int arrayIndex) =>
-            Array.Copy(_buffer, 0, array, arrayIndex, _itemsCount);
+            Array.Copy(_bufferOwner.Buffer, 0, array, arrayIndex, _itemsCount);
 
         public bool Remove(TSource item)
         {
@@ -83,33 +80,33 @@ namespace ListPool
         public void Insert(int index, TSource item)
         {
             if (index < 0 || index > _itemsCount) throw new ArgumentOutOfRangeException(nameof(index));
-
-            if (index >= _buffer.Length) GrowBuffer();
+            if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
+            if (index >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
             if (index < _itemsCount)
-                Array.Copy(_buffer, index, _buffer, index + 1, _itemsCount - index);
+                Array.Copy(_bufferOwner.Buffer, index, _bufferOwner.Buffer, index + 1, _itemsCount - index);
 
-            _buffer[index] = item;
+            _bufferOwner.Buffer[index] = item;
             _itemsCount++;
         }
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= _buffer.Length) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index < 0 || index >= _bufferOwner.Buffer.Length) throw new ArgumentOutOfRangeException(nameof(index));
 
             if (index >= _itemsCount) return;
 
             _itemsCount--;
 
-            Array.Copy(_buffer, index + 1, _buffer, index, _itemsCount - index);
+            Array.Copy(_bufferOwner.Buffer, index + 1, _bufferOwner.Buffer, index, _itemsCount - index);
         }
 
         public readonly TSource this[int index]
         {
             get
             {
-                if (index < 0 || index >= _buffer.Length) throw new IndexOutOfRangeException(nameof(index));
+                if (index < 0 || index >= _bufferOwner.Buffer.Length) throw new IndexOutOfRangeException(nameof(index));
 
-                return index >= _itemsCount ? default : _buffer[index];
+                return index >= _itemsCount ? default : _bufferOwner.Buffer[index];
             }
 
             set => Insert(index, value);
@@ -117,7 +114,8 @@ namespace ListPool
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly Enumerator<TSource> GetEnumerator() => new Enumerator<TSource>(in _buffer, in _itemsCount);
+        public readonly Enumerator<TSource> GetEnumerator() =>
+            new Enumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
 
         readonly IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => GetEnumerator();
 
@@ -126,20 +124,7 @@ namespace ListPool
         public void Dispose()
         {
             _itemsCount = 0;
-            _arrayPool.Return(_buffer);
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void GrowBuffer()
-        {
-            int newLength = _buffer.Length * 2;
-            var newBuffer = _arrayPool.Rent(newLength);
-            var oldBuffer = _buffer;
-
-            Array.Copy(oldBuffer, 0, newBuffer, 0, _itemsCount);
-
-            _buffer = newBuffer;
-            _arrayPool.Return(oldBuffer);
+            _bufferOwner.Dispose();
         }
     }
 }

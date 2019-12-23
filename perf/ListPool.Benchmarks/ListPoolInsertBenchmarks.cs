@@ -14,14 +14,14 @@ namespace ListPool.Benchmarks
         private List<int> _list;
         private ListPool<int> _listPool;
 
-        [Params(10, 100, 1000)]
+        [Params(1000, 10000, 100000)]
         public int N { get; set; }
 
         [IterationSetup]
         public void IterationSetup()
         {
-            _list = new List<int>(N);
-            _listPool = new ListPool<int>(N);
+            _list = new List<int>(1);
+            _listPool = new ListPool<int>(1);
         }
 
         [IterationCleanup]
