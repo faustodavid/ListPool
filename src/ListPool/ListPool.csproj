@@ -5,10 +5,12 @@
     <Nullable>enable</Nullable>
     <LangCode>8.0</LangCode>
     <Authors>Fausto David Suarez Rosario</Authors>
-    <Description>Optimized allocation free implementation of IList</Description>
+    <Title>ListPool</Title>
+    <Description>ListPool is an optimized allocation free implementation of IList using ArrayPool.</Description>
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageVersion>0.0.7-alpha</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
