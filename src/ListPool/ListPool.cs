@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
@@ -101,13 +102,17 @@ namespace ListPool
             Array.Copy(_bufferOwner.Buffer, index + 1, _bufferOwner.Buffer, index, _itemsCount - index);
         }
 
+        [MaybeNull]
         public readonly TSource this[int index]
         {
+            [Pure]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index < 0 || index >= _bufferOwner.Buffer.Length) throw new IndexOutOfRangeException(nameof(index));
+                if (index < 0 || index >= _bufferOwner.Buffer.Length || index >= _itemsCount)
+                    throw new IndexOutOfRangeException(nameof(index));
 
-                return index >= _itemsCount ? default : _bufferOwner.Buffer[index];
+                return _bufferOwner.Buffer[index];
             }
 
             set => Insert(index, value);

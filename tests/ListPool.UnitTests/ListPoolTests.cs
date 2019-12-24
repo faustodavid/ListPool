@@ -170,7 +170,7 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
-        public void Create_ListPool_with_parametess_constructor_should_add_and_get_items()
+        public void Create_ListPool_with_parameterless_constructor_should_add_and_get_items()
         {
             int expected0 = RandomNumberGenerator.GetInt32(0, 1000);
             int expected1 = RandomNumberGenerator.GetInt32(0, 1000);
