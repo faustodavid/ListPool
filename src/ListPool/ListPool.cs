@@ -57,8 +57,7 @@ namespace ListPool
         }
 
         public void Clear() => _itemsCount = 0;
-
-        public readonly bool Contains(TSource item) => _itemsCount > 0 && IndexOf(item) > -1;
+        public readonly bool Contains(TSource item) => IndexOf(item) > -1;
 
         public readonly int IndexOf(TSource item) => Array.IndexOf(_bufferOwner.Buffer, item, 0, _itemsCount);
 
@@ -94,7 +93,6 @@ namespace ListPool
         public void RemoveAt(int index)
         {
             if (index < 0 || index >= _bufferOwner.Buffer.Length) throw new ArgumentOutOfRangeException(nameof(index));
-
             if (index >= _itemsCount) return;
 
             _itemsCount--;
@@ -115,7 +113,13 @@ namespace ListPool
                 return _bufferOwner.Buffer[index];
             }
 
-            set => Insert(index, value);
+            set
+            {
+                if (index < 0 || index >= _bufferOwner.Buffer.Length || index >= _itemsCount)
+                    throw new IndexOutOfRangeException(nameof(index));
+
+                _bufferOwner.Buffer[index] = value;
+            }
         }
 
         [Pure]
