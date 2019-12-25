@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>0.0.7-alpha</PackageVersion>
+    <PackageVersion>0.0.8-alpha</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
