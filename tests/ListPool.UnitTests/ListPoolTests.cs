@@ -361,5 +361,16 @@ namespace ListPool.UnitTests
 
             Assert.Equal(nameof(index), exception.ParamName);
         }
+
+        [Fact]
+        public void Enumerate_when_capacity_is_not_set_dont_throw_exception()
+        {
+            using var sut = new ListPool<int>();
+
+            foreach (int item in sut)
+            {
+                
+            }
+        }
     }
 }
