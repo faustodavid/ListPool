@@ -116,7 +116,7 @@ namespace ListPool
             get
             {
                 if (index < 0 || index >= _bufferOwner.Buffer.Length || index >= _itemsCount)
-                    throw new IndexOutOfRangeException(nameof(index));
+                    throw new ArgumentOutOfRangeException(nameof(index));
 
                 return _bufferOwner.Buffer[index];
             }
@@ -124,7 +124,7 @@ namespace ListPool
             set
             {
                 if (index < 0 || index >= _bufferOwner.Buffer.Length || index >= _itemsCount)
-                    throw new IndexOutOfRangeException(nameof(index));
+                    throw new ArgumentOutOfRangeException(nameof(index));
 
                 _bufferOwner.Buffer[index] = value;
             }

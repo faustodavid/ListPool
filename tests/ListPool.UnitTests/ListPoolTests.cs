@@ -254,5 +254,59 @@ namespace ListPool.UnitTests
             Assert.Equal(expectedItemsCount, sut.Count);
             Assert.Equal(expectedItem, sut[2]);
         }
+
+        [Fact]
+        public void Get_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
+        {
+            int index = -1;
+            var sut = new ListPool<int>();
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
+
+            Assert.Equal(nameof(index), exception.ParamName);
+        }
+
+        [Fact]
+        public void Get_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        {
+            using var sut = new ListPool<int>{ _fixture.Create<int>() };
+            int index = 2;
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
+
+            Assert.Equal(nameof(index), exception.ParamName);
+        }
+
+        [Fact]
+        public void Set_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
+        {
+            int index = -1;
+            int item = _fixture.Create<int>();
+            var sut = new ListPool<int>();
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
+
+            Assert.Equal(nameof(index), exception.ParamName);
+        }
+
+        [Fact]
+        public void Set_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        {
+            using var sut = new ListPool<int>{ _fixture.Create<int>() };
+            int index = 2;
+            int item = _fixture.Create<int>();
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
+
+            Assert.Equal(nameof(index), exception.ParamName);
+        }
+
+        [Fact]
+        public void Readonly_property_is_always_false()
+        {
+            using var sut = new ListPool<int>();
+
+            Assert.False(sut.IsReadOnly);
+        }
     }
 }
