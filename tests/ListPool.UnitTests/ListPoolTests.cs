@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AutoFixture;
 using Xunit;
@@ -7,6 +8,17 @@ namespace ListPool.UnitTests
     public class ListPoolTests
     {
         private static readonly Fixture _fixture = new Fixture();
+
+        [Fact]
+        public void Add_item_without_indicate_capacity_of_list()
+        {
+            int expectedItem = _fixture.Create<int>();
+            using var sut = new ListPool<int>();
+
+            sut.Add(expectedItem);
+
+            Assert.Equal(expectedItem, sut[0]);
+        }
 
         [Fact]
         public void Add_items_when_capacity_is_full_then_buffer_autogrow()
@@ -21,17 +33,6 @@ namespace ListPool.UnitTests
 
             Assert.Equal(expectedItems.Count, sut.Count);
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
-        }
-
-        [Fact]
-        public void Add_item_without_indicate_capacity_of_list()
-        {
-            int expectedItem = _fixture.Create<int>();
-            using var sut = new ListPool<int>();
-
-            sut.Add(expectedItem);
-
-            Assert.Equal(expectedItem, sut[0]);
         }
 
         [Fact]
@@ -186,6 +187,58 @@ namespace ListPool.UnitTests
 
             Assert.Equal(4, sut.Count);
             Assert.Equal(expectedAt3, sut[3]);
+        }
+
+        [Fact]
+        public void Insert_items_when_capacity_is_full_then_buffer_autogrow()
+        {
+            using var sut = new ListPool<int>();
+            var expectedItems = _fixture.CreateMany<int>(sut.Capacity * 2).ToList();
+            int index = 0;
+
+            foreach (int expectedItem in expectedItems)
+            {
+                sut.Insert(index++, expectedItem);
+            }
+
+            Assert.Equal(expectedItems.Count, sut.Count);
+            Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
+        }
+
+        [Fact]
+        public void Insert_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
+        {
+            int index = -1;
+            int item = _fixture.Create<int>();
+            using var sut = new ListPool<int>();
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
+
+            Assert.Equal(nameof(index), exception.ParamName);
+        }
+
+        [Fact]
+        public void Insert_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        {
+            using var sut = new ListPool<int>{ _fixture.Create<int>() };
+            int index = 2;
+            int item = _fixture.Create<int>();
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
+
+            Assert.Equal(nameof(index), exception.ParamName);
+        }
+
+        [Fact]
+        public void Insert_without_indicating_capacity_of_list()
+        {
+            int index = 0;
+            int expectedItem = _fixture.Create<int>();
+            using var sut = new ListPool<int>();
+
+            sut.Insert(index, expectedItem);
+
+            Assert.Equal(expectedItem, sut[0]);
         }
 
         [Fact]

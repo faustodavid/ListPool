@@ -15,10 +15,11 @@ namespace ListPool
         {
             get
             {
-                if(!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
+                if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
                 return _bufferOwner.Buffer.Length;
             }
-        } 
+        }
+
         public readonly int Count => _itemsCount;
         public readonly bool IsReadOnly => false;
 
@@ -141,7 +142,8 @@ namespace ListPool
         public void Dispose()
         {
             _itemsCount = 0;
-            _bufferOwner.Dispose();
+            if (_bufferOwner.IsValid)
+                _bufferOwner.Dispose();
         }
     }
 }
