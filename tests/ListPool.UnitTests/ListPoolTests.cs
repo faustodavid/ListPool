@@ -23,7 +23,7 @@ namespace ListPool.UnitTests
         [Fact]
         public void Add_items_when_capacity_is_full_then_buffer_autogrow()
         {
-            using var sut = new ListPool<int>();
+            using var sut = new ListPool<int>(128);
             var expectedItems = _fixture.CreateMany<int>(sut.Capacity * 2).ToList();
 
             foreach (int expectedItem in expectedItems)
@@ -212,7 +212,7 @@ namespace ListPool.UnitTests
         [Fact]
         public void Insert_items_when_capacity_is_full_then_buffer_autogrow()
         {
-            using var sut = new ListPool<int>();
+            using var sut = new ListPool<int>(128);
             var expectedItems = _fixture.CreateMany<int>(sut.Capacity * 2).ToList();
             int index = 0;
 

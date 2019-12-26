@@ -11,15 +11,7 @@ namespace ListPool
                                       IValueEnumerable<TSource>
 
     {
-        public int Capacity
-        {
-            get
-            {
-                if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
-                return _bufferOwner.Buffer.Length;
-            }
-        }
-
+        public  readonly int Capacity => _bufferOwner.IsValid ? _bufferOwner.Buffer.Length : 0;
         public readonly int Count => _itemsCount;
         public readonly bool IsReadOnly => false;
 
