@@ -6,27 +6,32 @@ namespace ListPool.UnitTests
 {
     public class ListPoolTests
     {
-        static ListPoolTests()
-        {
-            _fixture = new Fixture();
-        }
-
-        private static readonly Fixture _fixture;
+        private static readonly Fixture _fixture = new Fixture();
 
         [Fact]
-        public void Add_items_when_capacity_is_full_buffer_autogrow()
+        public void Add_items_when_capacity_is_full_then_buffer_autogrow()
         {
-            int expectedAt0 = _fixture.Create<int>();
-            int expectedAt1 = _fixture.Create<int>();
-            int expectedAt2 = _fixture.Create<int>();
-            int expectedItemsCount = 3;
+            using var sut = new ListPool<int>();
+            var expectedItems = _fixture.CreateMany<int>(sut.Capacity * 2).ToList();
 
-            using var sut = new ListPool<int>(1) {expectedAt0, expectedAt1, expectedAt2};
+            foreach (int expectedItem in expectedItems)
+            {
+                sut.Add(expectedItem);
+            }
 
-            Assert.Equal(expectedAt0, sut[0]);
-            Assert.Equal(expectedAt1, sut[1]);
-            Assert.Equal(expectedAt2, sut[2]);
-            Assert.Equal(expectedItemsCount, sut.Count);
+            Assert.Equal(expectedItems.Count, sut.Count);
+            Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
+        }
+
+        [Fact]
+        public void Add_item_without_indicate_capacity_of_list()
+        {
+            int expectedItem = _fixture.Create<int>();
+            using var sut = new ListPool<int>();
+
+            sut.Add(expectedItem);
+
+            Assert.Equal(expectedItem, sut[0]);
         }
 
         [Fact]
@@ -195,26 +200,6 @@ namespace ListPool.UnitTests
 
             Assert.Equal(expectedItemsCount, sut.Count);
             Assert.Equal(expectedItem, sut[2]);
-        }
-
-        [Fact]
-        public void ToListPool_from_collection_contains_all_items()
-        {
-            var enumerable = Enumerable.Range(0, 10).ToArray();
-
-            using var sut = enumerable.ToListPool();
-
-            Assert.All(enumerable, value => sut.Contains(value));
-        }
-
-        [Fact]
-        public void ToListPool_from_IEnumerable_contains_all_items()
-        {
-            var enumerable = Enumerable.Range(0, 10);
-
-            using var sut = enumerable.ToListPool();
-
-            Assert.All(enumerable, value => sut.Contains(value));
         }
     }
 }
