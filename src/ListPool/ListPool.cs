@@ -11,7 +11,7 @@ namespace ListPool
                                       IValueEnumerable<TSource>
 
     {
-        public readonly int Capacity => _bufferOwner.Buffer.Length;
+        public  readonly int Capacity => _bufferOwner.IsValid ? _bufferOwner.Buffer.Length : 0;
         public readonly int Count => _itemsCount;
         public readonly bool IsReadOnly => false;
 
@@ -92,11 +92,9 @@ namespace ListPool
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= _bufferOwner.Buffer.Length) throw new ArgumentOutOfRangeException(nameof(index));
-            if (index >= _itemsCount) return;
+            if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             _itemsCount--;
-
             Array.Copy(_bufferOwner.Buffer, index + 1, _bufferOwner.Buffer, index, _itemsCount - index);
         }
 
@@ -108,7 +106,7 @@ namespace ListPool
             get
             {
                 if (index < 0 || index >= _bufferOwner.Buffer.Length || index >= _itemsCount)
-                    throw new IndexOutOfRangeException(nameof(index));
+                    throw new ArgumentOutOfRangeException(nameof(index));
 
                 return _bufferOwner.Buffer[index];
             }
@@ -116,7 +114,7 @@ namespace ListPool
             set
             {
                 if (index < 0 || index >= _bufferOwner.Buffer.Length || index >= _itemsCount)
-                    throw new IndexOutOfRangeException(nameof(index));
+                    throw new ArgumentOutOfRangeException(nameof(index));
 
                 _bufferOwner.Buffer[index] = value;
             }
@@ -134,7 +132,8 @@ namespace ListPool
         public void Dispose()
         {
             _itemsCount = 0;
-            _bufferOwner.Dispose();
+            if (_bufferOwner.IsValid)
+                _bufferOwner.Dispose();
         }
     }
 }
