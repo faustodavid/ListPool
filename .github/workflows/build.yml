@@ -16,13 +16,17 @@ jobs:
       run: echo "$GITHUB_CONTEXT"
     - name: Checkout
       uses: actions/checkout@v1
+    - name: Setup .NET Core 2.1
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1.607
     - name: Setup .NET Core 3.1
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.100
     - name: .NET Core SxS
       run: |
-        rsync -a ${DOTNET_ROOT/3.1.100}/* $DOTNET_ROOT/
+        rsync -a ${DOTNET_ROOT/3.1.100/2.1.607}/* $DOTNET_ROOT/
     - name: Build
       run: dotnet build --configuration Release
     - name: Test
