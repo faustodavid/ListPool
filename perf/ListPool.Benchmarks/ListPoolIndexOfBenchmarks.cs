@@ -39,19 +39,13 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _list.IndexOf(1);
             _list.IndexOf(N / 2);
-            _list.IndexOf(N);
-            _list.IndexOf(-1);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            _listPool.IndexOf(1);
             _listPool.IndexOf(N / 2);
-            _listPool.IndexOf(N);
-            _listPool.IndexOf(-1);
         }
     }
 }

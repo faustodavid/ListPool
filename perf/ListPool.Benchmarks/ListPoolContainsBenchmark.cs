@@ -39,19 +39,13 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _list.Contains(1);
             _list.Contains(N / 2);
-            _list.Contains(N);
-            _list.Contains(-1);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            _listPool.Contains(1);
             _listPool.Contains(N / 2);
-            _listPool.Contains(N);
-            _listPool.Contains(-1);
         }
     }
 }
