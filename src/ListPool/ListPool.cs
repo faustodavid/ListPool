@@ -100,11 +100,9 @@ namespace ListPool
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= _bufferOwner.Buffer.Length) throw new ArgumentOutOfRangeException(nameof(index));
-            if (index >= _itemsCount) return;
+            if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
 
             _itemsCount--;
-
             Array.Copy(_bufferOwner.Buffer, index + 1, _bufferOwner.Buffer, index, _itemsCount - index);
         }
 
