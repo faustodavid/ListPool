@@ -20,7 +20,7 @@ namespace ListPool.Benchmarks
         [IterationSetup]
         public void IterationSetup()
         {
-            var items = new int[N];
+            int[] items = new int[N];
 
             for (int i = 0; i < N - 1; i++)
             {
@@ -39,7 +39,7 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void Linq()
         {
-            var _ = _items.ToList();
+            _ = _items.ToList();
         }
     }
 }
