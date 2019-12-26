@@ -11,40 +11,40 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolInsertBenchmarks
     {
-        private List<int> list;
-        private ListPool<int> listPool;
+        private List<int> _list;
+        private ListPool<int> _listPool;
 
-        [Params(10, 100, 1000)]
+        [Params(1000, 10000, 100000)]
         public int N { get; set; }
 
         [IterationSetup]
         public void IterationSetup()
         {
-            list = new List<int>(N);
-            listPool = new ListPool<int>(N);
+            _list = new List<int>(1);
+            _listPool = new ListPool<int>(1);
         }
 
         [IterationCleanup]
         public void IterationCleanup()
         {
-            listPool.Dispose();
+            _listPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
         public void List()
         {
-            for (var i = 0; i < N - 1; i++)
+            for (int i = 0; i < N; i++)
             {
-                list.Add(i);
+                _list.Add(i);
             }
         }
 
         [Benchmark]
         public void ListPool()
         {
-            for (var i = 0; i < N - 1; i++)
+            for (int i = 0; i < N; i++)
             {
-                listPool.Add(i);
+                _listPool.Add(i);
             }
         }
     }

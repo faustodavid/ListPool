@@ -1,251 +1,220 @@
-using System;
-using System.Collections.Generic;
+using System.Linq;
+using AutoFixture;
 using Xunit;
 
 namespace ListPool.UnitTests
 {
     public class ListPoolTests
     {
+        static ListPoolTests()
+        {
+            _fixture = new Fixture();
+        }
+
+        private static readonly Fixture _fixture;
+
+        [Fact]
+        public void Add_items_when_capacity_is_full_buffer_autogrow()
+        {
+            int expectedAt0 = _fixture.Create<int>();
+            int expectedAt1 = _fixture.Create<int>();
+            int expectedAt2 = _fixture.Create<int>();
+            int expectedItemsCount = 3;
+
+            using var sut = new ListPool<int>(1) {expectedAt0, expectedAt1, expectedAt2};
+
+            Assert.Equal(expectedAt0, sut[0]);
+            Assert.Equal(expectedAt1, sut[1]);
+            Assert.Equal(expectedAt2, sut[2]);
+            Assert.Equal(expectedItemsCount, sut.Count);
+        }
+
+        [Fact]
+        public void Contains_return_true_when_item_exists()
+        {
+            int expectedAt0 = _fixture.Create<int>();
+            int expectedAt1 = _fixture.Create<int>();
+            int expectedAt2 = _fixture.Create<int>();
+            int unexpected = _fixture.Create<int>();
+
+            using var sut = new ListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
+
+            Assert.Contains(expectedAt0, sut);
+            Assert.Contains(expectedAt1, sut);
+            Assert.Contains(expectedAt2, sut);
+            Assert.DoesNotContain(unexpected, sut);
+        }
+
+        [Fact]
+        public void CopyTo_copy_all_elements_to_target_array()
+        {
+            int expectedAt0 = _fixture.Create<int>();
+            int expectedAt1 = _fixture.Create<int>();
+            int expectedAt2 = _fixture.Create<int>();
+            using var sut = new ListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
+            var array = new int[3];
+
+            sut.CopyTo(array, 0);
+
+            Assert.Equal(sut.Count, array.Length);
+            Assert.Contains(expectedAt0, array);
+            Assert.Contains(expectedAt1, array);
+            Assert.Contains(expectedAt2, array);
+        }
+
+        [Fact]
+        public void Count_property_is_for_items_Added_count_not_capacity_of_buffer()
+        {
+            const int listCapacity = 10;
+            const int expectedItemsCount = 3;
+
+            using var sut = new ListPool<int>(listCapacity) {1, 2, 3};
+
+            Assert.Equal(expectedItemsCount, sut.Count);
+        }
+
         [Fact]
         public void Create_list_and_add_values()
         {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
+            int expectedAt0 = _fixture.Create<int>();
+            int expectedAt1 = _fixture.Create<int>();
+            int expectedAt2 = _fixture.Create<int>();
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
 
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
-        }
-
-        [Fact]
-        public void Enumerate_added_items_and_ignore_others()
-        {
-            const int listCapacity = 10;
-            const int expectedCount = 3;
-
-            using var sut = new ListPool<int>(listCapacity)
-            {
-                1,
-                2,
-                3
-            };
-
-            Assert.Equal(expectedCount, sut.Count);
-        }
-
-        [Fact]
-        public void ListPool_should_autogrow()
-        {
-            int expectedAtFirst = 5;
-            int expectedAtSecond = 7;
-            int expectedAtThird = 10;
-
-            using var sut = new ListPool<int>(1)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
-
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
-        }
-
-        [Fact]
-        public void Create_list_and_add_values_after_remove()
-        {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
-            const int expectedCountAfterRemove = 2;
-
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
-
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
-
-            Assert.True(sut.Remove(expectedAtFirst));
-            Assert.Equal(expectedCountAfterRemove, sut.Count);
-        }
-
-        [Fact]
-        public void Create_list_and_add_values_after_remove_by_index()
-        {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
-            const int expectedCountAfterRemove = 2;
-
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
-
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
-
-            sut.RemoveAt(1);
-            var actualResult = sut.Contains(expectedAtSecond);
-
-            Assert.False(actualResult);
-            Assert.Equal(expectedCountAfterRemove, sut.Count);
+            Assert.Equal(expectedAt0, sut[0]);
+            Assert.Equal(expectedAt1, sut[1]);
+            Assert.Equal(expectedAt2, sut[2]);
         }
 
         [Fact]
         public void Create_list_and_add_values_after_clear()
         {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
-
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
-
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
+            using var sut =
+                new ListPool<int>(3) {_fixture.Create<int>(), _fixture.Create<int>(), _fixture.Create<int>()};
 
             sut.Clear();
-            var actualFirst = sut.Contains(expectedAtFirst);
-            var actualSecond = sut.Contains(expectedAtSecond);
-            var actualThird = sut.Contains(expectedAtThird);
 
-            Assert.False(actualFirst);
-            Assert.False(actualSecond);
-            Assert.False(actualThird);
             Assert.Empty(sut);
         }
 
         [Fact]
-        public void Create_list_and_add_values_and_call_contains()
+        public void Create_list_and_add_values_after_remove_by_index()
         {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
+            int expectedAt1 = _fixture.Create<int>();
+            const int expectedCountAfterRemove = 2;
+            using var sut = new ListPool<int>(3) {_fixture.Create<int>(), expectedAt1, _fixture.Create<int>()};
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            sut.RemoveAt(1);
 
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
-
-            var actualFirst = sut.Contains(expectedAtFirst);
-            var actualSecond = sut.Contains(expectedAtSecond);
-            var actualThird = sut.Contains(expectedAtThird);
-
-            Assert.NotEmpty(sut);
-            Assert.True(actualFirst);
-            Assert.True(actualSecond);
-            Assert.True(actualThird);
+            Assert.DoesNotContain(expectedAt1, sut);
+            Assert.Equal(expectedCountAfterRemove, sut.Count);
         }
 
         [Fact]
-        public void Create_list_and_add_values_and_call_copy_to()
+        public void Create_list_and_add_values_and_after_remove_first()
         {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
+            int expectedAt0 = _fixture.Create<int>();
+            const int expectedCountAfterRemove = 2;
+            using var sut = new ListPool<int>(3) {expectedAt0, _fixture.Create<int>(), _fixture.Create<int>()};
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            bool wasRemoved = sut.Remove(expectedAt0);
 
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
-
-            var actualArray = new int[3];
-            sut.CopyTo(actualArray, 0);
-
-            Assert.Equal(sut.Count, actualArray.Length);
-
-            for (var i = 0; i < sut.Count; i++) 
-            {
-                Assert.Equal(sut[i], actualArray[i]);
-            }
+            Assert.True(wasRemoved);
+            Assert.Equal(expectedCountAfterRemove, sut.Count);
         }
 
         [Fact]
-        public void Create_list_and_add_values_and_call_index_of()
+        public void Create_without_parameters_should_add_and_get_items()
         {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
+            int expectedAt0 = _fixture.Create<int>();
+            int expectedAt1 = _fixture.Create<int>();
+            int expectedAt2 = _fixture.Create<int>();
+            int expectedItemsCount = 3;
 
-            using var sut = new ListPool<int>(3)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
+            using var sut = new ListPool<int> {expectedAt0, expectedAt1, expectedAt2};
 
-            Assert.Equal(0, sut.IndexOf(expectedAtFirst));
-            Assert.Equal(1, sut.IndexOf(expectedAtSecond));
-            Assert.Equal(2, sut.IndexOf(expectedAtThird));
+            Assert.Equal(expectedAt0, sut[0]);
+            Assert.Equal(expectedAt1, sut[1]);
+            Assert.Equal(expectedAt2, sut[2]);
+            Assert.Equal(expectedItemsCount, sut.Count);
         }
 
         [Fact]
-        public void Create_list_and_add_values_and_call_insert()
+        public void IndexOf_returns_index_of_item()
         {
-            const int expectedAtFirst = 5;
-            const int expectedAtSecond = 7;
-            const int expectedAtThird = 10;
-            const int expectedAtForth= 15;
+            int expectedAt0 = _fixture.Create<int>();
+            int expectedAt1 = _fixture.Create<int>();
+            int expectedAt2 = _fixture.Create<int>();
+            using var sut = new ListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
 
-            var sut = new ListPool<int>(10)
-            {
-                expectedAtFirst,
-                expectedAtSecond,
-                expectedAtThird
-            };
-
-            sut.Insert(3, expectedAtForth);
-
-            Assert.Equal(expectedAtFirst, sut[0]);
-            Assert.Equal(expectedAtSecond, sut[1]);
-            Assert.Equal(expectedAtThird, sut[2]);
-            Assert.Equal(expectedAtForth, sut[3]);
+            Assert.Equal(0, sut.IndexOf(expectedAt0));
+            Assert.Equal(1, sut.IndexOf(expectedAt1));
+            Assert.Equal(2, sut.IndexOf(expectedAt2));
         }
 
         [Fact]
-        public void ToListPool()
+        public void Insert_at_existing_index_move_items_up()
         {
-            var source = new[] {Guid.NewGuid().ToString(), Guid.NewGuid().ToString()};
+            int[] expectedItems = _fixture.CreateMany<int>(3).ToArray();
+            int expectedItemAt1 = _fixture.Create<int>();
+            int expectedItemsCount = expectedItems.Length + 1;
+            using var sut = expectedItems.ToListPool();
 
-            var sourceAsListPool = source.ToListPool();
+            sut.Insert(1, expectedItemAt1);
 
-            Assert.Equal(source[0], sourceAsListPool[0]);
-            Assert.Equal(source[1], sourceAsListPool[1]);
+            Assert.Equal(expectedItemsCount, sut.Count);
+            Assert.Equal(expectedItems[0], sut[0]);
+            Assert.Equal(expectedItemAt1, sut[1]);
+            Assert.Equal(expectedItems[1], sut[2]);
+            Assert.Equal(expectedItems[2], sut[3]);
+        }
+
+        [Fact]
+        public void Insert_at_the_end_add_new_item()
+        {
+            int expectedAt3 = _fixture.Create<int>();
+            using var sut =
+                new ListPool<int>(4) {_fixture.Create<int>(), _fixture.Create<int>(), _fixture.Create<int>()};
+
+            sut.Insert(3, expectedAt3);
+
+            Assert.Equal(4, sut.Count);
+            Assert.Equal(expectedAt3, sut[3]);
+        }
+
+        [Fact]
+        public void Set_at_existing_index_update_item()
+        {
+            int expectedItem = _fixture.Create<int>();
+            int expectedItemsCount = 3;
+            using var sut =
+                new ListPool<int>(3) {_fixture.Create<int>(), _fixture.Create<int>(), _fixture.Create<int>()};
+
+            sut[2] = expectedItem;
+
+            Assert.Equal(expectedItemsCount, sut.Count);
+            Assert.Equal(expectedItem, sut[2]);
+        }
+
+        [Fact]
+        public void ToListPool_from_collection_contains_all_items()
+        {
+            var enumerable = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = enumerable.ToListPool();
+
+            Assert.All(enumerable, value => sut.Contains(value));
+        }
+
+        [Fact]
+        public void ToListPool_from_IEnumerable_contains_all_items()
+        {
+            var enumerable = Enumerable.Range(0, 10);
+
+            using var sut = enumerable.ToListPool();
+
+            Assert.All(enumerable, value => sut.Contains(value));
         }
     }
 }

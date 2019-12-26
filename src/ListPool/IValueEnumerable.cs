@@ -2,7 +2,7 @@
 
 namespace ListPool
 {
-    interface IValueEnumerable<T> : IEnumerable<T>
+    internal interface IValueEnumerable<T> : IEnumerable<T>
     {
         new Enumerator<T> GetEnumerator();
     }
