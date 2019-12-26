@@ -38,17 +38,13 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _list.Insert(1, 11111);
             _list.Insert(N / 2, 22222);
-            _list.Insert(N, 33333);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            _listPool.Insert(1, 11111);
             _listPool.Insert(N / 2, 22222);
-            _listPool.Insert(N, 33333);
         }
     }
 }

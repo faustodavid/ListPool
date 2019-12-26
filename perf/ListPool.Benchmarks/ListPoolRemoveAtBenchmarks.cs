@@ -39,17 +39,13 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _list.RemoveAt(0);
             _list.RemoveAt(N / 2);
-            _list.RemoveAt(N - 3);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            _listPool.RemoveAt(0);
             _listPool.RemoveAt(N / 2);
-            _listPool.RemoveAt(N - 3);
         }
     }
 }
