@@ -6,12 +6,12 @@ namespace ListPool.UnitTests
 {
     public class EnumeratorTests
     {
-        private static readonly Fixture _fixture = new Fixture();
+        private static readonly Fixture s_fixture = new Fixture();
 
         [Fact]
         public void Current_is_updated_in_each_iteration()
         {
-            var items = _fixture.CreateMany<string>(10).ToArray();
+            var items = s_fixture.CreateMany<string>(10).ToArray();
             var expectedEnumerator = items.GetEnumerator();
             var sut = new Enumerator<string>(items, items.Length);
 
@@ -25,7 +25,7 @@ namespace ListPool.UnitTests
         [Fact]
         public void Reset_allows_enumerator_to_be_enumerate_again()
         {
-            var items = _fixture.CreateMany<string>(10).ToArray();
+            var items = s_fixture.CreateMany<string>(10).ToArray();
             var expectedEnumerator = items.GetEnumerator();
             var sut = new Enumerator<string>(items, items.Length);
 

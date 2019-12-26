@@ -7,12 +7,12 @@ namespace ListPool.UnitTests
 {
     public class ListPoolTests
     {
-        private static readonly Fixture _fixture = new Fixture();
+        private static readonly Fixture s_fixture = new Fixture();
 
         [Fact]
         public void Add_item_without_indicate_capacity_of_list()
         {
-            int expectedItem = _fixture.Create<int>();
+            int expectedItem = s_fixture.Create<int>();
             using var sut = new ListPool<int>();
 
             sut.Add(expectedItem);
@@ -24,7 +24,7 @@ namespace ListPool.UnitTests
         public void Add_items_when_capacity_is_full_then_buffer_autogrow()
         {
             using var sut = new ListPool<int>(128);
-            var expectedItems = _fixture.CreateMany<int>(sut.Capacity * 2).ToList();
+            var expectedItems = s_fixture.CreateMany<int>(sut.Capacity * 2).ToList();
 
             foreach (int expectedItem in expectedItems)
             {
@@ -38,10 +38,10 @@ namespace ListPool.UnitTests
         [Fact]
         public void Contains_return_true_when_item_exists()
         {
-            int expectedAt0 = _fixture.Create<int>();
-            int expectedAt1 = _fixture.Create<int>();
-            int expectedAt2 = _fixture.Create<int>();
-            int unexpected = _fixture.Create<int>();
+            int expectedAt0 = s_fixture.Create<int>();
+            int expectedAt1 = s_fixture.Create<int>();
+            int expectedAt2 = s_fixture.Create<int>();
+            int unexpected = s_fixture.Create<int>();
 
             using var sut = new ListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
 
@@ -54,9 +54,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void CopyTo_copy_all_elements_to_target_array()
         {
-            int expectedAt0 = _fixture.Create<int>();
-            int expectedAt1 = _fixture.Create<int>();
-            int expectedAt2 = _fixture.Create<int>();
+            int expectedAt0 = s_fixture.Create<int>();
+            int expectedAt1 = s_fixture.Create<int>();
+            int expectedAt2 = s_fixture.Create<int>();
             using var sut = new ListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
             var array = new int[3];
 
@@ -82,9 +82,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void Create_list_and_add_values()
         {
-            int expectedAt0 = _fixture.Create<int>();
-            int expectedAt1 = _fixture.Create<int>();
-            int expectedAt2 = _fixture.Create<int>();
+            int expectedAt0 = s_fixture.Create<int>();
+            int expectedAt1 = s_fixture.Create<int>();
+            int expectedAt2 = s_fixture.Create<int>();
 
             using var sut = new ListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
 
@@ -97,7 +97,7 @@ namespace ListPool.UnitTests
         public void Create_list_and_add_values_after_clear()
         {
             using var sut =
-                new ListPool<int>(3) {_fixture.Create<int>(), _fixture.Create<int>(), _fixture.Create<int>()};
+                new ListPool<int>(3) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             sut.Clear();
 
@@ -107,9 +107,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void Create_without_parameters_should_add_and_get_items()
         {
-            int expectedAt0 = _fixture.Create<int>();
-            int expectedAt1 = _fixture.Create<int>();
-            int expectedAt2 = _fixture.Create<int>();
+            int expectedAt0 = s_fixture.Create<int>();
+            int expectedAt1 = s_fixture.Create<int>();
+            int expectedAt2 = s_fixture.Create<int>();
             int expectedItemsCount = 3;
 
             using var sut = new ListPool<int> {expectedAt0, expectedAt1, expectedAt2};
@@ -123,7 +123,7 @@ namespace ListPool.UnitTests
         [Fact]
         public void Get_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
         {
-            using var sut = new ListPool<int> {_fixture.Create<int>()};
+            using var sut = new ListPool<int> {s_fixture.Create<int>()};
             int index = 2;
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
@@ -145,9 +145,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void IndexOf_returns_index_of_item()
         {
-            int expectedAt0 = _fixture.Create<int>();
-            int expectedAt1 = _fixture.Create<int>();
-            int expectedAt2 = _fixture.Create<int>();
+            int expectedAt0 = s_fixture.Create<int>();
+            int expectedAt1 = s_fixture.Create<int>();
+            int expectedAt2 = s_fixture.Create<int>();
             using var sut = new ListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
 
             Assert.Equal(0, sut.IndexOf(expectedAt0));
@@ -158,8 +158,8 @@ namespace ListPool.UnitTests
         [Fact]
         public void Insert_at_existing_index_move_items_up()
         {
-            int[] expectedItems = _fixture.CreateMany<int>(3).ToArray();
-            int expectedItemAt1 = _fixture.Create<int>();
+            int[] expectedItems = s_fixture.CreateMany<int>(3).ToArray();
+            int expectedItemAt1 = s_fixture.Create<int>();
             int expectedItemsCount = expectedItems.Length + 1;
             using var sut = expectedItems.ToListPool();
 
@@ -175,9 +175,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void Insert_at_the_end_add_new_item()
         {
-            int expectedAt3 = _fixture.Create<int>();
+            int expectedAt3 = s_fixture.Create<int>();
             using var sut =
-                new ListPool<int>(4) {_fixture.Create<int>(), _fixture.Create<int>(), _fixture.Create<int>()};
+                new ListPool<int>(4) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             sut.Insert(3, expectedAt3);
 
@@ -188,9 +188,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void Insert_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
         {
-            using var sut = new ListPool<int> {_fixture.Create<int>()};
+            using var sut = new ListPool<int> {s_fixture.Create<int>()};
             int index = 2;
-            int item = _fixture.Create<int>();
+            int item = s_fixture.Create<int>();
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
 
@@ -201,7 +201,7 @@ namespace ListPool.UnitTests
         public void Insert_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
         {
             int index = -1;
-            int item = _fixture.Create<int>();
+            int item = s_fixture.Create<int>();
             using var sut = new ListPool<int>();
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
@@ -213,7 +213,7 @@ namespace ListPool.UnitTests
         public void Insert_items_when_capacity_is_full_then_buffer_autogrow()
         {
             using var sut = new ListPool<int>(128);
-            var expectedItems = _fixture.CreateMany<int>(sut.Capacity * 2).ToList();
+            var expectedItems = s_fixture.CreateMany<int>(sut.Capacity * 2).ToList();
             int index = 0;
 
             foreach (int expectedItem in expectedItems)
@@ -229,7 +229,7 @@ namespace ListPool.UnitTests
         public void Insert_without_indicating_capacity_of_list()
         {
             int index = 0;
-            int expectedItem = _fixture.Create<int>();
+            int expectedItem = s_fixture.Create<int>();
             using var sut = new ListPool<int>();
 
             sut.Insert(index, expectedItem);
@@ -248,8 +248,8 @@ namespace ListPool.UnitTests
         [Fact]
         public void Remove_item_that_doesnt_exists_return_false()
         {
-            string item = _fixture.Create<string>();
-            using var sut = new ListPool<string> {_fixture.Create<string>()};
+            string item = s_fixture.Create<string>();
+            using var sut = new ListPool<string> {s_fixture.Create<string>()};
 
             Assert.False(sut.Remove(item));
             Assert.Single(sut);
@@ -258,9 +258,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void Remove_when_item_exists_remove_item_and_decrease_itemsCount()
         {
-            int expectedAt0 = _fixture.Create<int>();
+            int expectedAt0 = s_fixture.Create<int>();
             const int expectedCountAfterRemove = 2;
-            using var sut = new ListPool<int>(3) {expectedAt0, _fixture.Create<int>(), _fixture.Create<int>()};
+            using var sut = new ListPool<int>(3) {expectedAt0, s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             bool wasRemoved = sut.Remove(expectedAt0);
 
@@ -281,9 +281,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void RemoveAt_when_item_exists_remove_item_and_decrease_itemsCount()
         {
-            int expectedAt1 = _fixture.Create<int>();
+            int expectedAt1 = s_fixture.Create<int>();
             const int expectedCountAfterRemove = 2;
-            using var sut = new ListPool<int>(3) {_fixture.Create<int>(), expectedAt1, _fixture.Create<int>()};
+            using var sut = new ListPool<int>(3) {s_fixture.Create<int>(), expectedAt1, s_fixture.Create<int>()};
 
             sut.RemoveAt(1);
 
@@ -294,7 +294,7 @@ namespace ListPool.UnitTests
         [Fact]
         public void RemoveAt_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
         {
-            using var sut = new ListPool<int> {_fixture.Create<int>()};
+            using var sut = new ListPool<int> {s_fixture.Create<int>()};
             int index = 2;
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
@@ -327,10 +327,10 @@ namespace ListPool.UnitTests
         [Fact]
         public void Set_at_existing_index_update_item()
         {
-            int expectedItem = _fixture.Create<int>();
+            int expectedItem = s_fixture.Create<int>();
             int expectedItemsCount = 3;
             using var sut =
-                new ListPool<int>(3) {_fixture.Create<int>(), _fixture.Create<int>(), _fixture.Create<int>()};
+                new ListPool<int>(3) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             sut[2] = expectedItem;
 
@@ -341,9 +341,9 @@ namespace ListPool.UnitTests
         [Fact]
         public void Set_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
         {
-            using var sut = new ListPool<int> {_fixture.Create<int>()};
+            using var sut = new ListPool<int> {s_fixture.Create<int>()};
             int index = 2;
-            int item = _fixture.Create<int>();
+            int item = s_fixture.Create<int>();
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
 
@@ -354,7 +354,7 @@ namespace ListPool.UnitTests
         public void Set_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
         {
             int index = -1;
-            int item = _fixture.Create<int>();
+            int item = s_fixture.Create<int>();
             var sut = new ListPool<int>();
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
