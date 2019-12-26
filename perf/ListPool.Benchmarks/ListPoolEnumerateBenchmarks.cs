@@ -11,8 +11,8 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolEnumerateBenchmarks
     {
-        private List<int> list;
-        private ListPool<int> listPool;
+        private List<int> _list;
+        private ListPool<int> _listPool;
 
         [Params(1000)]
         public int N { get; set; }
@@ -21,28 +21,28 @@ namespace ListPool.Benchmarks
         public double CapacityFilled { get; set; }
 
         [IterationSetup]
-        public void IterationSetup()
+        public void GlobalSetup()
         {
-            list = new List<int>(N);
-            listPool = new ListPool<int>(N);
+            _list = new List<int>(N);
+            _listPool = new ListPool<int>(N);
 
-            for (var i = 0; i < N * CapacityFilled; i++)
+            for (int i = 0; i < N * CapacityFilled; i++)
             {
-                list.Add(i);
-                listPool.Add(i);
+                _list.Add(1);
+                _listPool.Add(1);
             }
         }
 
         [IterationCleanup]
-        public void IterationCleanup()
+        public void GlobalCleanup()
         {
-            listPool.Dispose();
+            _listPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
         public void List()
         {
-            foreach (var _ in list)
+            foreach (int _ in _list)
             {
             }
         }
@@ -50,7 +50,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            foreach (var _ in listPool)
+            foreach (int _ in _listPool)
             {
             }
         }

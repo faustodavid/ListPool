@@ -9,37 +9,34 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ToListPoolBenchmark
+    public class ArrayToListPoolBenchmark
     {
-        [Params(10, 50 ,100, 1000)]
+        private int[] _array;
+
+        [Params(10, 50, 100, 1000)]
         public int N { get; set; }
-
-        [Params(1)]
-        public double CapacityFilled { get; set; }
-
-        private int[] array;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
-            array = new int[N];
+            _array = new int[N];
 
-            for (int i = 0; i < N * CapacityFilled; i++)
+            for (int i = 0; i < N - 1; i++)
             {
-                array[i] = 1;
+                _array[i] = 1;
             }
         }
 
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _ = array.ToList();
+            _ = _array.ToList();
         }
 
         [Benchmark]
         public void ListPool()
         {
-            using var listPool = array.ToListPool();
+            using var _ = _array.ToListPool();
         }
     }
 }

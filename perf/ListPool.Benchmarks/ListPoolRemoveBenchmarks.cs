@@ -14,44 +14,44 @@ namespace ListPool.Benchmarks
         [Params(10, 100, 1000, 10000)]
         public int N { get; set; }
 
-        private List<int> list;
-        private ListPool<int> listPool;
+        private List<int> _list;
+        private ListPool<int> _listPool;
 
         [IterationSetup]
         public void IterationSetup()
         {
-            list = new List<int>(N);
-            listPool = new ListPool<int>(N);
+            _list = new List<int>(N);
+            _listPool = new ListPool<int>(N);
 
-            for (var i = 1; i <= N; i++)
+            for (int i = 1; i <= N; i++)
             {
-                list.Add(i);
-                listPool.Add(i);
+                _list.Add(i);
+                _listPool.Add(i);
             }
         }
 
         [IterationCleanup]
         public void IterationCleanup()
         {
-            listPool.Dispose();
+            _listPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
         public void List()
         {
-            list.Remove(1);
-            list.Remove(N / 2);
-            list.Remove(N);
-            list.Remove(-1);
+            _list.Remove(1);
+            _list.Remove(N / 2);
+            _list.Remove(N);
+            _list.Remove(-1);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            listPool.Remove(1);
-            listPool.Remove(N / 2);
-            listPool.Remove(N);
-            listPool.Remove(-1);
+            _listPool.Remove(1);
+            _listPool.Remove(N / 2);
+            _listPool.Remove(N);
+            _listPool.Remove(-1);
         }
     }
 }
