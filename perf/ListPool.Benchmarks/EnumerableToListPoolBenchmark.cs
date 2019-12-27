@@ -27,7 +27,7 @@ namespace ListPool.Benchmarks
                 items[i] = 1;
             }
 
-            _items = items.Select(i => i);
+            _items = items;
         }
 
         [Benchmark]
