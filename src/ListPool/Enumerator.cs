@@ -11,7 +11,7 @@ namespace ListPool
         private readonly int _itemsCount;
         private int _index;
 
-        public Enumerator(in TSource[] source, in int itemsCount)
+        public Enumerator(TSource[] source, in int itemsCount)
         {
             _source = source;
             _itemsCount = itemsCount;

@@ -11,17 +11,16 @@ namespace ListPool
                                       IValueEnumerable<TSource>
 
     {
-        public  readonly int Capacity => _bufferOwner.IsValid ? _bufferOwner.Buffer.Length : 0;
+        public  readonly int Capacity => _bufferOwner.Buffer.Length;
         public readonly int Count => _itemsCount;
         public readonly bool IsReadOnly => false;
 
         private BufferOwner<TSource> _bufferOwner;
         private int _itemsCount;
-        private const int MinimumCapacity = 128;
 
         public ListPool(int length)
         {
-            _bufferOwner = new BufferOwner<TSource>(length < MinimumCapacity ? MinimumCapacity : length);
+            _bufferOwner = new BufferOwner<TSource>(length);
             _itemsCount = 0;
         }
 
@@ -36,7 +35,7 @@ namespace ListPool
             }
             else
             {
-                _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
+                _bufferOwner = new BufferOwner<TSource>();
                 _itemsCount = 0;
 
                 using IEnumerator<TSource> enumerator = source.GetEnumerator();
@@ -50,7 +49,6 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(TSource item)
         {
-            if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
             if (_itemsCount >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
 
             _bufferOwner.Buffer[_itemsCount++] = item;
@@ -81,7 +79,6 @@ namespace ListPool
         public void Insert(int index, TSource item)
         {
             if (index < 0 || index > _itemsCount) throw new ArgumentOutOfRangeException(nameof(index));
-            if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
             if (index >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
             if (index < _itemsCount)
                 Array.Copy(_bufferOwner.Buffer, index, _bufferOwner.Buffer, index + 1, _itemsCount - index);
@@ -123,7 +120,7 @@ namespace ListPool
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Enumerator<TSource> GetEnumerator() =>
-            new Enumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
+            new Enumerator<TSource>(_bufferOwner.Buffer, in _itemsCount);
 
         readonly IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => GetEnumerator();
 
@@ -132,8 +129,7 @@ namespace ListPool
         public void Dispose()
         {
             _itemsCount = 0;
-            if (_bufferOwner.IsValid)
-                _bufferOwner.Dispose();
+            _bufferOwner.Dispose();
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
 using Xunit;
@@ -373,6 +372,16 @@ namespace ListPool.UnitTests
             {
                 
             }
+        }
+
+        [Fact]
+        public void Call_index_of_when_list_pool_created_without_parameters_returns_false()
+        {
+            var sut = new ListPool<int>();
+
+            bool containsResult = sut.Contains(1);
+
+            Assert.False(containsResult);
         }
     }
 }
