@@ -374,5 +374,16 @@ namespace ListPool.UnitTests
                 
             }
         }
+
+        [Fact]
+        public void IndexOf_empty_ListPool_without_indicating_capacity_returns_false()
+        {
+            int randomItem = s_fixture.Create<int>();
+            using var sut = new ListPool<int>();
+
+            bool containsResult = sut.Contains(randomItem);
+
+            Assert.False(containsResult);
+        }
     }
 }
