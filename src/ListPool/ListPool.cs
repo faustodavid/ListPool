@@ -59,7 +59,7 @@ namespace ListPool
         public void Clear() => _itemsCount = 0;
         public readonly bool Contains(TSource item) => IndexOf(item) > -1;
 
-        public readonly int IndexOf(TSource item) => Array.IndexOf(_bufferOwner.Buffer, item, 0, _itemsCount);
+        public readonly int IndexOf(TSource item) => _bufferOwner.IsValid ? Array.IndexOf(_bufferOwner.Buffer, item, 0, _itemsCount) : -1;
 
         public readonly void CopyTo(TSource[] array, int arrayIndex) =>
             Array.Copy(_bufferOwner.Buffer, 0, array, arrayIndex, _itemsCount);
