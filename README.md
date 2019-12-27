@@ -239,3 +239,7 @@ Concurrent=True  Server=True
 |     Linq | 1000 |  5.023 us | 0.1779 us | 0.4717 us |  4.900 us |  1.00 |    0.00 |    1 |     - |     - |     - |    4056 B |
 | ListPool | 1000 | 14.714 us | 0.2999 us | 0.7300 us | 14.400 us |  2.94 |    0.24 |    2 |     - |     - |     - |         - |
 ```
+
+## Contributors
+A big thanks to the project contributors!
+* [Sergey Mokin](https://github.com/SergeyMokin)
