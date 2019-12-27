@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using AutoFixture;
 using Xunit;
@@ -11,8 +12,8 @@ namespace ListPool.UnitTests
         [Fact]
         public void Current_is_updated_in_each_iteration()
         {
-            var items = s_fixture.CreateMany<string>(10).ToArray();
-            var expectedEnumerator = items.GetEnumerator();
+            string[] items = s_fixture.CreateMany<string>(10).ToArray();
+            IEnumerator expectedEnumerator = items.GetEnumerator();
             var sut = new Enumerator<string>(items, items.Length);
 
             while (expectedEnumerator.MoveNext())
@@ -25,8 +26,8 @@ namespace ListPool.UnitTests
         [Fact]
         public void Reset_allows_enumerator_to_be_enumerate_again()
         {
-            var items = s_fixture.CreateMany<string>(10).ToArray();
-            var expectedEnumerator = items.GetEnumerator();
+            string[] items = s_fixture.CreateMany<string>(10).ToArray();
+            IEnumerator expectedEnumerator = items.GetEnumerator();
             var sut = new Enumerator<string>(items, items.Length);
 
             while (expectedEnumerator.MoveNext())

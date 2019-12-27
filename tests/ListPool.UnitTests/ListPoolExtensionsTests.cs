@@ -10,7 +10,7 @@ namespace ListPool.UnitTests
         [Fact]
         public void ToListPool_from_collection_contains_all_items()
         {
-            var enumerable = Enumerable.Range(0, 10).ToArray();
+            int[] enumerable = Enumerable.Range(0, 10).ToArray();
 
             using var sut = enumerable.ToListPool();
 
@@ -20,7 +20,7 @@ namespace ListPool.UnitTests
         [Fact]
         public void ToListPool_from_IEnumerable_contains_all_items()
         {
-            var enumerable = Enumerable.Range(0, 10);
+            IEnumerable<int> enumerable = Enumerable.Range(0, 10);
 
             using var sut = enumerable.ToListPool();
 
@@ -33,7 +33,7 @@ namespace ListPool.UnitTests
             IEnumerable<int> source = null;
             string expectedName = nameof(source);
 
-            var exception = Assert.Throws<ArgumentNullException>(() => source.ToListPool());
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => source.ToListPool());
 
             Assert.Contains(expectedName, exception.Message);
         }

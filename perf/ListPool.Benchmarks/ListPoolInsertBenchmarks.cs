@@ -20,8 +20,13 @@ namespace ListPool.Benchmarks
         [IterationSetup]
         public void IterationSetup()
         {
-            _list = new List<int>(1);
-            _listPool = new ListPool<int>(1);
+            _list = new List<int>(N);
+            _listPool = new ListPool<int>(N);
+            for (int i = 1; i <= N; i++)
+            {
+                _list.Add(i);
+                _listPool.Add(i);
+            }
         }
 
         [IterationCleanup]
@@ -33,19 +38,13 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            for (int i = 0; i < N; i++)
-            {
-                _list.Add(i);
-            }
+            _list.Insert(N / 2, 22222);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            for (int i = 0; i < N; i++)
-            {
-                _listPool.Add(i);
-            }
+            _listPool.Insert(N / 2, 22222);
         }
     }
 }

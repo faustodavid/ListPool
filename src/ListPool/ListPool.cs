@@ -39,7 +39,7 @@ namespace ListPool
                 _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
                 _itemsCount = 0;
 
-                using var enumerator = source.GetEnumerator();
+                using IEnumerator<TSource> enumerator = source.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     Add(enumerator.Current);
