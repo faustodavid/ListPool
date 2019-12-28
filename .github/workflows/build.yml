@@ -27,6 +27,11 @@ jobs:
     - name: dotnet test
       run: dotnet test --no-build --configuration Release
 
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v1.0.1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
   pack:
     runs-on: windows-latest
     needs: build
