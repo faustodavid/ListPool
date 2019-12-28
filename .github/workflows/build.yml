@@ -24,7 +24,7 @@ jobs:
     - name: dotnet test
       run: dotnet test --no-build --configuration Release
 
- pack:
+  pack:
     runs-on: windows-latest
     needs: build
     if: github.event_name == 'push'
