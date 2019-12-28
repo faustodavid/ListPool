@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
-    <PackageReference Include="NetFabric.Hyperlinq" Version="3.0.0-beta6" />
   </ItemGroup>
 
   <ItemGroup>
