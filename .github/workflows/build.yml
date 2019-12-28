@@ -18,6 +18,9 @@ jobs:
       with:
         version: 3.1.100
 
+    - name: dotnet restore
+      run: dotnet restore --packages .nuget/packages
+
     - name: dotnet build
       run: dotnet build --configuration Release
 
@@ -63,4 +66,4 @@ jobs:
         path: ./artifacts
 
     - name: Publish packages
-      run: dotnet nuget push ./artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}}
+      run: dotnet nuget push ./artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}} --skip-duplicate
