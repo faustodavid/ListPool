@@ -25,7 +25,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: dotnet test
-      run: dotnet test --no-build --configuration Release
+      run: dotnet test --no-build --configuration Release /p:CollectCoverage=true
 
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.0.1
