@@ -2,6 +2,7 @@
 ListPool is an allocation free implementation of IList using ArrayPool.
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/faustodavid/ListPool/Build)
+![GitHub](https://img.shields.io/github/license/faustodavid/ListPool)
 
 ## Benchmarks.
 
