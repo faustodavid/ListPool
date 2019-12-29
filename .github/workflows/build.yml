@@ -25,7 +25,12 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: dotnet test
-      run: dotnet test --no-build --configuration Release
+      run: dotnet test --no-build --configuration Release -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=../../coverage/lcov.info
+
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v1.0.1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
   pack:
     runs-on: windows-latest

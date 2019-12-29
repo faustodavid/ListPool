@@ -1,0 +1,223 @@
+SF:C:\Users\fsuarez\source\repos\ListPool\src\ListPool\BufferOwner.cs
+FN:22,System.Void ListPool.BufferOwner`1::GrowDoubleSize()
+FNDA:2,System.Void ListPool.BufferOwner`1::GrowDoubleSize()
+DA:23,2
+DA:24,2
+DA:25,2
+DA:27,2
+DA:29,2
+DA:30,2
+DA:31,2
+FN:34,System.Void ListPool.BufferOwner`1::Dispose()
+FNDA:23,System.Void ListPool.BufferOwner`1::Dispose()
+DA:35,23
+DA:36,23
+DA:37,23
+FN:14,System.Void ListPool.BufferOwner`1::.ctor(System.Int32)
+FNDA:23,System.Void ListPool.BufferOwner`1::.ctor(System.Int32)
+DA:15,23
+DA:16,23
+DA:17,23
+DA:18,23
+LF:14
+LH:14
+BRF:0
+BRH:0
+FNF:3
+FNH:3
+end_of_record
+SF:C:\Users\fsuarez\source\repos\ListPool\src\ListPool\Enumerator.cs
+FN:24,TSource& modreq(System.Runtime.InteropServices.InAttribute) ListPool.Enumerator`1::get_Current()
+FNDA:30,TSource& modreq(System.Runtime.InteropServices.InAttribute) ListPool.Enumerator`1::get_Current()
+DA:25,30
+FN:28,TSource ListPool.Enumerator`1::System.Collections.Generic.IEnumerator<TSource>.get_Current()
+FNDA:8,TSource ListPool.Enumerator`1::System.Collections.Generic.IEnumerator<TSource>.get_Current()
+DA:29,8
+FN:30,System.Object ListPool.Enumerator`1::System.Collections.IEnumerator.get_Current()
+FNDA:0,System.Object ListPool.Enumerator`1::System.Collections.IEnumerator.get_Current()
+DA:31,0
+FN:35,System.Boolean ListPool.Enumerator`1::MoveNext()
+FNDA:45,System.Boolean ListPool.Enumerator`1::MoveNext()
+DA:36,45
+FN:40,System.Void ListPool.Enumerator`1::Reset()
+FNDA:1,System.Void ListPool.Enumerator`1::Reset()
+DA:41,1
+DA:42,1
+FN:45,System.Void ListPool.Enumerator`1::Dispose()
+FNDA:6,System.Void ListPool.Enumerator`1::Dispose()
+DA:46,6
+FN:15,System.Void ListPool.Enumerator`1::.ctor(TSource[]&,System.Int32&)
+FNDA:8,System.Void ListPool.Enumerator`1::.ctor(TSource[]&,System.Int32&)
+DA:16,8
+DA:17,8
+DA:18,8
+DA:19,8
+LF:11
+LH:10
+BRF:0
+BRH:0
+FNF:7
+FNH:6
+end_of_record
+SF:C:\Users\fsuarez\source\repos\ListPool\src\ListPool\ListPool.cs
+FN:13,System.Int32 ListPool.ListPool`1::get_Capacity()
+FNDA:2,System.Int32 ListPool.ListPool`1::get_Capacity()
+DA:14,2
+BRDA:14,11,0,0
+BRDA:14,11,1,2
+FN:14,System.Int32 ListPool.ListPool`1::get_Count()
+FNDA:14,System.Int32 ListPool.ListPool`1::get_Count()
+DA:15,14
+FN:15,System.Boolean ListPool.ListPool`1::get_IsReadOnly()
+FNDA:1,System.Boolean ListPool.ListPool`1::get_IsReadOnly()
+DA:16,1
+FN:52,System.Void ListPool.ListPool`1::Add(TSource)
+FNDA:312,System.Void ListPool.ListPool`1::Add(TSource)
+DA:53,312
+DA:54,306
+DA:56,305
+DA:57,305
+BRDA:53,11,0,7
+BRDA:53,11,1,305
+BRDA:54,48,0,1
+BRDA:54,48,1,305
+FN:58,System.Void ListPool.ListPool`1::Clear()
+FNDA:1,System.Void ListPool.ListPool`1::Clear()
+DA:59,1
+FN:59,System.Boolean ListPool.ListPool`1::Contains(TSource)
+FNDA:539,System.Boolean ListPool.ListPool`1::Contains(TSource)
+DA:60,539
+FN:61,System.Int32 ListPool.ListPool`1::IndexOf(TSource)
+FNDA:545,System.Int32 ListPool.ListPool`1::IndexOf(TSource)
+DA:62,545
+BRDA:62,11,0,2
+BRDA:62,11,1,543
+FN:64,System.Void ListPool.ListPool`1::CopyTo(TSource[],System.Int32)
+FNDA:1,System.Void ListPool.ListPool`1::CopyTo(TSource[],System.Int32)
+DA:65,1
+FN:68,System.Boolean ListPool.ListPool`1::Remove(TSource)
+FNDA:4,System.Boolean ListPool.ListPool`1::Remove(TSource)
+DA:69,4
+DA:71,2
+DA:73,3
+DA:75,1
+DA:77,1
+BRDA:69,6,0,1
+BRDA:69,6,1,2
+BRDA:73,20,0,1
+BRDA:73,20,1,1
+FN:82,System.Void ListPool.ListPool`1::Insert(System.Int32,TSource)
+FNDA:263,System.Void ListPool.ListPool`1::Insert(System.Int32,TSource)
+DA:83,263
+DA:84,260
+DA:85,260
+DA:86,259
+DA:87,1
+DA:89,259
+DA:90,259
+DA:91,259
+BRDA:83,2,0,260
+BRDA:83,2,1,2
+BRDA:83,11,0,2
+BRDA:83,11,1,259
+BRDA:84,35,0,1
+BRDA:84,35,1,259
+BRDA:85,67,0,1
+BRDA:85,67,1,259
+BRDA:86,87,0,1
+BRDA:86,87,1,259
+FN:94,System.Void ListPool.ListPool`1::RemoveAt(System.Int32)
+FNDA:8,System.Void ListPool.ListPool`1::RemoveAt(System.Int32)
+DA:95,8
+DA:97,2
+DA:98,2
+DA:99,2
+BRDA:95,2,0,4
+BRDA:95,2,1,3
+BRDA:95,11,0,3
+BRDA:95,11,1,2
+FN:107,TSource ListPool.ListPool`1::get_Item(System.Int32)
+FNDA:16,TSource ListPool.ListPool`1::get_Item(System.Int32)
+DA:108,16
+DA:109,2
+DA:111,14
+BRDA:108,2,0,15
+BRDA:108,18,0,15
+BRDA:108,2,1,2
+BRDA:108,18,1,2
+BRDA:108,27,0,2
+BRDA:108,27,1,14
+FN:115,System.Void ListPool.ListPool`1::set_Item(System.Int32,TSource)
+FNDA:3,System.Void ListPool.ListPool`1::set_Item(System.Int32,TSource)
+DA:116,3
+DA:117,2
+DA:119,1
+DA:120,1
+BRDA:116,2,0,2
+BRDA:116,18,0,2
+BRDA:116,2,1,2
+BRDA:116,18,1,2
+BRDA:116,27,0,2
+BRDA:116,27,1,1
+FN:125,ListPool.Enumerator`1<TSource> ListPool.ListPool`1::GetEnumerator()
+FNDA:6,ListPool.Enumerator`1<TSource> ListPool.ListPool`1::GetEnumerator()
+DA:126,6
+FN:127,System.Collections.Generic.IEnumerator`1<TSource> ListPool.ListPool`1::System.Collections.Generic.IEnumerable<TSource>.GetEnumerator()
+FNDA:4,System.Collections.Generic.IEnumerator`1<TSource> ListPool.ListPool`1::System.Collections.Generic.IEnumerable<TSource>.GetEnumerator()
+DA:128,4
+FN:129,System.Collections.IEnumerator ListPool.ListPool`1::System.Collections.IEnumerable.GetEnumerator()
+FNDA:1,System.Collections.IEnumerator ListPool.ListPool`1::System.Collections.IEnumerable.GetEnumerator()
+DA:130,1
+FN:133,System.Void ListPool.ListPool`1::Dispose()
+FNDA:31,System.Void ListPool.ListPool`1::Dispose()
+DA:134,31
+DA:135,31
+DA:136,23
+DA:137,31
+BRDA:135,18,0,23
+BRDA:135,18,1,31
+FN:23,System.Void ListPool.ListPool`1::.ctor(System.Int32)
+FNDA:12,System.Void ListPool.ListPool`1::.ctor(System.Int32)
+DA:24,12
+DA:25,12
+DA:26,12
+BRDA:24,7,0,2
+BRDA:24,7,1,10
+FN:29,System.Void ListPool.ListPool`1::.ctor(System.Collections.Generic.IEnumerable`1<TSource>)
+FNDA:3,System.Void ListPool.ListPool`1::.ctor(System.Collections.Generic.IEnumerable`1<TSource>)
+DA:30,3
+DA:32,2
+DA:33,2
+DA:35,2
+DA:36,2
+DA:39,1
+DA:40,1
+DA:42,1
+DA:43,11
+DA:45,10
+DA:48,1
+BRDA:30,8,0,2
+BRDA:30,8,1,1
+BRDA:43,108,1,10
+BRDA:43,108,0,1
+LF:56
+LH:56
+BRF:46
+BRH:45
+FNF:19
+FNH:19
+end_of_record
+SF:C:\Users\fsuarez\source\repos\ListPool\src\ListPool\ListPoolExtensions.cs
+FN:9,ListPool.ListPool`1<TSource> ListPool.ListPoolExtensions::ToListPool(System.Collections.Generic.IEnumerable`1<TSource>)
+FNDA:5,ListPool.ListPool`1<TSource> ListPool.ListPoolExtensions::ToListPool(System.Collections.Generic.IEnumerable`1<TSource>)
+DA:10,5
+DA:11,3
+BRDA:10,1,0,1
+BRDA:10,1,1,3
+LF:2
+LH:2
+BRF:2
+BRH:2
+FNF:1
+FNH:1
+end_of_record
