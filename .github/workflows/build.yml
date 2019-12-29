@@ -28,7 +28,7 @@ jobs:
       run: ls
 
     - name: dotnet test
-      run: dotnet test --no-build --configuration Release -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=./coverage/lcov.info
+      run: dotnet test --no-build --configuration Release -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=../../coverage/lcov.info
 
     - name: ls
       run: ls
