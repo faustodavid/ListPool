@@ -46,14 +46,11 @@ jobs:
       with:
         version: 3.1.100
 
-    - name: ls
-      run: ls
+    - name: dotnet restore
+      run: dotnet restore --packages .nuget/packages
 
-    - name: Go to root folder
-      run: cd ../../
-
-    - name: ls
-      run: ls
+    - name: dotnet build
+      run: dotnet build --configuration Release
 
     - name: Pack
       run: dotnet pack --output ./artifacts -c Release --no-build --include-source --include-symbols
