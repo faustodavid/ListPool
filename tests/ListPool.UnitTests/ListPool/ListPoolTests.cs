@@ -3,7 +3,7 @@ using System.Linq;
 using AutoFixture;
 using Xunit;
 
-namespace ListPool.UnitTests
+namespace ListPool.UnitTests.ListPool
 {
     public class ListPoolTests : ListPoolTestsBase
     {

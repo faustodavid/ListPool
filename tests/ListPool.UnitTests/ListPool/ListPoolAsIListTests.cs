@@ -4,9 +4,9 @@ using System.Linq;
 using AutoFixture;
 using Xunit;
 
-namespace ListPool.UnitTests
+namespace ListPool.UnitTests.ListPool
 {
-    public class ListPoolAsIList : ListPoolTestsBase
+    public class ListPoolAsIListTests : ListPoolTestsBase
     {
         public override void Add_item_without_indicate_capacity_of_list()
         {
