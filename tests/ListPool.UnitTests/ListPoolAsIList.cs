@@ -33,55 +33,6 @@ namespace ListPool.UnitTests
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
         }
 
-        [Fact]
-        public void Add_item_when_is_not_same_type_throw_ArgumentException()
-        {
-            using var listPool = new ListPool<int>();
-            IList sut = listPool;
-            string itemWithWrongType = s_fixture.Create<string>();
-
-            ArgumentException actualException = Assert.Throws<ArgumentException>(() => sut.Add(itemWithWrongType));
-            Assert.Equal("item", actualException.ParamName);
-        }
-
-        [Fact]
-        public void Insert_item_when_is_not_same_type_throw_ArgumentException()
-        {
-            using var listPool = new ListPool<int>();
-            IList sut = listPool;
-            string itemWithWrongType = s_fixture.Create<string>();
-
-            ArgumentException actualException = Assert.Throws<ArgumentException>(() => sut.Insert(0, itemWithWrongType));
-            Assert.Equal("item", actualException.ParamName);
-        }
-
-        [Fact]
-        public void IsFixedSize_always_return_false()
-        {
-            using var listPool = new ListPool<int>();
-            IList sut = listPool;
-
-            Assert.False(sut.IsFixedSize);
-        }
-
-        [Fact]
-        public void IsSynchronized_always_return_false()
-        {
-            using var listPool = new ListPool<int>();
-            IList sut = listPool;
-
-            Assert.False(sut.IsSynchronized);
-        }
-
-        [Fact]
-        public void SyncRoot_never_is_null()
-        {
-            using var listPool = new ListPool<int>();
-            IList sut = listPool;
-
-            Assert.NotNull(sut.SyncRoot);
-        }
-
         public override void Contains_empty_ListPool_without_indicating_capacity_returns_false()
         {
             int randomItem = s_fixture.Create<int>();
@@ -378,7 +329,7 @@ namespace ListPool.UnitTests
             using var listPool = new ListPool<string>();
             IList sut = listPool;
 
-           sut.Remove(item);
+            sut.Remove(item);
         }
 
 
@@ -476,35 +427,21 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
-        public void Set_item_with_another_type_throws_ArgumentException()
+        public void Add_item_when_is_not_same_type_throw_ArgumentException()
         {
-            const int index = 0;
-            string itemWithWrongType = s_fixture.Create<string>();
-            var listPool = new ListPool<int> { s_fixture.Create<int>() };
+            using var listPool = new ListPool<int>();
             IList sut = listPool;
-
-            ArgumentException exception = Assert.Throws<ArgumentException>(() => sut[index] = itemWithWrongType);
-
-            Assert.Equal("value", exception.ParamName);
-        }
-
-        [Fact]
-        public void IndexOf_item_with_another_type_throws_ArgumentException()
-        {
             string itemWithWrongType = s_fixture.Create<string>();
-            var listPool = new ListPool<int> { s_fixture.Create<int>() };
-            IList sut = listPool;
 
-            ArgumentException exception = Assert.Throws<ArgumentException>(() => sut.IndexOf(itemWithWrongType));
-
-            Assert.Equal("item", exception.ParamName);
+            ArgumentException actualException = Assert.Throws<ArgumentException>(() => sut.Add(itemWithWrongType));
+            Assert.Equal("item", actualException.ParamName);
         }
 
         [Fact]
         public void Contains_item_with_another_type_throws_ArgumentException()
         {
             string itemWithWrongType = s_fixture.Create<string>();
-            var listPool = new ListPool<int> { s_fixture.Create<int>() };
+            var listPool = new ListPool<int> {s_fixture.Create<int>()};
             IList sut = listPool;
 
             ArgumentException exception = Assert.Throws<ArgumentException>(() => sut.Contains(itemWithWrongType));
@@ -513,15 +450,79 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
+        public void IndexOf_item_with_another_type_throws_ArgumentException()
+        {
+            string itemWithWrongType = s_fixture.Create<string>();
+            var listPool = new ListPool<int> {s_fixture.Create<int>()};
+            IList sut = listPool;
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(() => sut.IndexOf(itemWithWrongType));
+
+            Assert.Equal("item", exception.ParamName);
+        }
+
+        [Fact]
+        public void Insert_item_when_is_not_same_type_throw_ArgumentException()
+        {
+            using var listPool = new ListPool<int>();
+            IList sut = listPool;
+            string itemWithWrongType = s_fixture.Create<string>();
+
+            ArgumentException actualException =
+                Assert.Throws<ArgumentException>(() => sut.Insert(0, itemWithWrongType));
+            Assert.Equal("item", actualException.ParamName);
+        }
+
+        [Fact]
+        public void IsFixedSize_always_return_false()
+        {
+            using var listPool = new ListPool<int>();
+            IList sut = listPool;
+
+            Assert.False(sut.IsFixedSize);
+        }
+
+        [Fact]
+        public void IsSynchronized_always_return_false()
+        {
+            using var listPool = new ListPool<int>();
+            IList sut = listPool;
+
+            Assert.False(sut.IsSynchronized);
+        }
+
+        [Fact]
         public void Remove_item_with_another_type_throws_ArgumentException()
         {
             string itemWithWrongType = s_fixture.Create<string>();
-            var listPool = new ListPool<int> { s_fixture.Create<int>() };
+            var listPool = new ListPool<int> {s_fixture.Create<int>()};
             IList sut = listPool;
 
             ArgumentException exception = Assert.Throws<ArgumentException>(() => sut.Remove(itemWithWrongType));
 
             Assert.Equal("item", exception.ParamName);
+        }
+
+        [Fact]
+        public void Set_item_with_another_type_throws_ArgumentException()
+        {
+            const int index = 0;
+            string itemWithWrongType = s_fixture.Create<string>();
+            var listPool = new ListPool<int> {s_fixture.Create<int>()};
+            IList sut = listPool;
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(() => sut[index] = itemWithWrongType);
+
+            Assert.Equal("value", exception.ParamName);
+        }
+
+        [Fact]
+        public void SyncRoot_never_is_null()
+        {
+            using var listPool = new ListPool<int>();
+            IList sut = listPool;
+
+            Assert.NotNull(sut.SyncRoot);
         }
     }
 }

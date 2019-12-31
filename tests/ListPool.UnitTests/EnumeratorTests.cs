@@ -49,6 +49,7 @@ namespace ListPool.UnitTests
                 Assert.True(sut.MoveNext());
                 Assert.Equal(expectedEnumerator.Current, sut.Current);
             }
+
             Assert.False(sut.MoveNext());
             sut.Reset();
             expectedEnumerator.Reset();

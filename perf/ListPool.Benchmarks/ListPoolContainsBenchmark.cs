@@ -11,11 +11,11 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolContainsBenchmark
     {
-        [Params(10, 100, 1000, 10000)]
-        public int N { get; set; }
-
         private List<int> _list;
         private ListPool<int> _listPool;
+
+        [Params(10, 100, 1000, 10000)]
+        public int N { get; set; }
 
         [IterationSetup]
         public void IterationSetup()
@@ -23,7 +23,7 @@ namespace ListPool.Benchmarks
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
 
-            for (int i = 1; i <= N; i++) 
+            for (int i = 1; i <= N; i++)
             {
                 _list.Add(i);
                 _listPool.Add(i);

@@ -16,6 +16,7 @@ namespace ListPool.Benchmarks
 
         [Params(1000)]
         public int N { get; set; }
+
         [Params(0.10, 0.50, 0.80, 1)]
         public double CapacityFilled { get; set; }
 
