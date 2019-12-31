@@ -4,7 +4,7 @@ using System.Linq;
 using AutoFixture;
 using Xunit;
 
-namespace ListPool.UnitTests.ListPool
+namespace ListPool.UnitTests.ListPoolValue
 {
     public class ListPoolValueAsIListTests : ListPoolTestsBase
     {
