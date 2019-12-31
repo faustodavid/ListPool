@@ -11,13 +11,13 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolCopyToBenchmarks
     {
+        private List<int> _list;
+        private int[] _listCopy;
+        private ListPool<int> _listPool;
+        private int[] _listPoolCopy;
+
         [Params(10, 100, 1000, 10000)]
         public int N { get; set; }
-
-        private List<int> _list;
-        private ListPool<int> _listPool;
-        private int[] _listCopy;
-        private int[] _listPoolCopy;
 
         [IterationSetup]
         public void IterationSetup()
