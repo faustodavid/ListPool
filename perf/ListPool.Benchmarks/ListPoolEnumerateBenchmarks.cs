@@ -13,6 +13,7 @@ namespace ListPool.Benchmarks
     {
         private List<int> _list;
         private ListPool<int> _listPool;
+        private ListPoolValue<int> _listPoolValue;
 
         [Params(1000)]
         public int N { get; set; }
@@ -25,6 +26,7 @@ namespace ListPool.Benchmarks
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
+            _listPoolValue = new ListPoolValue<int>(N);
 
             for (int i = 0; i < N * CapacityFilled; i++)
             {
@@ -37,6 +39,7 @@ namespace ListPool.Benchmarks
         public void GlobalCleanup()
         {
             _listPool.Dispose();
+            _listPoolValue.Dispose();
         }
 
         [Benchmark(Baseline = true)]
@@ -51,6 +54,14 @@ namespace ListPool.Benchmarks
         public void ListPool()
         {
             foreach (int _ in _listPool)
+            {
+            }
+        }
+
+        [Benchmark]
+        public void ListPoolValue()
+        {
+            foreach (int _ in _listPoolValue)
             {
             }
         }

@@ -9,7 +9,7 @@ using System.Threading;
 namespace ListPool
 {
     public sealed class ListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
-                                     IValueEnumerable<TSource>
+                                            IValueEnumerable<TSource>
 
     {
         private const int MinimumCapacity = 128;
@@ -50,7 +50,7 @@ namespace ListPool
             }
         }
 
-        public int Capacity => _bufferOwner.IsValid ? _bufferOwner.Buffer.Length : 0;
+        public int Capacity => _bufferOwner.Buffer.Length;
 
         public void Dispose()
         {

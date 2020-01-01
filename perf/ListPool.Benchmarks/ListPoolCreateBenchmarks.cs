@@ -25,5 +25,11 @@ namespace ListPool.Benchmarks
         {
             using var list = new ListPool<int>(N);
         }
+
+        [Benchmark]
+        public void ListPoolValue()
+        {
+            using var list = new ListPoolValue<int>(N);
+        }
     }
 }

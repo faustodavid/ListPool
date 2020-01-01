@@ -20,6 +20,7 @@ namespace ListPool.Benchmarks
             BenchmarkRunner.Run<ListPoolRemoveBenchmarks>();
             BenchmarkRunner.Run<ArrayToListPoolBenchmark>();
             BenchmarkRunner.Run<EnumerableToListPoolBenchmark>();
+            BenchmarkRunner.Run<EnumerableToListPoolAndEnumerateBenchmark>();
 
             Console.ReadLine();
         }
