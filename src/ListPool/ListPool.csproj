@@ -13,10 +13,14 @@
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>2.0.0</PackageVersion>
-    <PackageReleaseNotes>ListPool is now reference type which can be serialized and pass as reference. For high-performance
-    scenarios we introduced ListPoolValue which is a ValueType with zero allocations</PackageReleaseNotes>
-    <Copyright>Copyright © Fausto David Suarez Rosario 2019</Copyright>
+    <PackageVersion>2.1.0</PackageVersion>
+    <PackageReleaseNotes>
+      Changelog:
+      * Rename ListPoolValue to ValueListPool
+
+      ListPool is the general use implementation. ValueListPool is the zero heap allocations implementation. Note, because it is a struct it is pass by value not by reference.
+    </PackageReleaseNotes>
+    <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
