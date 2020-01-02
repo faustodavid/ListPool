@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace ListPool
 {
-    public struct ListPoolValue<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
+    public struct ValueListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
                                            IValueEnumerable<TSource>
 
     {
@@ -39,14 +39,14 @@ namespace ListPool
             }
         }
 
-        public ListPoolValue(int length)
+        public ValueListPool(int length)
         {
             _syncRoot = null;
             _bufferOwner = new BufferOwner<TSource>(length < MinimumCapacity ? MinimumCapacity : length);
             _itemsCount = 0;
         }
 
-        public ListPoolValue(IEnumerable<TSource> source)
+        public ValueListPool(IEnumerable<TSource> source)
         {
             _syncRoot = null;
             if (source is ICollection<TSource> collection)
@@ -243,8 +243,8 @@ namespace ListPool
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly Enumerator<TSource> GetEnumerator() =>
-            new Enumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
+        public readonly ValueEnumerator<TSource> GetEnumerator() =>
+            new ValueEnumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
 
         readonly IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => GetEnumerator();
 

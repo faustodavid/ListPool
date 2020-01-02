@@ -4,6 +4,6 @@ namespace ListPool
 {
     internal interface IValueEnumerable<T> : IEnumerable<T>
     {
-        new Enumerator<T> GetEnumerator();
+        new ValueEnumerator<T> GetEnumerator();
     }
 }

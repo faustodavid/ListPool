@@ -254,7 +254,7 @@ namespace ListPool
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Enumerator<TSource> GetEnumerator() =>
-            new Enumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
+        public ValueEnumerator<TSource> GetEnumerator() =>
+            new ValueEnumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
     }
 }

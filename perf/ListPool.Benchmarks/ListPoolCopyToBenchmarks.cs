@@ -15,7 +15,7 @@ namespace ListPool.Benchmarks
         private int[] _listCopy;
         private ListPool<int> _listPool;
         private int[] _listPoolCopy;
-        private ListPoolValue<int> _listPoolValue;
+        private ValueListPool<int> _valueListPool;
         private int[] _listPoolValueCopy;
 
         [Params(10, 100, 1000, 10000)]
@@ -26,7 +26,7 @@ namespace ListPool.Benchmarks
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
-            _listPoolValue = new ListPoolValue<int>(N);
+            _valueListPool = new ValueListPool<int>(N);
             _listCopy = new int[N];
             _listPoolCopy = new int[N];
             _listPoolValueCopy = new int[N];
@@ -35,7 +35,7 @@ namespace ListPool.Benchmarks
             {
                 _list.Add(i);
                 _listPool.Add(i);
-                _listPoolValue.Add(i);
+                _valueListPool.Add(i);
             }
         }
 
@@ -43,7 +43,7 @@ namespace ListPool.Benchmarks
         public void IterationCleanup()
         {
             _listPool.Dispose();
-            _listPoolValue.Dispose();
+            _valueListPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
@@ -61,7 +61,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPoolValue()
         {
-            _listPoolValue.CopyTo(_listPoolCopy, 0);
+            _valueListPool.CopyTo(_listPoolCopy, 0);
         }
     }
 }
