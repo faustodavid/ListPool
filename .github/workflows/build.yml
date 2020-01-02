@@ -52,8 +52,13 @@ jobs:
     - name: dotnet build
       run: dotnet build --configuration Release
 
+    - run: ls
+
     - name: Pack
       run: dotnet pack --output ./artifacts -c Release --no-build --include-source --include-symbols
+
+    - run: ls
+    - run: ls ./artifacts
 
     - uses: actions/upload-artifact@v1
       with:
@@ -71,10 +76,14 @@ jobs:
       with:
         version: 3.1.100
 
+    - run: ls
+
     - uses: actions/download-artifact@v1
       with:
         name: artifacts
         path: ./artifacts
+
+    - run: ls ./artifacts
 
     - name: Publish packages
       run: dotnet nuget push ./artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}} --skip-duplicate
