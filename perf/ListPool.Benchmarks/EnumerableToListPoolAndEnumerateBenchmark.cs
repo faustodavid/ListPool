@@ -10,7 +10,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class EnumerableToListPoolBenchmark
+    public class EnumerableToListPoolAndEnumerateBenchmark
     {
         private IEnumerable<int> _items;
 
@@ -33,19 +33,28 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            using var _ = _items.ToListPool();
+            using ListPool<int> list = _items.ToListPool();
+            foreach (int _ in list)
+            {
+            }
         }
 
         [Benchmark]
         public void ListPoolValue()
         {
-            using var _ = _items.ToListPoolValue();
+            using ValueListPool<int> valueList = _items.ToListPoolValue();
+            foreach (int _ in valueList)
+            {
+            }
         }
 
         [Benchmark(Baseline = true)]
         public void Linq()
         {
-            _ = _items.ToList();
+            List<int> list = _items.ToList();
+            foreach (int _ in list)
+            {
+            }
         }
     }
 }

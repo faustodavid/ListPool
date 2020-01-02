@@ -10,7 +10,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Add_item_without_indicate_capacity_of_list()
         {
             int expectedItem = s_fixture.Create<int>();
-            using var sut = new ListPoolValue<int> {expectedItem};
+            using var sut = new ValueListPool<int> {expectedItem};
 
             Assert.Equal(expectedItem, sut[0]);
         }
@@ -18,7 +18,7 @@ namespace ListPool.UnitTests.ListPoolValue
 
         public override void Add_items_when_capacity_is_full_then_buffer_autogrow()
         {
-            using var sut = new ListPoolValue<int>(128);
+            using var sut = new ValueListPool<int>(128);
             var expectedItems = s_fixture.CreateMany<int>(sut.Capacity * 2).ToList();
 
             foreach (int expectedItem in expectedItems)
@@ -34,7 +34,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Contains_empty_ListPool_without_indicating_capacity_returns_false()
         {
             int randomItem = s_fixture.Create<int>();
-            using var sut = new ListPoolValue<int>();
+            using var sut = new ValueListPool<int>();
 
             bool actual = sut.Contains(randomItem);
 
@@ -49,7 +49,7 @@ namespace ListPool.UnitTests.ListPoolValue
             int expectedAt2 = s_fixture.Create<int>();
             int unexpected = s_fixture.Create<int>();
 
-            using var sut = new ListPoolValue<int>(3) {expectedAt0, expectedAt1, expectedAt2};
+            using var sut = new ValueListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
 
             Assert.Contains(expectedAt0, sut);
             Assert.Contains(expectedAt1, sut);
@@ -63,7 +63,7 @@ namespace ListPool.UnitTests.ListPoolValue
             int expectedAt0 = s_fixture.Create<int>();
             int expectedAt1 = s_fixture.Create<int>();
             int expectedAt2 = s_fixture.Create<int>();
-            using var sut = new ListPoolValue<int>(3) {expectedAt0, expectedAt1, expectedAt2};
+            using var sut = new ValueListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
             int[] array = new int[3];
 
             sut.CopyTo(array, 0);
@@ -80,7 +80,7 @@ namespace ListPool.UnitTests.ListPoolValue
             const int listCapacity = 10;
             const int expectedItemsCount = 3;
 
-            using var sut = new ListPoolValue<int>(listCapacity) {1, 2, 3};
+            using var sut = new ValueListPool<int>(listCapacity) {1, 2, 3};
 
             Assert.Equal(expectedItemsCount, sut.Count);
         }
@@ -92,7 +92,7 @@ namespace ListPool.UnitTests.ListPoolValue
             int expectedAt1 = s_fixture.Create<int>();
             int expectedAt2 = s_fixture.Create<int>();
 
-            using var sut = new ListPoolValue<int>(3) {expectedAt0, expectedAt1, expectedAt2};
+            using var sut = new ValueListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
 
             Assert.Equal(expectedAt0, sut[0]);
             Assert.Equal(expectedAt1, sut[1]);
@@ -103,7 +103,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Create_list_and_add_values_after_clear()
         {
             using var sut =
-                new ListPoolValue<int>(3) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
+                new ValueListPool<int>(3) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             sut.Clear();
 
@@ -118,7 +118,7 @@ namespace ListPool.UnitTests.ListPoolValue
             int expectedAt1 = s_fixture.Create<int>();
             int expectedAt2 = s_fixture.Create<int>();
 
-            using var sut = new ListPoolValue<int> {expectedAt0, expectedAt1, expectedAt2};
+            using var sut = new ValueListPool<int> {expectedAt0, expectedAt1, expectedAt2};
 
             Assert.Equal(expectedAt0, sut[0]);
             Assert.Equal(expectedAt1, sut[1]);
@@ -129,7 +129,7 @@ namespace ListPool.UnitTests.ListPoolValue
 
         public override void Enumerate_when_capacity_is_not_set_dont_throw_exception()
         {
-            using var sut = new ListPoolValue<int>();
+            using var sut = new ValueListPool<int>();
 
             foreach (int _ in sut)
             {
@@ -140,7 +140,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Get_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
         {
             const int index = 2;
-            using var sut = new ListPoolValue<int> {s_fixture.Create<int>()};
+            using var sut = new ValueListPool<int> {s_fixture.Create<int>()};
 
             ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
 
@@ -151,7 +151,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Get_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
         {
             int index = -1;
-            var sut = new ListPoolValue<int>();
+            var sut = new ValueListPool<int>();
 
             ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
 
@@ -163,7 +163,7 @@ namespace ListPool.UnitTests.ListPoolValue
         {
             int randomItem = s_fixture.Create<int>();
             const int expected = -1;
-            using var sut = new ListPoolValue<int>();
+            using var sut = new ValueListPool<int>();
 
             int actual = sut.IndexOf(randomItem);
 
@@ -176,7 +176,7 @@ namespace ListPool.UnitTests.ListPoolValue
             int expectedAt0 = s_fixture.Create<int>();
             int expectedAt1 = s_fixture.Create<int>();
             int expectedAt2 = s_fixture.Create<int>();
-            using var sut = new ListPoolValue<int>(3) {expectedAt0, expectedAt1, expectedAt2};
+            using var sut = new ValueListPool<int>(3) {expectedAt0, expectedAt1, expectedAt2};
 
             Assert.Equal(0, sut.IndexOf(expectedAt0));
             Assert.Equal(1, sut.IndexOf(expectedAt1));
@@ -205,7 +205,7 @@ namespace ListPool.UnitTests.ListPoolValue
         {
             int expectedAt3 = s_fixture.Create<int>();
             using var sut =
-                new ListPoolValue<int>(4) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
+                new ValueListPool<int>(4) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             sut.Insert(3, expectedAt3);
 
@@ -217,7 +217,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Insert_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
         {
             const int index = 2;
-            using var sut = new ListPoolValue<int> {s_fixture.Create<int>()};
+            using var sut = new ValueListPool<int> {s_fixture.Create<int>()};
             int item = s_fixture.Create<int>();
 
             ArgumentOutOfRangeException exception =
@@ -231,7 +231,7 @@ namespace ListPool.UnitTests.ListPoolValue
         {
             const int index = -1;
             int item = s_fixture.Create<int>();
-            using var sut = new ListPoolValue<int>();
+            using var sut = new ValueListPool<int>();
 
             ArgumentOutOfRangeException exception =
                 Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
@@ -242,7 +242,7 @@ namespace ListPool.UnitTests.ListPoolValue
 
         public override void Insert_items_when_capacity_is_full_then_buffer_autogrow()
         {
-            using var sut = new ListPoolValue<int>(128);
+            using var sut = new ValueListPool<int>(128);
             var expectedItems = s_fixture.CreateMany<int>(sut.Capacity * 2).ToList();
             int index = 0;
 
@@ -260,7 +260,7 @@ namespace ListPool.UnitTests.ListPoolValue
         {
             const int index = 0;
             int expectedItem = s_fixture.Create<int>();
-            using var sut = new ListPoolValue<int>();
+            using var sut = new ValueListPool<int>();
 
             sut.Insert(index, expectedItem);
 
@@ -270,7 +270,7 @@ namespace ListPool.UnitTests.ListPoolValue
 
         public override void Readonly_property_is_always_false()
         {
-            using var sut = new ListPoolValue<int>();
+            using var sut = new ValueListPool<int>();
 
             Assert.False(sut.IsReadOnly);
         }
@@ -279,7 +279,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Remove_item_that_doesnt_exists_return_false()
         {
             string item = s_fixture.Create<string>();
-            using var sut = new ListPoolValue<string> {s_fixture.Create<string>()};
+            using var sut = new ValueListPool<string> {s_fixture.Create<string>()};
 
             Assert.False(sut.Remove(item));
             Assert.Single(sut);
@@ -290,7 +290,7 @@ namespace ListPool.UnitTests.ListPoolValue
         {
             const int expectedCountAfterRemove = 2;
             int expectedAt0 = s_fixture.Create<int>();
-            using var sut = new ListPoolValue<int>(3) {expectedAt0, s_fixture.Create<int>(), s_fixture.Create<int>()};
+            using var sut = new ValueListPool<int>(3) {expectedAt0, s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             bool wasRemoved = sut.Remove(expectedAt0);
 
@@ -303,7 +303,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Remove_when_item_is_null_return_false()
         {
             string item = null;
-            using var sut = new ListPoolValue<string>();
+            using var sut = new ValueListPool<string>();
 
             Assert.False(sut.Remove(item));
         }
@@ -313,7 +313,7 @@ namespace ListPool.UnitTests.ListPoolValue
         {
             const int expectedCountAfterRemove = 2;
             int expectedAt1 = s_fixture.Create<int>();
-            using var sut = new ListPoolValue<int>(3) {s_fixture.Create<int>(), expectedAt1, s_fixture.Create<int>()};
+            using var sut = new ValueListPool<int>(3) {s_fixture.Create<int>(), expectedAt1, s_fixture.Create<int>()};
 
             sut.RemoveAt(1);
 
@@ -325,7 +325,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void RemoveAt_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
         {
             const int index = 2;
-            using var sut = new ListPoolValue<int> {s_fixture.Create<int>()};
+            using var sut = new ValueListPool<int> {s_fixture.Create<int>()};
 
             ArgumentOutOfRangeException exception =
                 Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
@@ -337,7 +337,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void RemoveAt_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
         {
             const int index = -1;
-            using var sut = new ListPoolValue<int>();
+            using var sut = new ValueListPool<int>();
 
             ArgumentOutOfRangeException exception =
                 Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
@@ -349,7 +349,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void RemoveAt_with_index_zero_when_not_item_added_throws_ArgumentOutOfRangeException()
         {
             const int index = 0;
-            using var sut = new ListPoolValue<int>();
+            using var sut = new ValueListPool<int>();
 
             ArgumentOutOfRangeException exception =
                 Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
@@ -363,7 +363,7 @@ namespace ListPool.UnitTests.ListPoolValue
             const int expectedItemsCount = 3;
             int expectedItem = s_fixture.Create<int>();
             using var sut =
-                new ListPoolValue<int>(3) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
+                new ValueListPool<int>(3) {s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             sut[2] = expectedItem;
 
@@ -375,7 +375,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public override void Set_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
         {
             const int index = 2;
-            using var sut = new ListPoolValue<int> {s_fixture.Create<int>()};
+            using var sut = new ValueListPool<int> {s_fixture.Create<int>()};
             int item = s_fixture.Create<int>();
 
             ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
@@ -388,7 +388,7 @@ namespace ListPool.UnitTests.ListPoolValue
         {
             const int index = -1;
             int item = s_fixture.Create<int>();
-            var sut = new ListPoolValue<int>();
+            var sut = new ValueListPool<int>();
 
             ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
 

@@ -9,7 +9,7 @@ using System.Threading;
 namespace ListPool
 {
     public sealed class ListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
-                                     IValueEnumerable<TSource>
+                                            IValueEnumerable<TSource>
 
     {
         private const int MinimumCapacity = 128;
@@ -50,7 +50,7 @@ namespace ListPool
             }
         }
 
-        public int Capacity => _bufferOwner.IsValid ? _bufferOwner.Buffer.Length : 0;
+        public int Capacity => _bufferOwner.Buffer.Length;
 
         public void Dispose()
         {
@@ -254,7 +254,7 @@ namespace ListPool
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Enumerator<TSource> GetEnumerator() =>
-            new Enumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
+        public ValueEnumerator<TSource> GetEnumerator() =>
+            new ValueEnumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
     }
 }

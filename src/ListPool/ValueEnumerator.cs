@@ -5,13 +5,13 @@ using System.Runtime.CompilerServices;
 
 namespace ListPool
 {
-    public struct Enumerator<TSource> : IEnumerator<TSource>
+    public struct ValueEnumerator<TSource> : IEnumerator<TSource>
     {
         private readonly TSource[] _source;
         private readonly int _itemsCount;
         private int _index;
 
-        public Enumerator(in TSource[] source, in int itemsCount)
+        public ValueEnumerator(in TSource[] source, in int itemsCount)
         {
             _source = source;
             _itemsCount = itemsCount;

@@ -11,10 +11,10 @@ namespace ListPool
             return new ListPool<TSource>(source);
         }
 
-        public static ListPoolValue<TSource> ToListPoolValue<TSource>(this IEnumerable<TSource> source)
+        public static ValueListPool<TSource> ToListPoolValue<TSource>(this IEnumerable<TSource> source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
-            return new ListPoolValue<TSource>(source);
+            return new ValueListPool<TSource>(source);
         }
     }
 }
