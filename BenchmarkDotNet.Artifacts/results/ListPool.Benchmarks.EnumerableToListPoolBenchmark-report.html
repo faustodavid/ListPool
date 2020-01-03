@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>ListPool.Benchmarks.EnumerableToListPoolBenchmark-20200103-233107</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.12.0, OS=elementary 5.1
+Intel Core i7-4702MQ CPU 2.20GHz (Haswell), 1 CPU, 8 logical and 4 physical cores
+.NET Core SDK=3.1.100
+  [Host]     : .NET Core 3.1.0 (CoreCLR 4.700.19.56106, CoreFX 4.700.19.56202), X64 RyuJIT
+  Job-OIUWYV : .NET Core 3.1.0 (CoreCLR 4.700.19.56106, CoreFX 4.700.19.56202), X64 RyuJIT
+</code></pre>
+<pre><code>Concurrent=True  Server=True  InvocationCount=1  
+UnrollFactor=1  
+</code></pre>
+
+<table>
+<thead><tr><th> Method</th><th>N</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Median</th><th>Ratio</th><th>RatioSD</th><th>Rank</th><th>Gen 0</th><th>Gen 1</th><th>Gen 2</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>ListPool</td><td>10</td><td>14.21 us</td><td>3.778 us</td><td>10.901 us</td><td>8.953 us</td><td>1.89</td><td>2.60</td><td>1</td><td>-</td><td>-</td><td>-</td><td>88 B</td>
+</tr><tr><td>Linq</td><td>10</td><td>15.46 us</td><td>4.082 us</td><td>11.907 us</td><td>11.671 us</td><td>1.00</td><td>0.00</td><td>1</td><td>-</td><td>-</td><td>-</td><td>248 B</td>
+</tr><tr><td>ListPoolValue</td><td>10</td><td>17.84 us</td><td>4.111 us</td><td>11.596 us</td><td>14.915 us</td><td>2.04</td><td>2.30</td><td>2</td><td>-</td><td>-</td><td>-</td><td>32 B</td>
+</tr><tr><td>ListPool</td><td>50</td><td>10.86 us</td><td>2.645 us</td><td>7.372 us</td><td>8.060 us</td><td>1.04</td><td>0.87</td><td>1</td><td>-</td><td>-</td><td>-</td><td>88 B</td>
+</tr><tr><td>ListPoolValue</td><td>50</td><td>12.60 us</td><td>2.917 us</td><td>8.370 us</td><td>8.709 us</td><td>1.22</td><td>0.90</td><td>1</td><td>-</td><td>-</td><td>-</td><td>32 B</td>
+</tr><tr><td>Linq</td><td>50</td><td>12.72 us</td><td>2.596 us</td><td>7.533 us</td><td>9.604 us</td><td>1.00</td><td>0.00</td><td>1</td><td>-</td><td>-</td><td>-</td><td>680 B</td>
+</tr><tr><td>ListPool</td><td>100</td><td>15.03 us</td><td>2.979 us</td><td>8.305 us</td><td>12.022 us</td><td>1.27</td><td>1.00</td><td>1</td><td>-</td><td>-</td><td>-</td><td>88 B</td>
+</tr><tr><td>ListPoolValue</td><td>100</td><td>16.30 us</td><td>3.264 us</td><td>9.313 us</td><td>14.026 us</td><td>1.46</td><td>1.27</td><td>1</td><td>-</td><td>-</td><td>-</td><td>32 B</td>
+</tr><tr><td>Linq</td><td>100</td><td>16.95 us</td><td>4.201 us</td><td>12.188 us</td><td>14.171 us</td><td>1.00</td><td>0.00</td><td>1</td><td>-</td><td>-</td><td>-</td><td>1216 B</td>
+</tr><tr><td>ListPoolValue</td><td>1000</td><td>27.80 us</td><td>4.797 us</td><td>13.764 us</td><td>22.904 us</td><td>1.10</td><td>0.77</td><td>1</td><td>-</td><td>-</td><td>-</td><td>32 B</td>
+</tr><tr><td>ListPool</td><td>1000</td><td>29.70 us</td><td>5.124 us</td><td>14.702 us</td><td>26.166 us</td><td>1.19</td><td>0.93</td><td>1</td><td>-</td><td>-</td><td>-</td><td>88 B</td>
+</tr><tr><td>Linq</td><td>1000</td><td>31.31 us</td><td>5.682 us</td><td>16.393 us</td><td>27.160 us</td><td>1.00</td><td>0.00</td><td>1</td><td>-</td><td>-</td><td>-</td><td>8456 B</td>
+</tr></tbody></table>
+</body>
+</html>

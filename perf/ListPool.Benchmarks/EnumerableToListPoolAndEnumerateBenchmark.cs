@@ -12,7 +12,7 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class EnumerableToListPoolAndEnumerateBenchmark
     {
-        private IEnumerable<int> _items;
+        private Enumerable<int> _items;
 
         [Params(10, 50, 100, 1000)]
         public int N { get; set; }
@@ -27,7 +27,7 @@ namespace ListPool.Benchmarks
                 items[i] = 1;
             }
 
-            _items = items.Select(i => i);
+            _items = new Enumerable<int>(items);
         }
 
         [Benchmark]
