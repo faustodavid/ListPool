@@ -38,5 +38,11 @@ namespace ListPool.Benchmarks
         {
             using var _ = _array.ToListPool();
         }
+
+        [Benchmark]
+        public void ListPoolValue()
+        {
+            using var _ = _array.ToListPoolValue();
+        }
     }
 }

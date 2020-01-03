@@ -8,60 +8,23 @@ using System.Threading;
 
 namespace ListPool
 {
-    public sealed class ListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
-                                            IValueEnumerable<TSource>
+    public struct ValueListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
+                                           IValueEnumerable<TSource>
 
     {
-        private const int MinimumCapacity = 128;
+        public readonly int Capacity => _bufferOwner.IsValid ? _bufferOwner.Buffer.Length : 0;
+        public readonly int Count => _itemsCount;
+        public readonly bool IsReadOnly => false;
+        int ICollection.Count => _itemsCount;
+        readonly bool IList.IsFixedSize => false;
+        bool ICollection.IsSynchronized => false;
+        readonly bool IList.IsReadOnly => false;
         private BufferOwner<TSource> _bufferOwner;
         private int _itemsCount;
+        private const int MinimumCapacity = 128;
 
         [NonSerialized]
         private object? _syncRoot;
-
-        public ListPool()
-        {
-            _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
-        }
-
-        public ListPool(int length)
-        {
-            _bufferOwner = new BufferOwner<TSource>(length < MinimumCapacity ? MinimumCapacity : length);
-        }
-
-        public ListPool(IEnumerable<TSource> source)
-        {
-            if (source is ICollection<TSource> collection)
-            {
-                _bufferOwner = new BufferOwner<TSource>(collection.Count);
-                _itemsCount = collection.Count;
-
-                collection.CopyTo(_bufferOwner.Buffer, 0);
-            }
-            else
-            {
-                _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
-
-                using IEnumerator<TSource> enumerator = source.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    Add(enumerator.Current);
-                }
-            }
-        }
-
-        public int Capacity => _bufferOwner.Buffer.Length;
-
-        public void Dispose()
-        {
-            _bufferOwner.Dispose();
-            _itemsCount = 0;
-        }
-
-        int ICollection.Count => _itemsCount;
-        bool IList.IsFixedSize => false;
-        bool ICollection.IsSynchronized => false;
-        bool IList.IsReadOnly => false;
 
         object ICollection.SyncRoot
         {
@@ -74,6 +37,45 @@ namespace ListPool
 
                 return _syncRoot;
             }
+        }
+
+        public ValueListPool(int length)
+        {
+            _syncRoot = null;
+            _bufferOwner = new BufferOwner<TSource>(length < MinimumCapacity ? MinimumCapacity : length);
+            _itemsCount = 0;
+        }
+
+        public ValueListPool(IEnumerable<TSource> source)
+        {
+            _syncRoot = null;
+            if (source is ICollection<TSource> collection)
+            {
+                _bufferOwner = new BufferOwner<TSource>(collection.Count);
+                _itemsCount = collection.Count;
+
+                collection.CopyTo(_bufferOwner.Buffer, 0);
+            }
+            else
+            {
+                _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
+                _itemsCount = 0;
+
+                using IEnumerator<TSource> enumerator = source.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    Add(enumerator.Current);
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Add(TSource item)
+        {
+            if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
+            if (_itemsCount >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
+
+            _bufferOwner.Buffer[_itemsCount++] = item;
         }
 
         int IList.Add(object item)
@@ -90,6 +92,10 @@ namespace ListPool
 
             return Count - 1;
         }
+
+
+        public void Clear() => _itemsCount = 0;
+        public readonly bool Contains(TSource item) => IndexOf(item) > -1;
 
         bool IList.Contains(object item)
         {
@@ -138,13 +144,75 @@ namespace ListPool
             Insert(index, itemAsTSource);
         }
 
+        public readonly int IndexOf(TSource item) =>
+            _bufferOwner.IsValid ? Array.IndexOf(_bufferOwner.Buffer, item, 0, _itemsCount) : -1;
+
+        public readonly void CopyTo(TSource[] array, int arrayIndex) =>
+            Array.Copy(_bufferOwner.Buffer, 0, array, arrayIndex, _itemsCount);
+
         void ICollection.CopyTo(Array array, int arrayIndex)
         {
             Array.Copy(_bufferOwner.Buffer, 0, array, arrayIndex, _itemsCount);
         }
 
+        public bool Remove(TSource item)
+        {
+            if (item is null) return false;
+
+            int index = IndexOf(item);
+
+            if (index == -1) return false;
+
+            RemoveAt(index);
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Insert(int index, TSource item)
+        {
+            if (index < 0 || index > _itemsCount) throw new ArgumentOutOfRangeException(nameof(index));
+            if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
+            if (index >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
+            if (index < _itemsCount)
+                Array.Copy(_bufferOwner.Buffer, index, _bufferOwner.Buffer, index + 1, _itemsCount - index);
+
+            _bufferOwner.Buffer[index] = item;
+            _itemsCount++;
+        }
+
+        public void RemoveAt(int index)
+        {
+            if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
+
+            _itemsCount--;
+            Array.Copy(_bufferOwner.Buffer, index + 1, _bufferOwner.Buffer, index, _itemsCount - index);
+        }
+
         [MaybeNull]
-        object IList.this[int index]
+        public readonly TSource this[int index]
+        {
+            [Pure]
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                if (index < 0 || index >= _itemsCount)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
+                return _bufferOwner.Buffer[index];
+            }
+
+            set
+            {
+                if (index < 0 || index >= _itemsCount)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
+                _bufferOwner.Buffer[index] = value;
+            }
+        }
+
+        [MaybeNull]
+        readonly object IList.this[int index]
         {
             [Pure]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -173,88 +241,20 @@ namespace ListPool
             }
         }
 
-        public int Count => _itemsCount;
-        public bool IsReadOnly => false;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Add(TSource item)
-        {
-            if (_itemsCount >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
-
-            _bufferOwner.Buffer[_itemsCount++] = item;
-        }
-
-
-        public void Clear() => _itemsCount = 0;
-        public bool Contains(TSource item) => IndexOf(item) > -1;
-
-        public int IndexOf(TSource item) => Array.IndexOf(_bufferOwner.Buffer, item, 0, _itemsCount);
-
-        public void CopyTo(TSource[] array, int arrayIndex) =>
-            Array.Copy(_bufferOwner.Buffer, 0, array, arrayIndex, _itemsCount);
-
-        public bool Remove(TSource item)
-        {
-            if (item is null) return false;
-
-            int index = IndexOf(item);
-
-            if (index == -1) return false;
-
-            RemoveAt(index);
-
-            return true;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Insert(int index, TSource item)
-        {
-            if (index < 0 || index > _itemsCount) throw new ArgumentOutOfRangeException(nameof(index));
-            if (index >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
-            if (index < _itemsCount)
-                Array.Copy(_bufferOwner.Buffer, index, _bufferOwner.Buffer, index + 1, _itemsCount - index);
-
-            _bufferOwner.Buffer[index] = item;
-            _itemsCount++;
-        }
-
-        public void RemoveAt(int index)
-        {
-            if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
-
-            _itemsCount--;
-            Array.Copy(_bufferOwner.Buffer, index + 1, _bufferOwner.Buffer, index, _itemsCount - index);
-        }
-
-        [MaybeNull]
-        public TSource this[int index]
-        {
-            [Pure]
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                if (index < 0 || index >= _itemsCount)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-
-                return _bufferOwner.Buffer[index];
-            }
-
-            set
-            {
-                if (index < 0 || index >= _itemsCount)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-
-                _bufferOwner.Buffer[index] = value;
-            }
-        }
-
-        IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueEnumerator<TSource> GetEnumerator() =>
+        public readonly ValueEnumerator<TSource> GetEnumerator() =>
             new ValueEnumerator<TSource>(in _bufferOwner.Buffer, in _itemsCount);
+
+        readonly IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => GetEnumerator();
+
+        readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public void Dispose()
+        {
+            _itemsCount = 0;
+            if (_bufferOwner.IsValid)
+                _bufferOwner.Dispose();
+        }
     }
 }

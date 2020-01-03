@@ -1,7 +1,12 @@
 # ListPool
 ListPool is an allocation free implementation of IList using ArrayPool.
 
-## Benchmarks.
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/faustodavid/ListPool/Build)](https://github.com/faustodavid/ListPool/actions)
+[![Coveralls github](https://img.shields.io/coveralls/github/faustodavid/ListPool)](https://coveralls.io/github/faustodavid/ListPool)
+[![Nuget](https://img.shields.io/nuget/v/ListPool)](https://www.nuget.org/packages/ListPool/)
+[![GitHub](https://img.shields.io/github/license/faustodavid/ListPool)](https://github.com/faustodavid/ListPool/blob/master/LICENSE)
+
+## Benchmarks
 
 BenchmarkDotNet=v0.12.0, OS=Windows 10.0.17134.1006 (1803/April2018Update/Redstone4)
 Intel Core i5-4570 CPU 3.20GHz (Haswell), 1 CPU, 4 logical and 4 physical cores

@@ -14,7 +14,21 @@ namespace ListPool.UnitTests
         {
             string[] items = s_fixture.CreateMany<string>(10).ToArray();
             IEnumerator expectedEnumerator = items.GetEnumerator();
-            var sut = new Enumerator<string>(items, items.Length);
+            var sut = new ValueEnumerator<string>(items, items.Length);
+
+            while (expectedEnumerator.MoveNext())
+            {
+                Assert.True(sut.MoveNext());
+                Assert.Equal(expectedEnumerator.Current, sut.Current);
+            }
+        }
+
+        [Fact]
+        public void Current_is_updated_in_each_iteration_using_IEnumerator()
+        {
+            string[] items = s_fixture.CreateMany<string>(10).ToArray();
+            IEnumerator expectedEnumerator = items.GetEnumerator();
+            IEnumerator sut = new ValueEnumerator<string>(items, items.Length);
 
             while (expectedEnumerator.MoveNext())
             {
@@ -28,13 +42,14 @@ namespace ListPool.UnitTests
         {
             string[] items = s_fixture.CreateMany<string>(10).ToArray();
             IEnumerator expectedEnumerator = items.GetEnumerator();
-            var sut = new Enumerator<string>(items, items.Length);
+            var sut = new ValueEnumerator<string>(items, items.Length);
 
             while (expectedEnumerator.MoveNext())
             {
                 Assert.True(sut.MoveNext());
                 Assert.Equal(expectedEnumerator.Current, sut.Current);
             }
+
             Assert.False(sut.MoveNext());
             sut.Reset();
             expectedEnumerator.Reset();

@@ -6,11 +6,21 @@
     <LangCode>8.0</LangCode>
     <Authors>Fausto David Suarez Rosario</Authors>
     <Title>ListPool</Title>
+    <AssemblyName>ListPool</AssemblyName>
+    <PackageId>ListPool</PackageId>
     <Description>ListPool is an optimized allocation free implementation of IList using ArrayPool.</Description>
+    <PackageTags>ASP.NET;List;System.Buffers;ArrayPool;ListPool;Performance</PackageTags>
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>1.0.2</PackageVersion>
+    <PackageVersion>2.1.0</PackageVersion>
+    <PackageReleaseNotes>
+      Changelog:
+      * Rename ListPoolValue to ValueListPool
+
+      ListPool is the general use of the implementation. ValueListPool is the zero heap allocations implementation. Note, because it is a struct it is passed by value, not by reference.
+    </PackageReleaseNotes>
+    <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

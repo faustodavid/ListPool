@@ -8,60 +8,82 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Setup .NET Core 2.1
-      uses: actions/setup-dotnet@v1
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1.0.0
       with:
-        dotnet-version: 2.1.607
-    - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.100
-    - name: .NET Core SxS
-      run: |
-        rsync -a ${DOTNET_ROOT/3.1.100/2.1.607}/* $DOTNET_ROOT/
-    - name: Build
+        version: 3.1.100
+
+    - name: dotnet restore
+      run: dotnet restore --packages .nuget/packages
+
+    - name: dotnet build
       run: dotnet build --configuration Release
-    - name: Test
-      run: dotnet test --no-build --configuration Release
+
+    - name: dotnet test
+      run: dotnet test --no-build --configuration Release -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=../../coverage/lcov.info
+
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v1.0.1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
   pack:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     if: github.event_name == 'push'
     steps:
+
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v1
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1.0.0
       with:
-        dotnet-version: 3.1.100
-    - name: Determine version
-      run: echo "::set-env name=VERSION::$(git describe --tags --dirty)"
+        version: 3.1.100
+
+    - name: dotnet restore
+      run: dotnet restore --packages .nuget/packages
+
+    - name: dotnet build
+      run: dotnet build --configuration Release
+
+    - run: ls
+
     - name: Pack
-      run: dotnet pack --output ./artifacts --configuration Release -p:Version=$VERSION
+      run: dotnet pack --output ./artifacts -c Release --no-build --include-source --include-symbols
+
+    - run: ls
+    - run: ls ./artifacts
+
     - uses: actions/upload-artifact@v1
       with:
         name: artifacts
         path: ./artifacts
+
   publish:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: pack
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     steps:
-    - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v1
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1.0.0
       with:
-        dotnet-version: 3.1.100
+        version: 3.1.100
+
+    - run: ls
+
     - uses: actions/download-artifact@v1
       with:
         name: artifacts
         path: ./artifacts
+
+    - run: ls ./artifacts
+
     - name: Publish packages
-      run: dotnet nuget push ./artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}}
+      run: dotnet nuget push ./artifacts/**.nupkg --source nuget.org --api-key ${{secrets.NUGET_TOKEN}} --skip-duplicate
