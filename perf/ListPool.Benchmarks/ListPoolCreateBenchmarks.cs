@@ -11,7 +11,7 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolCreateBenchmarks
     {
-        [Params(10, 100, 1000, 10000)]
+        [Params(50, 60, 70, 80, 100, 1000, 10000)]
         public int N { get; set; }
 
         [Benchmark(Baseline = true)]
@@ -24,6 +24,12 @@ namespace ListPool.Benchmarks
         public void ListPool()
         {
             using var list = new ListPool<int>(N);
+        }
+
+        [Benchmark]
+        public void ListPoolValue()
+        {
+            using var list = new ValueListPool<int>(N);
         }
     }
 }
