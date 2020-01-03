@@ -18,7 +18,7 @@
       Changelog:
       * Rename ListPoolValue to ValueListPool
 
-      ListPool is the general use implementation. ValueListPool is the zero heap allocations implementation. Note, because it is a struct it is pass by value not by reference.
+      ListPool is the general use of the implementation. ValueListPool is the zero heap allocations implementation. Note, because it is a struct it is passed by value, not by reference.
     </PackageReleaseNotes>
     <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
   </PropertyGroup>
