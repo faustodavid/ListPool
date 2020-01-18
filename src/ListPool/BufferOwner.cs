@@ -30,6 +30,18 @@ namespace ListPool
             _arrayPool.Return(oldBuffer);
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public void Grow(int capacity)
+        {
+            var newBuffer = _arrayPool.Rent(capacity);
+            var oldBuffer = Buffer;
+
+            Array.Copy(oldBuffer, 0, newBuffer, 0, Buffer.Length);
+
+            Buffer = newBuffer;
+            _arrayPool.Return(oldBuffer);
+        }
+
         public void Dispose()
         {
             IsValid = false;
