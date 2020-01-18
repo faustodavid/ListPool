@@ -43,7 +43,7 @@ namespace ListPool.UnitTests
         {
             int[] enumerable = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = enumerable.ToListPoolValue();
+            using var sut = enumerable.ToValueListPool();
 
             Assert.All(enumerable, value => sut.Contains(value));
         }
@@ -53,7 +53,7 @@ namespace ListPool.UnitTests
         {
             IEnumerable<int> enumerable = Enumerable.Range(0, 10);
 
-            using var sut = enumerable.ToListPoolValue();
+            using var sut = enumerable.ToValueListPool();
 
             Assert.All(enumerable, value => sut.Contains(value));
         }
@@ -64,7 +64,7 @@ namespace ListPool.UnitTests
             IEnumerable<int> source = null;
             string expectedName = nameof(source);
 
-            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => source.ToListPoolValue());
+            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => source.ToValueListPool());
 
             Assert.Contains(expectedName, exception.Message);
         }

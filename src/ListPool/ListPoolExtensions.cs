@@ -11,7 +11,7 @@ namespace ListPool
             return new ListPool<TSource>(source);
         }
 
-        public static ValueListPool<TSource> ToListPoolValue<TSource>(this IEnumerable<TSource> source)
+        public static ValueListPool<TSource> ToValueListPool<TSource>(this IEnumerable<TSource> source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
             return new ValueListPool<TSource>(source);
