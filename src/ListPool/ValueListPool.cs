@@ -8,12 +8,26 @@ using System.Threading;
 
 namespace ListPool
 {
+    /// <summary>
+    ///     High-performance implementation of IList with zero heap allocations.
+    ///     IMPORTANT:Do not create ValueListPool without indicating a constructor.
+    ///     Otherwise it wont work.
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
     public struct ValueListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
                                            IValueEnumerable<TSource>
 
     {
-        public readonly int Capacity =>_bufferOwner.Buffer.Length;
+        /// <summary>
+        ///     Capacity of the underlying array.
+        /// </summary>
+        public readonly int Capacity => _bufferOwner.Buffer.Length;
+
+        /// <summary>
+        ///     Count of items added.
+        /// </summary>
         public int Count { get; private set; }
+
         public readonly bool IsReadOnly => false;
         public readonly Span<TSource> AsSpan() => _bufferOwner.Buffer.AsSpan(0, Count);
         public readonly Memory<TSource> AsMemory() => _bufferOwner.Buffer.AsMemory(0, Count);
@@ -40,13 +54,21 @@ namespace ListPool
             }
         }
 
-        public ValueListPool(int length)
+        /// <summary>
+        ///     Construct ValueListPool with the indicated capacity.
+        /// </summary>
+        /// <param name="capacity">Required initial capacity</param>
+        public ValueListPool(int capacity)
         {
             _syncRoot = null;
-            _bufferOwner = new BufferOwner<TSource>(length < MinimumCapacity ? MinimumCapacity : length);
+            _bufferOwner = new BufferOwner<TSource>(capacity < MinimumCapacity ? MinimumCapacity : capacity);
             Count = 0;
         }
 
+        /// <summary>
+        ///     Construct ValueListPool from the given source.
+        /// </summary>
+        /// <param name="source"></param>
         public ValueListPool(IEnumerable<TSource> source)
         {
             _syncRoot = null;
@@ -86,7 +108,7 @@ namespace ListPool
             }
             else
             {
-               throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
+                throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
             }
 
             return Count - 1;
@@ -145,7 +167,7 @@ namespace ListPool
                 return Contains(itemAsTSource);
             }
 
-           throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
+            throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
         }
 
         int IList.IndexOf(object item)
@@ -155,7 +177,7 @@ namespace ListPool
                 return IndexOf(itemAsTSource);
             }
 
-           throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
+            throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
         }
 
         void IList.Remove(object item)

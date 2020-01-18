@@ -8,6 +8,11 @@ using System.Threading;
 
 namespace ListPool
 {
+    /// <summary>
+    /// Overhead free implementation of IList using ArrayPool.
+    /// With overhead being the class itself regardless the size of the underlying array.
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
     public sealed class ListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
                                             IValueEnumerable<TSource>
 
@@ -18,16 +23,28 @@ namespace ListPool
         [NonSerialized]
         private object? _syncRoot;
 
+        /// <summary>
+        /// Construct ListPool with default capacity.
+        /// We recommend to indicate the required capacity in front to avoid regrowing as much as possible.
+        /// </summary>
         public ListPool()
         {
             _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
         }
 
-        public ListPool(int length)
+        /// <summary>
+        /// Construct ListPool with the indicated capacity.
+        /// </summary>
+        /// <param name="capacity">Required initial capacity</param>
+        public ListPool(int capacity)
         {
-            _bufferOwner = new BufferOwner<TSource>(length < MinimumCapacity ? MinimumCapacity : length);
+            _bufferOwner = new BufferOwner<TSource>(capacity < MinimumCapacity ? MinimumCapacity : capacity);
         }
 
+        /// <summary>
+        /// Construct ListPool from the given source.
+        /// </summary>
+        /// <param name="source"></param>
         public ListPool(IEnumerable<TSource> source)
         {
             if (source is ICollection<TSource> collection)
@@ -49,8 +66,14 @@ namespace ListPool
             }
         }
 
+        /// <summary>
+        /// Capacity of the underlying array.
+        /// </summary>
         public int Capacity => _bufferOwner.Buffer.Length;
 
+        /// <summary>
+        /// Returns underlying array to the pool
+        /// </summary>
         public void Dispose()
         {
             _bufferOwner.Dispose();
@@ -172,6 +195,9 @@ namespace ListPool
             }
         }
 
+        /// <summary>
+        /// Count of items added.
+        /// </summary>
         public int Count { get; private set; }
 
         public bool IsReadOnly => false;
