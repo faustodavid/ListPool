@@ -12,7 +12,7 @@ namespace ListPool
                                            IValueEnumerable<TSource>
 
     {
-        public readonly int Capacity => _bufferOwner.IsValid ? _bufferOwner.Buffer.Length : 0;
+        public readonly int Capacity =>_bufferOwner.Buffer.Length;
         public int Count { get; private set; }
         public readonly bool IsReadOnly => false;
         public readonly Span<TSource> AsSpan() => _bufferOwner.Buffer.AsSpan(0, Count);
@@ -73,7 +73,6 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(TSource item)
         {
-            if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
             if (Count >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
 
             _bufferOwner.Buffer[Count++] = item;
@@ -186,8 +185,7 @@ namespace ListPool
             Insert(index, itemAsTSource);
         }
 
-        public readonly int IndexOf(TSource item) =>
-            _bufferOwner.IsValid ? Array.IndexOf(_bufferOwner.Buffer, item, 0, Count) : -1;
+        public readonly int IndexOf(TSource item) => Array.IndexOf(_bufferOwner.Buffer, item, 0, Count);
 
         public readonly void CopyTo(TSource[] array, int arrayIndex) =>
             Array.Copy(_bufferOwner.Buffer, 0, array, arrayIndex, Count);
@@ -214,7 +212,6 @@ namespace ListPool
         public void Insert(int index, TSource item)
         {
             if (index < 0 || index > Count) throw new ArgumentOutOfRangeException(nameof(index));
-            if (!_bufferOwner.IsValid) _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
             if (index >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
             if (index < Count)
                 Array.Copy(_bufferOwner.Buffer, index, _bufferOwner.Buffer, index + 1, Count - index);
