@@ -587,7 +587,7 @@ namespace ListPool.UnitTests.ListPoolValue
         public void AddRange_from_ReadOnlySpan_adds_all_items()
         {
             ReadOnlySpan<int> expectedValues = Enumerable.Range(0, 10).ToArray();
-            using var sut = new ValueListPool<int>();
+            using var sut = new ValueListPool<int>(10);
 
             sut.AddRange(expectedValues);
 
