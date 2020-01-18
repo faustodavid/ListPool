@@ -39,7 +39,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPoolValue()
         {
-            using var _ = _items.ToListPoolValue();
+            using var _ = _items.ToValueListPool();
         }
 
         [Benchmark(Baseline = true)]

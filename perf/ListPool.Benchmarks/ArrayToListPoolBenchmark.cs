@@ -42,7 +42,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPoolValue()
         {
-            using var _ = _array.ToListPoolValue();
+            using var _ = _array.ToValueListPool();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
 using Xunit;
@@ -388,11 +389,96 @@ namespace ListPool.UnitTests.ListPool
         {
             const int index = -1;
             int item = s_fixture.Create<int>();
-            var sut = new ListPool<int>();
+            using var sut = new ListPool<int>();
 
             ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
 
             Assert.Equal(nameof(index), exception.ParamName);
+        }
+
+        [Fact]
+        public void AsMemory_returns_memory_for_added_items()
+        {
+            int[] expectedValues = s_fixture.Create<int[]>();
+            using var listPool = new ListPool<int>(expectedValues);
+
+            Memory<int> sut = listPool.AsMemory();
+
+            Assert.Equal(expectedValues.Length, sut.Length);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.True(sut.Span.Contains(expectedValue));
+            }
+        }
+
+        [Fact]
+        public void AsMemory_when_not_items_Added_returns_empty_memory()
+        {
+            using var listPool = new ListPool<int>();
+
+            Memory<int> sut = listPool.AsMemory();
+
+            Assert.Equal(0, sut.Length);
+        }
+
+        [Fact]
+        public void AsSpan_returns_span_for_added_items()
+        {
+            int[] expectedValues = s_fixture.Create<int[]>();
+            using var listPool = new ListPool<int>(expectedValues);
+
+            Span<int> sut = listPool.AsSpan();
+
+            Assert.Equal(expectedValues.Length, sut.Length);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.True(sut.Contains(expectedValue));
+            }
+        }
+
+        [Fact]
+        public void AsSpan_when_not_items_Added_returns_empty_span()
+        {
+            using var listPool = new ListPool<int>();
+
+            Span<int> sut = listPool.AsSpan();
+
+            Assert.Equal(0, sut.Length);
+        }
+
+        [Fact]
+        public void Create_ListPool_from_enumerable()
+        {
+            IEnumerable<int> values = Enumerable.Range(0, 10);
+
+            using var sut = new ListPool<int>(values);
+
+            IEnumerable<int> expectedValues = values.ToArray();
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void Create_large_ListPool_from_enumerable()
+        {
+            IEnumerable<int> values = Enumerable.Range(0, 1000);
+
+            using var sut = new ListPool<int>(values);
+
+            IEnumerable<int> expectedValues = values.ToArray();
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void Create_ListPool_from_collection()
+        {
+            ICollection<int> expectedValues = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = new ListPool<int>(expectedValues);
+
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
         }
     }
 }

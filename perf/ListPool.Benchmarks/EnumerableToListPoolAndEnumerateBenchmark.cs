@@ -42,7 +42,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPoolValue()
         {
-            using ValueListPool<int> valueList = _items.ToListPoolValue();
+            using ValueListPool<int> valueList = _items.ToValueListPool();
             foreach (int _ in valueList)
             {
             }
