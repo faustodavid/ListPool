@@ -394,5 +394,55 @@ namespace ListPool.UnitTests.ListPoolValue
 
             Assert.Equal(nameof(index), exception.ParamName);
         }
+
+        [Fact]
+        public void AsMemory_returns_memory_for_added_items()
+        {
+            int[] expectedValues = s_fixture.Create<int[]>();
+            using var listPool = new ValueListPool<int>(expectedValues);
+
+            Memory<int> sut = listPool.AsMemory();
+
+            Assert.Equal(expectedValues.Length, sut.Length);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.True(sut.Span.Contains(expectedValue));
+            }
+        }
+
+        [Fact]
+        public void AsMemory_when_not_items_Added_returns_empty_memory()
+        {
+            using var listPool = new ValueListPool<int>();
+
+            Memory<int> sut = listPool.AsMemory();
+
+            Assert.Equal(0, sut.Length);
+        }
+
+        [Fact]
+        public void AsSpan_returns_span_for_added_items()
+        {
+            int[] expectedValues = s_fixture.Create<int[]>();
+            using var listPool = new ValueListPool<int>(expectedValues);
+
+            Span<int> sut = listPool.AsSpan();
+
+            Assert.Equal(expectedValues.Length, sut.Length);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.True(sut.Contains(expectedValue));
+            }
+        }
+
+        [Fact]
+        public void AsSpan_when_not_items_Added_returns_empty_span()
+        {
+            using var listPool = new ValueListPool<int>(10);
+
+            Span<int> sut = listPool.AsSpan();
+
+            Assert.Equal(0, sut.Length);
+        }
     }
 }
