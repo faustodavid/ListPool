@@ -8,7 +8,7 @@ namespace ListPool.UnitTests.ListPool
 {
     public class ListPoolTests : ListPoolTestsBase
     {
-        public override void Add_item_without_indicate_capacity_of_list()
+        public void Add_item_without_indicate_capacity_of_list()
         {
             int expectedItem = s_fixture.Create<int>();
             using var sut = new ListPool<int> {expectedItem};
@@ -32,7 +32,7 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Contains_empty_ListPool_without_indicating_capacity_returns_false()
+        public void Contains_empty_ListPool_without_indicating_capacity_returns_false()
         {
             int randomItem = s_fixture.Create<int>();
             using var sut = new ListPool<int>();
@@ -112,7 +112,7 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Create_without_parameters_should_add_and_get_items()
+        public void Create_without_parameters_should_add_and_get_items()
         {
             const int expectedItemsCount = 3;
             int expectedAt0 = s_fixture.Create<int>();
@@ -128,7 +128,7 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Enumerate_when_capacity_is_not_set_dont_throw_exception()
+        public void Enumerate_when_capacity_is_not_set_dont_throw_exception()
         {
             using var sut = new ListPool<int>();
 
@@ -160,7 +160,7 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void IndexOf_empty_ListPool_without_indicating_capacity_returns_negative_one()
+        public void IndexOf_empty_ListPool_without_indicating_capacity_returns_negative_one()
         {
             int randomItem = s_fixture.Create<int>();
             const int expected = -1;
@@ -257,7 +257,7 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Insert_without_indicating_capacity_of_list()
+        public void Insert_without_indicating_capacity_of_list()
         {
             const int index = 0;
             int expectedItem = s_fixture.Create<int>();

@@ -6,20 +6,14 @@ namespace ListPool.UnitTests
     public abstract class ListPoolTestsBase
     {
         protected static readonly Fixture s_fixture = new Fixture();
-
-        [Fact]
-        public abstract void Add_item_without_indicate_capacity_of_list();
-
+        
         [Fact]
         public abstract void Add_items_when_capacity_is_full_then_buffer_autogrow();
 
         [Fact]
-        public abstract void Contains_empty_ListPool_without_indicating_capacity_returns_false();
-
-        [Fact]
         public abstract void Contains_return_true_when_item_exists();
 
-        [Fact]
+       [Fact]
         public abstract void CopyTo_copy_all_elements_to_target_array();
 
         [Fact]
@@ -32,19 +26,10 @@ namespace ListPool.UnitTests
         public abstract void Create_list_and_add_values_after_clear();
 
         [Fact]
-        public abstract void Create_without_parameters_should_add_and_get_items();
-
-        [Fact]
-        public abstract void Enumerate_when_capacity_is_not_set_dont_throw_exception();
-
-        [Fact]
         public abstract void Get_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException();
 
         [Fact]
         public abstract void Get_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException();
-
-        [Fact]
-        public abstract void IndexOf_empty_ListPool_without_indicating_capacity_returns_negative_one();
 
         [Fact]
         public abstract void IndexOf_returns_index_of_item();
@@ -63,10 +48,7 @@ namespace ListPool.UnitTests
 
         [Fact]
         public abstract void Insert_items_when_capacity_is_full_then_buffer_autogrow();
-
-        [Fact]
-        public abstract void Insert_without_indicating_capacity_of_list();
-
+        
         [Fact]
         public abstract void Readonly_property_is_always_false();
 
