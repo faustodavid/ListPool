@@ -33,17 +33,18 @@ namespace ListPool
             if (source is ICollection<TSource> collection)
             {
                 _bufferOwner = new BufferOwner<TSource>(collection.Count);
-                Count = collection.Count;
 
                 collection.CopyTo(_bufferOwner.Buffer, 0);
+                Count = collection.Count;
             }
             else
             {
                 _bufferOwner = new BufferOwner<TSource>(MinimumCapacity);
-                foreach (TSource item in source)
+
+                using IEnumerator<TSource> enumerator = source.GetEnumerator();
+                while (enumerator.MoveNext())
                 {
-                    if (Count >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
-                    _bufferOwner.Buffer[Count++] = item;
+                    Add(enumerator.Current);
                 }
             }
         }
@@ -255,6 +256,49 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ValueEnumerator<TSource> GetEnumerator() =>
             new ValueEnumerator<TSource>(in _bufferOwner.Buffer, Count);
+
+        public void AddRange(Span<TSource> items)
+        {
+            bool isCapacityEnough = _bufferOwner.Buffer.Length - items.Length - Count > 0;
+            if (!isCapacityEnough)
+                _bufferOwner.Grow(_bufferOwner.Buffer.Length + items.Length);
+
+            items.CopyTo(_bufferOwner.Buffer.AsSpan().Slice(Count));
+            Count += items.Length;
+        }
+
+        public void AddRange(ReadOnlySpan<TSource> items)
+        {
+            bool isCapacityEnough = _bufferOwner.Buffer.Length - items.Length - Count > 0;
+            if (!isCapacityEnough)
+                _bufferOwner.Grow(_bufferOwner.Buffer.Length + items.Length);
+
+            items.CopyTo(_bufferOwner.Buffer.AsSpan().Slice(Count));
+            Count += items.Length;
+        }
+
+        public void AddRange(TSource[] array) => AddRange(array.AsSpan());
+
+        public void AddRange(IEnumerable<TSource> items)
+        {
+            if (items is ICollection<TSource> collection)
+            {
+                bool isCapacityEnough = _bufferOwner.Buffer.Length - collection.Count - Count > 0;
+                if (!isCapacityEnough)
+                    _bufferOwner.Grow(_bufferOwner.Buffer.Length + collection.Count);
+
+                collection.CopyTo(_bufferOwner.Buffer, Count);
+                Count += collection.Count;
+            }
+            else
+            {
+                foreach (TSource item in items)
+                {
+                    if (Count >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
+                    _bufferOwner.Buffer[Count++] = item;
+                }
+            }
+        }
 
         public Span<TSource> AsSpan() => _bufferOwner.Buffer.AsSpan(0, Count);
         public Memory<TSource> AsMemory() => _bufferOwner.Buffer.AsMemory(0, Count);

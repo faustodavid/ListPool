@@ -53,9 +53,9 @@ namespace ListPool
             if (source is ICollection<TSource> collection)
             {
                 _bufferOwner = new BufferOwner<TSource>(collection.Count);
-                Count = collection.Count;
 
                 collection.CopyTo(_bufferOwner.Buffer, 0);
+                Count = collection.Count;
             }
             else
             {
@@ -87,13 +87,54 @@ namespace ListPool
             }
             else
             {
-                throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{item}'.",
-                    nameof(item));
+               throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
             }
 
             return Count - 1;
         }
 
+        public void AddRange(Span<TSource> items)
+        {
+            bool isCapacityEnough = _bufferOwner.Buffer.Length - items.Length - Count > 0;
+            if (!isCapacityEnough)
+                _bufferOwner.Grow(_bufferOwner.Buffer.Length + items.Length);
+
+            items.CopyTo(_bufferOwner.Buffer.AsSpan().Slice(Count));
+            Count += items.Length;
+        }
+
+        public void AddRange(ReadOnlySpan<TSource> items)
+        {
+            bool isCapacityEnough = _bufferOwner.Buffer.Length - items.Length - Count > 0;
+            if (!isCapacityEnough)
+                _bufferOwner.Grow(_bufferOwner.Buffer.Length + items.Length);
+
+            items.CopyTo(_bufferOwner.Buffer.AsSpan().Slice(Count));
+            Count += items.Length;
+        }
+
+        public void AddRange(TSource[] array) => AddRange(array.AsSpan());
+
+        public void AddRange(IEnumerable<TSource> items)
+        {
+            if (items is ICollection<TSource> collection)
+            {
+                bool isCapacityEnough = _bufferOwner.Buffer.Length - collection.Count - Count > 0;
+                if (!isCapacityEnough)
+                    _bufferOwner.Grow(_bufferOwner.Buffer.Length + collection.Count);
+
+                collection.CopyTo(_bufferOwner.Buffer, Count);
+                Count += collection.Count;
+            }
+            else
+            {
+                foreach (TSource item in items)
+                {
+                    if (Count >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
+                    _bufferOwner.Buffer[Count++] = item;
+                }
+            }
+        }
 
         public void Clear() => Count = 0;
         public readonly bool Contains(TSource item) => IndexOf(item) > -1;
@@ -105,7 +146,7 @@ namespace ListPool
                 return Contains(itemAsTSource);
             }
 
-            throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{item}'.", nameof(item));
+           throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
         }
 
         int IList.IndexOf(object item)
@@ -115,7 +156,7 @@ namespace ListPool
                 return IndexOf(itemAsTSource);
             }
 
-            throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{item}'.", nameof(item));
+           throw new ArgumentException($"Wrong type. Expected {typeof(TSource)}, actual: '{item}'.", nameof(item));
         }
 
         void IList.Remove(object item)

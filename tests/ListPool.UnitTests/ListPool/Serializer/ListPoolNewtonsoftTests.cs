@@ -17,6 +17,7 @@ namespace ListPool.UnitTests.ListPool.Serializer
 
             using ListPool<int> actualItems = JsonConvert.DeserializeObject<ListPool<int>>(serializedItems);
 
+            Assert.Equal(expectedItems.Count, actualItems.Count);
             Assert.All(expectedItems, expectedItem => actualItems.Contains(expectedItem));
         }
 
@@ -31,8 +32,9 @@ namespace ListPool.UnitTests.ListPool.Serializer
             using ListPool<CustomObject> actualItems =
                 JsonConvert.DeserializeObject<ListPool<CustomObject>>(serializedItems);
 
+            Assert.Equal(expectedItems.Count, actualItems.Count);
             Assert.All(expectedItems,
-                expectedItem => actualItems.Single(actualItem => actualItem.Property == expectedItem.Property));
+                expectedItem => actualItems.Any(actualItem => actualItem.Property == expectedItem.Property));
         }
 
         public override void Serialize_and_deserialize_objects_containing_ListPool()
@@ -51,8 +53,9 @@ namespace ListPool.UnitTests.ListPool.Serializer
                 JsonConvert.DeserializeObject<CustomObjectWithListPool>(serializedItems);
 
             Assert.Equal(expectedObject.Property, actualObject.Property);
+            Assert.Equal(expectedItems.Count, actualObject.List.Count);
             Assert.All(expectedItems,
-                expectedItem => actualObject.List.Single(actualItem => actualItem == expectedItem));
+                expectedItem => actualObject.List.Any(actualItem => actualItem == expectedItem));
         }
     }
 }
