@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoFixture;
 using Xunit;
@@ -443,6 +444,41 @@ namespace ListPool.UnitTests.ListPoolValue
             Span<int> sut = listPool.AsSpan();
 
             Assert.Equal(0, sut.Length);
+        }
+
+        [Fact]
+        public void Create_ValueListPool_from_enumerable()
+        {
+            IEnumerable<int> values = Enumerable.Range(0, 10);
+
+            using var sut = new ValueListPool<int>(values);
+
+            IEnumerable<int> expectedValues = values.ToArray();
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void Create_large_ValueListPool_from_enumerable()
+        {
+            IEnumerable<int> values = Enumerable.Range(0, 1000);
+
+            using var sut = new ValueListPool<int>(values);
+
+            IEnumerable<int> expectedValues = values.ToArray();
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void Create_ValueListPool_from_collection()
+        {
+            ICollection<int> expectedValues = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = new ValueListPool<int>(expectedValues);
+
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
         }
     }
 }
