@@ -58,7 +58,8 @@ static async Task Main()
  ```
 
  Mapping domain object to dto:
- Note: `ValueListPool` is not been dispose at `MapToResult`. It is dispose at the caller.
+
+ *Note: `ValueListPool` is not been dispose at `MapToResult`. It is dispose at the caller.*
 
   ```csharp
 static void Main()
@@ -92,7 +93,8 @@ static void Main()
   ```
 
 Updating ValueListPool in other methods:
-Note: The use of `ref` is required for `ValueListPool` when it is updated in other methods because it is a ValueType. `ListPool` does not require it.
+
+*Note: The use of `ref` is required for `ValueListPool` when it is updated in other methods because it is a ValueType. `ListPool` does not require it.*
 
   ```csharp
 static void Main()
