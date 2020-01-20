@@ -1,6 +1,6 @@
 # ListPool
 
-Allocation-free implementation of IList using ArrayPool with two variants, ListPool and ValueListPool
+Allocation-free implementation of IList using ArrayPool with two variants, `ListPool` and `ValueListPool`
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/faustodavid/ListPool/Build)](https://github.com/faustodavid/ListPool/actions)
 [![Coveralls github](https://img.shields.io/coveralls/github/faustodavid/ListPool)](https://coveralls.io/github/faustodavid/ListPool)
@@ -20,9 +20,9 @@ Requirements:
 
 ## Introduction
 
-When performance matter, ListPool provides all the goodness of ArrayPool with the usability of IList and support for Span.
+When performance matter, **ListPool** provides all the goodness of ArrayPool with the usability of IList and support for Span.
 
-It has two variants ListPool and ValueListPool.
+It has two variants `ListPool` and `ValueListPool`.
 
 Differences:
 
@@ -37,11 +37,11 @@ Differences:
   * Allocation-free
   * Cannot be deserialized
   * Cannot be created with parameterless constructors, otherwise it is created in an invalid state
-  * Because it is ValueType when it is passed to other methods, it is passed by copy, not by reference. It is good for performance, but any modifications don't affect the original instance. In case it is required to be updated, we need to use the "ref" keyword in the parameter.
+  * Because it is ValueType when it is passed to other methods, it is passed by copy, not by reference. It is good for performance, but any modifications don't affect the original instance. In case it is required to be updated, it is required to use the "ref" keyword in the parameter.
 
  ## How to use
 
- ListPool and ValueListPool implement IDisposable. After finishing their use, you must dispose the list.
+ `ListPool` and `ValueListPool` implement IDisposable. After finishing their use, you must dispose the list.
 
  Examples
 
@@ -58,7 +58,7 @@ static async Task Main()
  ```
 
  Mapping domain object to dto:
- Note: ValueListPool is not been dispose at `MapToResult`. It is dispose at the caller.
+ Note: `ValueListPool` is not been dispose at `MapToResult`. It is dispose at the caller.
 
   ```csharp
 static void Main()
@@ -90,6 +90,25 @@ static void Main()
     ...
 }
   ```
+
+Updating ValueListPool in other methods:
+Note: The use of `ref` is required for `ValueListPool` when it is updated in other methods because it is a ValueType. `ListPool` does not require it.
+
+  ```csharp
+static void Main()
+{
+    ValueListPool<int> numbers = Enumerable.Range(0, 1000).ToValueListPool();
+    AddNumbers(ref numbers);
+    ...
+    numbers.Dispose();
+}
+
+static void AddNumbers(ref ValueListPool<int> numbers)
+{
+    numbers.AddRange(Enumerable.Range(0, 1000));
+}
+  ```
+
 
 
 ## Contributors
