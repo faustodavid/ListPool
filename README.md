@@ -16,17 +16,17 @@ It has two variants ListPool and ValueListPool.
 Differences:
 
 * ListPool:
- * ReferenceType
- * Serializable
- * Because it is a class it has a constant heap allocation of 64kb regardiness the size
+  * ReferenceType
+  * Serializable
+  * Because it is a class it has a constant heap allocation of 64kb regardiness the size
 
 * ValueListPool
- * ValueType
- * High-performance
- * Allocation-free
- * Cannot be deserialize
- * Cannot be created with parametless constructor, otherwise will be in invalid state. (Wich will be allow by the compiler)
- * Because it is ValueType when it is pass to other methods is pass by copy not by reference. This is good for performance but any modification wont be reflected in the original instance. In case is required to be updated need to use the "ref" keyword in the parameter.
+  * ValueType
+  * High-performance
+  * Allocation-free
+  * Cannot be deserialize
+  * Cannot be created with parametless constructor, otherwise will be in invalid state. (Wich will be allow by the compiler)
+  * Because it is ValueType when it is pass to other methods is pass by copy not by reference. This is good for performance but any modification wont be reflected in the original instance. In case is required to be updated need to use the "ref" keyword in the parameter.
 
  ## How to use
 
