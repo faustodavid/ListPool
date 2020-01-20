@@ -20,7 +20,7 @@ Requirements:
 
 ## Introduction
 
-When performance matter, **ListPool** provides all the goodness of ArrayPool with the usability of IList and support for Span.
+When performance matter, **ListPool** provides all the goodness of ArrayPool with the usability of `IList` and support for `Span`.
 
 It has two variants `ListPool` and `ValueListPool`.
 
