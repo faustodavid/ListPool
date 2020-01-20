@@ -37,39 +37,39 @@ Differences:
  Deserialization:
 
  ```csharp
-         static async Task Main()
-        {
-            var httpClient = HttpClientFactory.Create();
-            var stream = await httpClient.GetStreamAsync("examplePath");
-            using var examples = await JsonSerializer.DeserializeAsync<ListPool<string>>(stream); 
-            ...
-        }
+static async Task Main()
+{
+    var httpClient = HttpClientFactory.Create();
+    var stream = await httpClient.GetStreamAsync("examplePath");
+    using var examples = await JsonSerializer.DeserializeAsync<ListPool<string>>(stream); 
+    ...
+}
  ```
 
  Mapping domain object to dto:
 
   ```csharp
-          static void Main()
-        {
-            using ValueListPool<Example> examples = new GetAllExamplesUseCase().Query();
-            using ValueListPool<ExampleResult> examplesResult = new ValueListPool<ExampleResult>(examples.Count);
-            foreach (var example in examples)
-            {
-                examplesResult.Add(new ExampleResult(example));
-            }
-            ...
-        }
+static void Main()
+{
+    using ValueListPool<Example> examples = new GetAllExamplesUseCase().Query();
+    using ValueListPool<ExampleResult> examplesResult = new ValueListPool<ExampleResult>(examples.Count);
+    foreach (var example in examples)
+    {
+        examplesResult.Add(new ExampleResult(example));
+    }
+    ...
+}
   ```
 
 Mapping domain object to dto using LINQ (It perfrom slower than with foreach):
 
   ```csharp
-        static void Main()
-        {
-            using ValueListPool<Example> examples = new GetAllExamplesUseCase().Query();
-            using ValueListPool<ExampleResult> examplesResult = examples.Select(example => new ExampleResult(example)).ToValueListPool();
-            ...
-        }
+static void Main()
+{
+    using ValueListPool<Example> examples = new GetAllExamplesUseCase().Query();
+    using ValueListPool<ExampleResult> examplesResult = examples.Select(example => new ExampleResult(example)).ToValueListPool();
+    ...
+}
   ```
 
 ## Contributors
