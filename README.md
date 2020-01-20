@@ -7,6 +7,17 @@ Allocation-free implementation of IList using ArrayPool with two variants, ListP
 [![Nuget](https://img.shields.io/nuget/v/ListPool)](https://www.nuget.org/packages/ListPool/)
 [![GitHub](https://img.shields.io/github/license/faustodavid/ListPool)](https://github.com/faustodavid/ListPool/blob/master/LICENSE)
 
+
+## Installation
+
+Available on [nuget](https://www.nuget.org/packages/ListPool/)
+
+	PM> Install-Package ListPool
+
+Requirements:
+* netstandard2.1 or above
+* dotnet core 3.0 or above
+
 ## Introduction
 
 When performance matter, ListPool provides all the goodness of ArrayPool with the usability of IList and support for Span.
