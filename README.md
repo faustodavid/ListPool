@@ -9,7 +9,7 @@ Allocation-free implementation of IList using ArrayPool with two variants, ListP
 
 ## Introduction
 
-When performance matter, ListPool provide all the goodness of ArrayPool with the usability of IList and support for Span.
+When performance matter, ListPool provides all the goodness of ArrayPool with the usability of IList and support for Span.
 
 It has two variants ListPool and ValueListPool.
 
@@ -18,19 +18,19 @@ Differences:
 * ListPool:
   * ReferenceType
   * Serializable
-  * Because it is a class it has a constant heap allocation of 64kb regardiness the size
+  * Because it is a class it has a constant heap allocation of 64kb regardless the size
 
 * ValueListPool
   * ValueType
   * High-performance
   * Allocation-free
-  * Cannot be deserialize
-  * Cannot be created with parametless constructor, otherwise will be in invalid state. (Wich will be allow by the compiler)
-  * Because it is ValueType when it is pass to other methods is pass by copy not by reference. This is good for performance but any modification wont be reflected in the original instance. In case is required to be updated need to use the "ref" keyword in the parameter.
+  * Cannot be deserialized
+  * Cannot be created with parameterless constructors, otherwise it is created in an invalid state
+  * Because it is ValueType when it is passed to other methods, it is passed by copy, not by reference. It is good for performance, but any modifications don't affect the original instance. In case it is required to be updated, we need to use the "ref" keyword in the parameter.
 
  ## How to use
 
- ListPool and ValueListPool implement IDisposable, after finshing their use you must dispose the list to return the buffer to the pool.
+ ListPool and ValueListPool implement IDisposable. After finishing their use, you must dispose the list.
 
  Examples
 
@@ -47,21 +47,29 @@ static async Task Main()
  ```
 
  Mapping domain object to dto:
+ Note: ValueListPool is not been dispose at `MapToResult`. It is dispose at the caller.
 
   ```csharp
 static void Main()
 {
     using ValueListPool<Example> examples = new GetAllExamplesUseCase().Query();
-    using ValueListPool<ExampleResult> examplesResult = new ValueListPool<ExampleResult>(examples.Count);
+    using ValueListPool<ExampleResult> exampleResults = MapToResult(examples); 
+    ...
+}
+
+public static ValueListPool<ExampleResult> MapToResult(IReadOnlyCollection<Example> examples)
+{
+    ValueListPool<ExampleResult> examplesResult = new ValueListPool<ExampleResult>(examples.Count);
     foreach (var example in examples)
     {
         examplesResult.Add(new ExampleResult(example));
     }
-    ...
+
+    return examplesResult;
 }
   ```
 
-Mapping domain object to dto using LINQ (It perfrom slower than with foreach):
+Mapping a domain object to dto using LINQ (It perform slower than with foreach):
 
   ```csharp
 static void Main()
@@ -71,6 +79,7 @@ static void Main()
     ...
 }
   ```
+
 
 ## Contributors
 
