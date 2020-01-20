@@ -15,7 +15,6 @@ Available on [nuget](https://www.nuget.org/packages/ListPool/)
 	PM> Install-Package ListPool
 
 Requirements:
-* netstandard2.1 or above
 * dotnet core 3.0 or above
 
 ## Introduction
