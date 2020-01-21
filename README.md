@@ -28,7 +28,7 @@ Differences:
 * ListPool:
   * ReferenceType
   * Serializable
-  * Because it is a class it has a constant heap allocation of 64kb regardless the size
+  * Because it is a class it has a constant heap allocation of ~56 bytes regardless the size
 
 * ValueListPool
   * ValueType
