@@ -180,7 +180,7 @@ namespace ListPool.UnitTests.ValueListPool
             using var listPool = new ValueListPool<int>(10);
             IList<int> sut = listPool;
 
-            Assert.Throws<IndexOutOfRangeException>(() => sut.Insert(index, item));
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
         }
 
 
@@ -278,7 +278,7 @@ namespace ListPool.UnitTests.ValueListPool
             using var listPool = new ValueListPool<int>(10);
             IList<int> sut = listPool;
 
-            Assert.Throws<IndexOutOfRangeException>(() => sut.RemoveAt(index));
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
         }
 
 

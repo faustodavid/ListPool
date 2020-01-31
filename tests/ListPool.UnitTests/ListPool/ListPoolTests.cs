@@ -227,7 +227,7 @@ namespace ListPool.UnitTests.ListPool
             int item = s_fixture.Create<int>();
             using var sut = new ListPool<int>();
 
-            Assert.Throws<IndexOutOfRangeException>(() => sut.Insert(index, item));
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
         }
 
 
@@ -327,7 +327,7 @@ namespace ListPool.UnitTests.ListPool
             const int index = -1;
             using var sut = new ListPool<int>();
 
-            Assert.Throws<IndexOutOfRangeException>(() => sut.RemoveAt(index));
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
         }
 
 
