@@ -233,7 +233,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Insert(int index, TSource item)
         {
-            if (index < 0 || index > Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index > Count) throw new IndexOutOfRangeException(nameof(index));
             if (index >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
             if (index < Count)
                 Array.Copy(_bufferOwner.Buffer, index, _bufferOwner.Buffer, index + 1, Count - index);
@@ -244,7 +244,7 @@ namespace ListPool
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index >= Count) throw new IndexOutOfRangeException(nameof(index));
 
             Count--;
             Array.Copy(_bufferOwner.Buffer, index + 1, _bufferOwner.Buffer, index, Count - index);
@@ -253,20 +253,19 @@ namespace ListPool
         [MaybeNull]
         public readonly TSource this[int index]
         {
-            [Pure]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
 
                 return _bufferOwner.Buffer[index];
             }
 
             set
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
 
                 _bufferOwner.Buffer[index] = value;
             }
@@ -275,20 +274,19 @@ namespace ListPool
         [MaybeNull]
         readonly object IList.this[int index]
         {
-            [Pure]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
 
                 return _bufferOwner.Buffer[index];
             }
 
             set
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
 
                 if (value is TSource valueAsTSource)
                 {

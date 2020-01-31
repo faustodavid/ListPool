@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AutoFixture;
+using Utf8Json;
 using Xunit;
 
 namespace ListPool.UnitTests.ListPool.Serializer
@@ -12,9 +13,9 @@ namespace ListPool.UnitTests.ListPool.Serializer
             {
                 s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()
             };
-            string serializedItems = Utf8Json.JsonSerializer.ToJsonString(expectedItems);
+            string serializedItems = JsonSerializer.ToJsonString(expectedItems);
 
-            using ListPool<int> actualItems = Utf8Json.JsonSerializer.Deserialize<ListPool<int>>(serializedItems);
+            using ListPool<int> actualItems = JsonSerializer.Deserialize<ListPool<int>>(serializedItems);
 
             Assert.Equal(expectedItems.Count, actualItems.Count);
             Assert.All(expectedItems, expectedItem => actualItems.Contains(expectedItem));
@@ -26,10 +27,10 @@ namespace ListPool.UnitTests.ListPool.Serializer
             {
                 s_fixture.Create<CustomObject>(), s_fixture.Create<CustomObject>(), s_fixture.Create<CustomObject>()
             };
-            string serializedItems = Utf8Json.JsonSerializer.ToJsonString(expectedItems);
+            string serializedItems = JsonSerializer.ToJsonString(expectedItems);
 
             using ListPool<CustomObject> actualItems =
-                Utf8Json.JsonSerializer.Deserialize<ListPool<CustomObject>>(serializedItems);
+                JsonSerializer.Deserialize<ListPool<CustomObject>>(serializedItems);
 
             Assert.Equal(expectedItems.Count, actualItems.Count);
             Assert.All(expectedItems,
@@ -46,10 +47,10 @@ namespace ListPool.UnitTests.ListPool.Serializer
             {
                 Property = s_fixture.Create<string>(), List = expectedItems
             };
-            string serializedItems = Utf8Json.JsonSerializer.ToJsonString(expectedObject);
+            string serializedItems = JsonSerializer.ToJsonString(expectedObject);
 
             using CustomObjectWithListPool actualObject =
-                Utf8Json.JsonSerializer.Deserialize<CustomObjectWithListPool>(serializedItems);
+                JsonSerializer.Deserialize<CustomObjectWithListPool>(serializedItems);
 
             Assert.Equal(expectedObject.Property, actualObject.Property);
             Assert.Equal(expectedItems.Count, actualObject.List.Count);

@@ -15,8 +15,8 @@ namespace ListPool.Benchmarks
         private int[] _listCopy;
         private ListPool<int> _listPool;
         private int[] _listPoolCopy;
-        private ValueListPool<int> _valueListPool;
         private int[] _listPoolValueCopy;
+        private ValueListPool<int> _valueListPool;
 
         [Params(10, 100, 1000, 10000)]
         public int N { get; set; }

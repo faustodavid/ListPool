@@ -9,8 +9,8 @@ using System.Threading;
 namespace ListPool
 {
     /// <summary>
-    /// Overhead free implementation of IList using ArrayPool.
-    /// With overhead being the class itself regardless the size of the underlying array.
+    ///     Overhead free implementation of IList using ArrayPool.
+    ///     With overhead being the class itself regardless the size of the underlying array.
     /// </summary>
     /// <typeparam name="TSource"></typeparam>
     public sealed class ListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
@@ -24,8 +24,8 @@ namespace ListPool
         private object? _syncRoot;
 
         /// <summary>
-        /// Construct ListPool with default capacity.
-        /// We recommend to indicate the required capacity in front to avoid regrowing as much as possible.
+        ///     Construct ListPool with default capacity.
+        ///     We recommend to indicate the required capacity in front to avoid regrowing as much as possible.
         /// </summary>
         public ListPool()
         {
@@ -33,7 +33,7 @@ namespace ListPool
         }
 
         /// <summary>
-        /// Construct ListPool with the indicated capacity.
+        ///     Construct ListPool with the indicated capacity.
         /// </summary>
         /// <param name="capacity">Required initial capacity</param>
         public ListPool(int capacity)
@@ -42,7 +42,7 @@ namespace ListPool
         }
 
         /// <summary>
-        /// Construct ListPool from the given source.
+        ///     Construct ListPool from the given source.
         /// </summary>
         /// <param name="source"></param>
         public ListPool(IEnumerable<TSource> source)
@@ -67,17 +67,17 @@ namespace ListPool
         }
 
         /// <summary>
-        /// Capacity of the underlying array.
+        ///     Capacity of the underlying array.
         /// </summary>
         public int Capacity => _bufferOwner.Buffer.Length;
 
         /// <summary>
-        /// Returns underlying array to the pool
+        ///     Returns underlying array to the pool
         /// </summary>
         public void Dispose()
         {
-            _bufferOwner.Dispose();
             Count = 0;
+            _bufferOwner.Dispose();
         }
 
         int ICollection.Count => Count;
@@ -172,16 +172,16 @@ namespace ListPool
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
 
                 return _bufferOwner.Buffer[index];
             }
 
             set
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
 
                 if (value is TSource valueAsTSource)
                 {
@@ -196,7 +196,7 @@ namespace ListPool
         }
 
         /// <summary>
-        /// Count of items added.
+        ///     Count of items added.
         /// </summary>
         public int Count { get; private set; }
 
@@ -235,7 +235,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Insert(int index, TSource item)
         {
-            if (index < 0 || index > Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index > Count) throw new IndexOutOfRangeException(nameof(index));
             if (index >= _bufferOwner.Buffer.Length) _bufferOwner.GrowDoubleSize();
             if (index < Count)
                 Array.Copy(_bufferOwner.Buffer, index, _bufferOwner.Buffer, index + 1, Count - index);
@@ -246,7 +246,7 @@ namespace ListPool
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index >= Count) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index >= Count) throw new IndexOutOfRangeException(nameof(index));
 
             Count--;
             Array.Copy(_bufferOwner.Buffer, index + 1, _bufferOwner.Buffer, index, Count - index);
@@ -259,16 +259,16 @@ namespace ListPool
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
 
                 return _bufferOwner.Buffer[index];
             }
 
             set
             {
-                if (index < 0 || index >= Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
 
                 _bufferOwner.Buffer[index] = value;
             }
