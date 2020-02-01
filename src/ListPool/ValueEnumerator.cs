@@ -31,10 +31,7 @@ namespace ListPool
         readonly object? IEnumerator.Current => _source[_index];
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool MoveNext()
-        {
-            return ++_index < _itemsCount;
-        }
+        public bool MoveNext() => ++_index < _itemsCount;
 
         public void Reset()
         {

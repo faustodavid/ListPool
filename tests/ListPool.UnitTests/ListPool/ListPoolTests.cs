@@ -138,25 +138,21 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Get_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        public override void Get_item_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
             const int index = 2;
             using var sut = new ListPool<int> {s_fixture.Create<int>()};
 
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut[index]);
         }
 
 
-        public override void Get_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
+        public override void Get_item_with_index_bellow_zero_throws_IndexOutOfRangeException()
         {
             int index = -1;
             var sut = new ListPool<int>();
 
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut[index]);
         }
 
 
@@ -215,16 +211,13 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Insert_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        public override void Insert_item_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
             const int index = 2;
             using var sut = new ListPool<int> {s_fixture.Create<int>()};
             int item = s_fixture.Create<int>();
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut.Insert(index, item));
         }
 
 
@@ -234,10 +227,7 @@ namespace ListPool.UnitTests.ListPool
             int item = s_fixture.Create<int>();
             using var sut = new ListPool<int>();
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
         }
 
 
@@ -323,15 +313,12 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void RemoveAt_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        public override void RemoveAt_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
             const int index = 2;
             using var sut = new ListPool<int> {s_fixture.Create<int>()};
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut.RemoveAt(index));
         }
 
 
@@ -340,22 +327,16 @@ namespace ListPool.UnitTests.ListPool
             const int index = -1;
             using var sut = new ListPool<int>();
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
         }
 
 
-        public override void RemoveAt_with_index_zero_when_not_item_added_throws_ArgumentOutOfRangeException()
+        public override void RemoveAt_with_index_zero_when_not_item_added_throws_IndexOutOfRangeException()
         {
             const int index = 0;
             using var sut = new ListPool<int>();
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut.RemoveAt(index));
         }
 
 
@@ -373,27 +354,155 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Set_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        public override void Set_item_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
             const int index = 2;
             using var sut = new ListPool<int> {s_fixture.Create<int>()};
             int item = s_fixture.Create<int>();
 
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut[index] = item);
         }
 
 
-        public override void Set_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
+        public override void Set_item_with_index_bellow_zero_throws_IndexOutOfRangeException()
         {
             const int index = -1;
             int item = s_fixture.Create<int>();
             using var sut = new ListPool<int>();
 
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
+            Assert.Throws<IndexOutOfRangeException>(() => sut[index] = item);
+        }
 
-            Assert.Equal(nameof(index), exception.ParamName);
+        [Fact]
+        public void AddRange_from_array_adds_all_items()
+        {
+            int[] expectedValues = Enumerable.Range(0, 10).ToArray();
+            using var sut = new ListPool<int>(10);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void AddRange_from_array_as_IEnumerable_adds_all_items()
+        {
+            IEnumerable<int> expectedValues = Enumerable.Range(0, 10);
+            using var sut = new ListPool<int>(10);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void AddRange_from_array_as_IEnumerable_bigger_than_capacity_then_it_grows_and_add_items()
+        {
+            IEnumerable<int> expectedValues = Enumerable.Range(0, 1000).ToArray();
+            using var sut = new ListPool<int>(128);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void AddRange_from_array_bigger_than_capacity_then_it_grows_and_add_items()
+        {
+            int[] expectedValues = Enumerable.Range(0, 1000).ToArray();
+            using var sut = new ListPool<int>(128);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void AddRange_from_enumerable_as_IEnumerable_adds_all_items()
+        {
+            IEnumerable<int> expectedValues = Enumerable.Range(0, 10);
+            using var sut = new ListPool<int>(10);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void AddRange_from_enumerable_as_IEnumerable_bigger_than_capacity_then_it_grows_and_add_items()
+        {
+            IEnumerable<int> expectedValues = Enumerable.Range(0, 1000);
+            using var sut = new ListPool<int>(128);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void AddRange_from_ReadOnlySpan_adds_all_items()
+        {
+            ReadOnlySpan<int> expectedValues = Enumerable.Range(0, 10).ToArray();
+            using var sut = new ListPool<int>();
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.Contains(expectedValue, sut);
+            }
+        }
+
+        [Fact]
+        public void AddRange_from_ReadOnlySpan_bigger_than_capacity_then_it_grows_and_add_items()
+        {
+            ReadOnlySpan<int> expectedValues = Enumerable.Range(0, 1000).ToArray();
+            using var sut = new ListPool<int>(64);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.Contains(expectedValue, sut);
+            }
+        }
+
+        [Fact]
+        public void AddRange_from_span_adds_all_items()
+        {
+            Span<int> expectedValues = Enumerable.Range(0, 10).ToArray();
+            using var sut = new ListPool<int>(10);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.Contains(expectedValue, sut);
+            }
+        }
+
+        [Fact]
+        public void AddRange_from_span_bigger_than_capacity_then_it_grows_and_add_items()
+        {
+            Span<int> expectedValues = Enumerable.Range(0, 1000).ToArray();
+            using var sut = new ListPool<int>(64);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.Contains(expectedValue, sut);
+            }
         }
 
         [Fact]
@@ -447,18 +556,6 @@ namespace ListPool.UnitTests.ListPool
         }
 
         [Fact]
-        public void Create_ListPool_from_enumerable()
-        {
-            IEnumerable<int> values = Enumerable.Range(0, 10);
-
-            using var sut = new ListPool<int>(values);
-
-            IEnumerable<int> expectedValues = values.ToArray();
-            Assert.Equal(expectedValues.Count(), sut.Count);
-            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
-        }
-
-        [Fact]
         public void Create_large_ListPool_from_enumerable()
         {
             IEnumerable<int> values = Enumerable.Range(0, 1000);
@@ -482,135 +579,15 @@ namespace ListPool.UnitTests.ListPool
         }
 
         [Fact]
-        public void AddRange_from_array_adds_all_items()
+        public void Create_ListPool_from_enumerable()
         {
-            int[] expectedValues = Enumerable.Range(0, 10).ToArray();
-            using var sut = new ListPool<int>(10);
+            IEnumerable<int> values = Enumerable.Range(0, 10);
 
-            sut.AddRange(expectedValues);
+            using var sut = new ListPool<int>(values);
 
-            Assert.Equal(expectedValues.Length, sut.Count);
-            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
-        }
-
-        [Fact]
-        public void AddRange_from_array_bigger_than_capacity_then_it_grows_and_add_items()
-        {
-            int[] expectedValues = Enumerable.Range(0, 1000).ToArray();
-            using var sut = new ListPool<int>(128);
-
-            sut.AddRange(expectedValues);
-
-            Assert.Equal(expectedValues.Length, sut.Count);
-            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
-        }
-
-        [Fact]
-        public void AddRange_from_enumerable_as_IEnumerable_adds_all_items()
-        {
-            IEnumerable<int> expectedValues = Enumerable.Range(0, 10);
-            using var sut = new ListPool<int>(10);
-
-            sut.AddRange(expectedValues);
-
+            IEnumerable<int> expectedValues = values.ToArray();
             Assert.Equal(expectedValues.Count(), sut.Count);
             Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
-        }
-
-        [Fact]
-        public void AddRange_from_enumerable_as_IEnumerable_bigger_than_capacity_then_it_grows_and_add_items()
-        {
-            IEnumerable<int> expectedValues = Enumerable.Range(0, 1000);
-            using var sut = new ListPool<int>(128);
-
-            sut.AddRange(expectedValues);
-
-            Assert.Equal(expectedValues.Count(), sut.Count);
-            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
-        }
-
-        [Fact]
-        public void AddRange_from_array_as_IEnumerable_adds_all_items()
-        {
-            IEnumerable<int> expectedValues = Enumerable.Range(0, 10);
-            using var sut = new ListPool<int>(10);
-
-            sut.AddRange(expectedValues);
-
-            Assert.Equal(expectedValues.Count(), sut.Count);
-            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
-        }
-
-        [Fact]
-        public void AddRange_from_array_as_IEnumerable_bigger_than_capacity_then_it_grows_and_add_items()
-        {
-            IEnumerable<int> expectedValues = Enumerable.Range(0, 1000).ToArray();
-            using var sut = new ListPool<int>(128);
-
-            sut.AddRange(expectedValues);
-
-            Assert.Equal(expectedValues.Count(), sut.Count);
-            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
-        }
-
-        [Fact]
-        public void AddRange_from_span_adds_all_items()
-        {
-            Span<int> expectedValues = Enumerable.Range(0, 10).ToArray();
-            using var sut = new ListPool<int>(10);
-
-            sut.AddRange(expectedValues);
-
-            Assert.Equal(expectedValues.Length, sut.Count);
-            foreach (int expectedValue in expectedValues)
-            {
-                Assert.Contains(expectedValue, sut);
-            }
-        }
-
-        [Fact]
-        public void AddRange_from_span_bigger_than_capacity_then_it_grows_and_add_items()
-        {
-            Span<int> expectedValues = Enumerable.Range(0, 1000).ToArray();
-            using var sut = new ListPool<int>(64);
-
-            sut.AddRange(expectedValues);
-
-            Assert.Equal(expectedValues.Length, sut.Count);
-            foreach (int expectedValue in expectedValues)
-            {
-                Assert.Contains(expectedValue, sut);
-            }
-        }
-
-        [Fact]
-        public void AddRange_from_ReadOnlySpan_adds_all_items()
-        {
-            ReadOnlySpan<int> expectedValues = Enumerable.Range(0, 10).ToArray();
-            using var sut = new ListPool<int>();
-
-            sut.AddRange(expectedValues);
-
-            Assert.Equal(expectedValues.Length, sut.Count);
-            foreach (int expectedValue in expectedValues)
-            {
-                Assert.Contains(expectedValue, sut);
-            }
-        }
-
-        [Fact]
-        public void AddRange_from_ReadOnlySpan_bigger_than_capacity_then_it_grows_and_add_items()
-        {
-            ReadOnlySpan<int> expectedValues = Enumerable.Range(0, 1000).ToArray();
-            using var sut = new ListPool<int>(64);
-
-            sut.AddRange(expectedValues);
-
-            Assert.Equal(expectedValues.Length, sut.Count);
-            foreach (int expectedValue in expectedValues)
-            {
-                Assert.Contains(expectedValue, sut);
-            }
         }
     }
 }
