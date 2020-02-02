@@ -1,4 +1,4 @@
-# ListPool`<T>`
+# ListPool<T>
 
 Allocation-free implementation of IList using ArrayPool with two variants, `ListPool<T>` and `ValueListPool<T>`
 
