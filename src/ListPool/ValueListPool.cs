@@ -16,7 +16,7 @@ namespace ListPool
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public struct ValueListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable,
-                                           IValueEnumerable<T>
+                                     IValueEnumerable<T>
 
     {
         /// <summary>
@@ -36,6 +36,7 @@ namespace ListPool
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Memory<T> AsMemory() => _buffer.AsMemory(0, Count);
+
         int ICollection.Count => Count;
         readonly bool IList.IsFixedSize => false;
         bool ICollection.IsSynchronized => false;
