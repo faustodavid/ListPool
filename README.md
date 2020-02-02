@@ -1,4 +1,4 @@
-# ListPool
+# ListPool<T>
 
 Allocation-free implementation of IList using ArrayPool with two variants, `ListPool` and `ValueListPool`
 
@@ -19,18 +19,18 @@ Requirements:
 
 ## Introduction
 
-When performance matter, **ListPool** provides all the goodness of ArrayPool with the usability of `IList` and support for `Span`.
+When performance matter, **ListPool<T>** provides all the goodness of ArrayPool with the usability of `IList` and support for `Span<T>`.
 
 It has two variants `ListPool` and `ValueListPool`.
 
 Differences:
 
-* ListPool:
+* ListPool<T>:
   * ReferenceType
   * Serializable
   * Because it is a class it has a constant heap allocation of ~56 bytes regardless the size
 
-* ValueListPool
+* ValueListPool<T>
   * ValueType
   * High-performance
   * Allocation-free
@@ -40,7 +40,7 @@ Differences:
 
  ## How to use
 
- `ListPool` and `ValueListPool` implement IDisposable. After finishing their use, you must dispose the list.
+ `ListPool<T>` and `ValueListPool<T>` implement IDisposable. After finishing their use, you must dispose the list.
 
  Examples
 
@@ -58,7 +58,7 @@ static async Task Main()
 
  Mapping domain object to dto:
 
- *Note: `ValueListPool` is not been dispose at `MapToResult`. It is dispose at the caller.*
+ *Note: `ValueListPool<T>` is not been dispose at `MapToResult`. It is dispose at the caller.*
 
   ```csharp
 static void Main()
@@ -91,9 +91,9 @@ static void Main()
 }
   ```
 
-Updating ValueListPool in other methods:
+Updating ValueListPool<T> in other methods:
 
-*Note: The use of `ref` is required for `ValueListPool` when it is updated in other methods because it is a ValueType. `ListPool` does not require it.*
+*Note: The use of `ref` is required for `ValueListPool<T>` when it is updated in other methods because it is a ValueType. `ListPool<T>` does not require it.*
 
   ```csharp
 static void Main()
