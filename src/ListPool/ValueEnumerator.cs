@@ -38,7 +38,7 @@ namespace ListPool
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get { return _source[_index]; }
-        } 
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext() => ++_index < _itemsCount;

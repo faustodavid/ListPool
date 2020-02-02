@@ -72,6 +72,16 @@ namespace ListPool
         /// </summary>
         public int Capacity => _buffer.Length;
 
+        /// <summary>
+        ///     Returns underlying array to the pool
+        /// </summary>
+        public void Dispose()
+        {
+            Count = 0;
+            if (_buffer != null)
+                ArrayPool<TSource>.Shared.Return(_buffer);
+        }
+
         int ICollection.Count => Count;
         bool IList.IsFixedSize => false;
         bool ICollection.IsSynchronized => false;
@@ -344,16 +354,6 @@ namespace ListPool
 
             _buffer = newBuffer;
             ArrayPool<TSource>.Shared.Return(oldBuffer);
-        }
-
-        /// <summary>
-        ///     Returns underlying array to the pool
-        /// </summary>
-        public void Dispose()
-        {
-            Count = 0;
-            if (_buffer != null)
-                ArrayPool<TSource>.Shared.Return(_buffer);
         }
     }
 }
