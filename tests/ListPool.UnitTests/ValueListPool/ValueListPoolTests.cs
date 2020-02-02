@@ -314,6 +314,31 @@ namespace ListPool.UnitTests.ValueListPool
         }
 
         [Fact]
+        public void AddRange_adds_all_items()
+        {
+            int[] expectedValues = Enumerable.Range(0, 10).ToArray();
+            int expectedItem0 = s_fixture.Create<int>();
+            int expectedItem1 = s_fixture.Create<int>();
+            int expectedItem2 = s_fixture.Create<int>();
+            int expectedItemAtTheEnd = s_fixture.Create<int>();
+            int expectedCount = expectedValues.Length + 4;
+            using var sut = new ValueListPool<int>(20)
+            {
+                expectedItem0, expectedItem1, expectedItem2
+            };
+
+            sut.AddRange(expectedValues);
+            sut.Add(expectedItemAtTheEnd);
+
+            Assert.Equal(expectedCount, sut.Count);
+            Assert.Equal(expectedItem0, sut[0]);
+            Assert.Equal(expectedItem1, sut[1]);
+            Assert.Equal(expectedItem2, sut[2]);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+            Assert.Equal(expectedItemAtTheEnd, sut[13]);
+        }
+
+        [Fact]
         public void AddRange_from_array_as_IEnumerable_adds_all_items()
         {
             IEnumerable<int> expectedValues = Enumerable.Range(0, 10);
