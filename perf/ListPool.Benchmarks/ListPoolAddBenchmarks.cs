@@ -52,7 +52,7 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public void ValueListPool()
         {
             for (int i = 0; i < N - 1; i++)
             {

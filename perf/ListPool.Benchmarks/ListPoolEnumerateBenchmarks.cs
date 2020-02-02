@@ -59,7 +59,7 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public void ValueListPool()
         {
             foreach (int _ in _valueListPool)
             {

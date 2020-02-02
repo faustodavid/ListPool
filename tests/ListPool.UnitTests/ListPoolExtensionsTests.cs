@@ -39,7 +39,7 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
-        public void ToListPoolValue_from_collection_contains_all_items()
+        public void ToValueListPool_from_collection_contains_all_items()
         {
             int[] enumerable = Enumerable.Range(0, 10).ToArray();
 
@@ -49,7 +49,7 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
-        public void ToListPoolValue_from_IEnumerable_contains_all_items()
+        public void ToValueListPool_from_IEnumerable_contains_all_items()
         {
             IEnumerable<int> enumerable = Enumerable.Range(0, 10);
 
@@ -59,7 +59,7 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
-        public void ToListPoolValue_when_source_is_null_throw_ArgumentNullException()
+        public void ToValueListPool_when_source_is_null_throw_ArgumentNullException()
         {
             IEnumerable<int> source = null;
             string expectedName = nameof(source);

@@ -53,7 +53,7 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public void ValueListPool()
         {
             _valueListPool.Contains(N / 2);
         }

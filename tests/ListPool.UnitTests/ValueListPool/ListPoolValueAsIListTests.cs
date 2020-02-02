@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ListPool.UnitTests.ValueListPool
 {
-    public class ListPoolValueAsIListTests : ListPoolTestsBase
+    public class ValueListPoolAsIListTests : ListPoolTestsBase
     {
         public override void Add_items_when_capacity_is_full_then_buffer_autogrow()
         {
