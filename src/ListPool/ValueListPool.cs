@@ -30,7 +30,11 @@ namespace ListPool
         public int Count { get; private set; }
 
         public readonly bool IsReadOnly => false;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Span<TSource> AsSpan() => _buffer.AsSpan(0, Count);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Memory<TSource> AsMemory() => _buffer.AsMemory(0, Count);
         int ICollection.Count => Count;
         readonly bool IList.IsFixedSize => false;
@@ -208,6 +212,7 @@ namespace ListPool
             Insert(index, itemAsTSource);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly int IndexOf(TSource item) => Array.IndexOf(_buffer, item, 0, Count);
 
         public readonly void CopyTo(TSource[] array, int arrayIndex) =>
