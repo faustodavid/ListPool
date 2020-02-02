@@ -256,7 +256,6 @@ namespace ListPool
         [MaybeNull]
         public TSource this[int index]
         {
-            [Pure]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
@@ -279,8 +278,7 @@ namespace ListPool
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        [Pure]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ValueEnumerator<TSource> GetEnumerator() =>
             new ValueEnumerator<TSource>(_buffer, Count);
 
@@ -327,7 +325,10 @@ namespace ListPool
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Span<TSource> AsSpan() => _buffer.AsSpan(0, Count);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Memory<TSource> AsMemory() => _buffer.AsMemory(0, Count);
 
         [MethodImpl(MethodImplOptions.NoInlining)]
