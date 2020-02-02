@@ -15,20 +15,17 @@ namespace ListPool.Benchmarks
         private ListPool<int> _listPool;
         private ValueListPool<int> _valueListPool;
 
-        [Params(1000)]
+        [Params(100, 1000, 10000)]
         public int N { get; set; }
 
-        [Params(0.10, 0.50, 0.80, 1)]
-        public double CapacityFilled { get; set; }
-
-        [IterationSetup]
-        public void IterationSetup()
+        [GlobalSetup]
+        public void GlobalSetup()
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
             _valueListPool = new ValueListPool<int>(N);
 
-            for (int i = 0; i < N * CapacityFilled; i++)
+            for (int i = 0; i < N; i++)
             {
                 _list.Add(1);
                 _listPool.Add(1);
@@ -36,8 +33,8 @@ namespace ListPool.Benchmarks
             }
         }
 
-        [IterationCleanup]
-        public void IterationCleanup()
+        [GlobalCleanup]
+        public void GlobalCleanup()
         {
             _listPool.Dispose();
             _valueListPool.Dispose();

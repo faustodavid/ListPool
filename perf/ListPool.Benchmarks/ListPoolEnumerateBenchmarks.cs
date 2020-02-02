@@ -21,7 +21,7 @@ namespace ListPool.Benchmarks
         [Params(0.10, 0.50, 0.80, 1)]
         public double CapacityFilled { get; set; }
 
-        [IterationSetup]
+        [GlobalSetup]
         public void GlobalSetup()
         {
             _list = new List<int>(N);
@@ -35,7 +35,7 @@ namespace ListPool.Benchmarks
             }
         }
 
-        [IterationCleanup]
+        [GlobalCleanup]
         public void GlobalCleanup()
         {
             _listPool.Dispose();
@@ -59,9 +59,25 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
+        public void ListPoolAsSpan()
+        {
+            foreach (int _ in _listPool.AsSpan())
+            {
+            }
+        }
+
+        [Benchmark]
         public void ValueListPool()
         {
             foreach (int _ in _valueListPool)
+            {
+            }
+        }
+
+        [Benchmark]
+        public void ValueListPoolAsSpan()
+        {
+            foreach (int _ in _valueListPool.AsSpan())
             {
             }
         }

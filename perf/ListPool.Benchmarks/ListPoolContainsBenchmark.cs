@@ -15,11 +15,11 @@ namespace ListPool.Benchmarks
         private ListPool<int> _listPool;
         private ValueListPool<int> _valueListPool;
 
-        [Params(10, 100, 1000, 10000)]
+        [Params(100, 1000, 10000)]
         public int N { get; set; }
 
-        [IterationSetup]
-        public void IterationSetup()
+        [GlobalSetup]
+        public void GlobalSetup()
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
@@ -33,29 +33,29 @@ namespace ListPool.Benchmarks
             }
         }
 
-        [IterationCleanup]
-        public void IterationCleanup()
+        [GlobalCleanup]
+        public void GlobalCleanup()
         {
             _listPool.Dispose();
             _valueListPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
-        public void List()
+        public bool List()
         {
-            _list.Contains(N / 2);
+            return _list.Contains(N / 2);
         }
 
         [Benchmark]
-        public void ListPool()
+        public bool ListPool()
         {
-            _listPool.Contains(N / 2);
+            return _listPool.Contains(N / 2);
         }
 
         [Benchmark]
-        public void ValueListPool()
+        public bool ValueListPool()
         {
-            _valueListPool.Contains(N / 2);
+            return _valueListPool.Contains(N / 2);
         }
     }
 }

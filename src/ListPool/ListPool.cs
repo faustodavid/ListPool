@@ -28,6 +28,7 @@ namespace ListPool
         ///     Construct ListPool with default capacity.
         ///     We recommend to indicate the required capacity in front to avoid regrowing as much as possible.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool()
         {
             _buffer = ArrayPool<TSource>.Shared.Rent(MinimumCapacity);
@@ -37,6 +38,7 @@ namespace ListPool
         ///     Construct ListPool with the indicated capacity.
         /// </summary>
         /// <param name="capacity">Required initial capacity</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool(int capacity)
         {
             _buffer = ArrayPool<TSource>.Shared.Rent(capacity < MinimumCapacity ? MinimumCapacity : capacity);
@@ -46,6 +48,7 @@ namespace ListPool
         ///     Construct ListPool from the given source.
         /// </summary>
         /// <param name="source"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool(IEnumerable<TSource> source)
         {
             if (source is ICollection<TSource> collection)
