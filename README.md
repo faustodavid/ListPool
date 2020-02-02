@@ -1,4 +1,4 @@
-# ListPool<T>
+# ListPool`<T>`
 
 Allocation-free implementation of IList using ArrayPool with two variants, `ListPool<T>` and `ValueListPool<T>`
 
@@ -21,7 +21,7 @@ Requirements:
 
 When performance matter, **ListPool<T>** provides all the goodness of ArrayPool with the usability of `IList` and support for `Span<T>`.
 
-It has two variants `ListPool` and `ValueListPool`.
+It has two variants `ListPool<T>` and `ValueListPool<T>`.
 
 Differences:
 
