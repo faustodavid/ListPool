@@ -5,14 +5,14 @@ using System.Runtime.CompilerServices;
 
 namespace ListPool
 {
-    public struct ValueEnumerator<TSource> : IEnumerator<TSource>
+    public struct ValueEnumerator<T> : IEnumerator<T>
     {
-        private readonly TSource[] _source;
+        private readonly T[] _source;
         private readonly int _itemsCount;
         private int _index;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueEnumerator(TSource[] source, int itemsCount)
+        public ValueEnumerator(T[] source, int itemsCount)
         {
             _source = source;
             _itemsCount = itemsCount;
@@ -20,14 +20,14 @@ namespace ListPool
         }
 
         [MaybeNull]
-        public readonly ref TSource Current
+        public readonly ref T Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => ref _source[_index];
         }
 
         [MaybeNull]
-        readonly TSource IEnumerator<TSource>.Current
+        readonly T IEnumerator<T>.Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get { return _source[_index]; }
