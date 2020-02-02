@@ -1,6 +1,6 @@
 # ListPool<T>
 
-Allocation-free implementation of IList using ArrayPool with two variants, `ListPool` and `ValueListPool`
+Allocation-free implementation of IList using ArrayPool with two variants, `ListPool<T>` and `ValueListPool<T>`
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/faustodavid/ListPool/Build)](https://github.com/faustodavid/ListPool/actions)
 [![Coveralls github](https://img.shields.io/coveralls/github/faustodavid/ListPool)](https://coveralls.io/github/faustodavid/ListPool)
