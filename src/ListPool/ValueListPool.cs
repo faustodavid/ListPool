@@ -252,27 +252,6 @@ namespace ListPool
         }
 
         [MaybeNull]
-        public readonly TSource this[int index]
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                if (index >= Count)
-                    throw new IndexOutOfRangeException(nameof(index));
-
-                return _buffer[index];
-            }
-
-            set
-            {
-                if (index >= Count)
-                    throw new IndexOutOfRangeException(nameof(index));
-
-                _buffer[index] = value;
-            }
-        }
-
-        [MaybeNull]
         readonly object IList.this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -298,6 +277,53 @@ namespace ListPool
                     throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{value}'.",
                         nameof(value));
                 }
+            }
+        }
+
+        [MaybeNull]
+        readonly TSource IList<TSource>.this[int index]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
+
+                return _buffer[index];
+            }
+
+            set
+            {
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
+
+                _buffer[index] = value;
+            }
+        }
+
+        [MaybeNull]
+        readonly TSource IReadOnlyList<TSource>.this[int index]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
+
+                return _buffer[index];
+            }
+        }
+
+        [MaybeNull]
+        public readonly ref TSource this[int index]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                if (index >= Count)
+                    throw new IndexOutOfRangeException(nameof(index));
+
+                return ref _buffer[index];
             }
         }
 

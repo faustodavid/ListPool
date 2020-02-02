@@ -212,7 +212,6 @@ namespace ListPool
             _buffer[Count++] = item;
         }
 
-
         public void Clear() => Count = 0;
         public bool Contains(TSource item) => IndexOf(item) > -1;
 
