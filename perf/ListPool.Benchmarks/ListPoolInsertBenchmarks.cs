@@ -52,7 +52,7 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public void ValueListPool()
         {
             _valueListPool.Insert(N / 2, 22222);
         }

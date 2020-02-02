@@ -27,7 +27,7 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public void ValueListPool()
         {
             using var list = new ValueListPool<int>(N);
         }
