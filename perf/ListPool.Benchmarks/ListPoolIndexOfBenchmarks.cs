@@ -18,8 +18,8 @@ namespace ListPool.Benchmarks
         [Params(100, 1000, 10000)]
         public int N { get; set; }
 
-        [GlobalSetup]
-        public void GlobalSetup()
+        [IterationSetup]
+        public void IterationSetup()
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
@@ -33,7 +33,7 @@ namespace ListPool.Benchmarks
             }
         }
 
-        [GlobalCleanup]
+        [IterationCleanup]
         public void IterationCleanup()
         {
             _listPool.Dispose();

@@ -15,11 +15,8 @@ namespace ListPool.Benchmarks
         private ListPool<int> _listPool;
         private ValueListPool<int> _valueListPool;
 
-        [Params(1000)]
+        [Params(100, 1000, 10000)]
         public int N { get; set; }
-
-        [Params(0.10, 0.50, 0.80, 1)]
-        public double CapacityFilled { get; set; }
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -28,10 +25,11 @@ namespace ListPool.Benchmarks
             _listPool = new ListPool<int>(N);
             _valueListPool = new ValueListPool<int>(N);
 
-            for (int i = 0; i < N * CapacityFilled; i++)
+            for (int i = 0; i < N; i++)
             {
                 _list.Add(1);
                 _listPool.Add(1);
+                _valueListPool.Add(1);
             }
         }
 
@@ -43,43 +41,63 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark(Baseline = true)]
-        public void List()
+        public int List()
         {
-            foreach (int _ in _list)
+            int count = 0;
+            foreach (int value in _list)
             {
+                count += value;
             }
+
+            return count;
         }
 
         [Benchmark]
-        public void ListPool()
+        public int ListPool()
         {
-            foreach (int _ in _listPool)
+            int count = 0;
+            foreach (int value in _listPool)
             {
+                count += value;
             }
+
+            return count;
         }
 
         [Benchmark]
-        public void ListPoolAsSpan()
+        public int ListPoolAsSpan()
         {
-            foreach (int _ in _listPool.AsSpan())
+            int count = 0;
+            foreach (int value in _listPool.AsSpan())
             {
+                count += value;
             }
+
+            return count;
         }
 
         [Benchmark]
-        public void ValueListPool()
+        public int ValueListPool()
         {
-            foreach (int _ in _valueListPool)
+            int count = 0;
+            foreach (int value in _valueListPool)
             {
+                count += value;
             }
+
+            return count;
         }
 
         [Benchmark]
-        public void ValueListPoolAsSpan()
+        public int ValueListPoolAsSpan()
         {
-            foreach (int _ in _valueListPool.AsSpan())
+            int count = 0;
+            foreach (int value in _valueListPool.AsSpan())
             {
+                count += value;
             }
+
+            return count;
         }
     }
 }
