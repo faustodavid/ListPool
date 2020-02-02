@@ -13,13 +13,13 @@ namespace ListPool
     ///     Overhead free implementation of IList using ArrayPool.
     ///     With overhead being the class itself regardless the size of the underlying array.
     /// </summary>
-    /// <typeparam name="TSource"></typeparam>
-    public sealed class ListPool<TSource> : IList<TSource>, IList, IReadOnlyList<TSource>, IDisposable,
-                                            IValueEnumerable<TSource>
+    /// <typeparam name="T"></typeparam>
+    public sealed class ListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable,
+                                            IValueEnumerable<T>
 
     {
         private const int MinimumCapacity = 128;
-        private TSource[] _buffer;
+        private T[] _buffer;
 
         [NonSerialized]
         private object? _syncRoot;
@@ -28,38 +28,41 @@ namespace ListPool
         ///     Construct ListPool with default capacity.
         ///     We recommend to indicate the required capacity in front to avoid regrowing as much as possible.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool()
         {
-            _buffer = ArrayPool<TSource>.Shared.Rent(MinimumCapacity);
+            _buffer = ArrayPool<T>.Shared.Rent(MinimumCapacity);
         }
 
         /// <summary>
         ///     Construct ListPool with the indicated capacity.
         /// </summary>
         /// <param name="capacity">Required initial capacity</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool(int capacity)
         {
-            _buffer = ArrayPool<TSource>.Shared.Rent(capacity < MinimumCapacity ? MinimumCapacity : capacity);
+            _buffer = ArrayPool<T>.Shared.Rent(capacity < MinimumCapacity ? MinimumCapacity : capacity);
         }
 
         /// <summary>
         ///     Construct ListPool from the given source.
         /// </summary>
         /// <param name="source"></param>
-        public ListPool(IEnumerable<TSource> source)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ListPool(IEnumerable<T> source)
         {
-            if (source is ICollection<TSource> collection)
+            if (source is ICollection<T> collection)
             {
-                _buffer = ArrayPool<TSource>.Shared.Rent(collection.Count);
+                _buffer = ArrayPool<T>.Shared.Rent(collection.Count);
 
                 collection.CopyTo(_buffer, 0);
-                Count = collection.Count;
+                _count = collection.Count;
             }
             else
             {
-                _buffer = ArrayPool<TSource>.Shared.Rent(MinimumCapacity);
+                _buffer = ArrayPool<T>.Shared.Rent(MinimumCapacity);
 
-                using IEnumerator<TSource> enumerator = source.GetEnumerator();
+                using IEnumerator<T> enumerator = source.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     Add(enumerator.Current);
@@ -77,9 +80,9 @@ namespace ListPool
         /// </summary>
         public void Dispose()
         {
-            Count = 0;
+            _count = 0;
             if (_buffer != null)
-                ArrayPool<TSource>.Shared.Return(_buffer);
+                ArrayPool<T>.Shared.Return(_buffer);
         }
 
         int ICollection.Count => Count;
@@ -102,13 +105,13 @@ namespace ListPool
 
         int IList.Add(object item)
         {
-            if (item is TSource itemAsTSource)
+            if (item is T itemAsTSource)
             {
                 Add(itemAsTSource);
             }
             else
             {
-                throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{item}'.",
+                throw new ArgumentException($"Wrong value type. Expected {typeof(T)}, got: '{item}'.",
                     nameof(item));
             }
 
@@ -117,22 +120,22 @@ namespace ListPool
 
         bool IList.Contains(object item)
         {
-            if (item is TSource itemAsTSource)
+            if (item is T itemAsTSource)
             {
                 return Contains(itemAsTSource);
             }
 
-            throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{item}'.", nameof(item));
+            throw new ArgumentException($"Wrong value type. Expected {typeof(T)}, got: '{item}'.", nameof(item));
         }
 
         int IList.IndexOf(object item)
         {
-            if (item is TSource itemAsTSource)
+            if (item is T itemAsTSource)
             {
                 return IndexOf(itemAsTSource);
             }
 
-            throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{item}'.", nameof(item));
+            throw new ArgumentException($"Wrong value type. Expected {typeof(T)}, got: '{item}'.", nameof(item));
         }
 
         void IList.Remove(object item)
@@ -142,9 +145,9 @@ namespace ListPool
                 return;
             }
 
-            if (!(item is TSource itemAsTSource))
+            if (!(item is T itemAsTSource))
             {
-                throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{item}'.",
+                throw new ArgumentException($"Wrong value type. Expected {typeof(T)}, got: '{item}'.",
                     nameof(item));
             }
 
@@ -153,9 +156,9 @@ namespace ListPool
 
         void IList.Insert(int index, object item)
         {
-            if (!(item is TSource itemAsTSource))
+            if (!(item is T itemAsTSource))
             {
-                throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{item}'.",
+                throw new ArgumentException($"Wrong value type. Expected {typeof(T)}, got: '{item}'.",
                     nameof(item));
             }
 
@@ -174,7 +177,7 @@ namespace ListPool
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index >= Count)
+                if (index >= _count)
                     throw new IndexOutOfRangeException(nameof(index));
 
                 return _buffer[index];
@@ -182,16 +185,16 @@ namespace ListPool
 
             set
             {
-                if (index >= Count)
+                if (index >= _count)
                     throw new IndexOutOfRangeException(nameof(index));
 
-                if (value is TSource valueAsTSource)
+                if (value is T valueAsTSource)
                 {
                     _buffer[index] = valueAsTSource;
                 }
                 else
                 {
-                    throw new ArgumentException($"Wrong value type. Expected {typeof(TSource)}, got: '{value}'.",
+                    throw new ArgumentException($"Wrong value type. Expected {typeof(T)}, got: '{value}'.",
                         nameof(value));
                 }
             }
@@ -200,27 +203,29 @@ namespace ListPool
         /// <summary>
         ///     Count of items added.
         /// </summary>
-        public int Count { get; private set; }
+        public int Count => _count;
+
+        private int _count;
 
         public bool IsReadOnly => false;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Add(TSource item)
+        public void Add(T item)
         {
-            if (Count >= _buffer.Length) GrowBufferDoubleSize();
+            if (_count >= _buffer.Length) GrowBufferDoubleSize();
 
-            _buffer[Count++] = item;
+            _buffer[_count++] = item;
         }
 
-        public void Clear() => Count = 0;
-        public bool Contains(TSource item) => IndexOf(item) > -1;
+        public void Clear() => _count = 0;
+        public bool Contains(T item) => IndexOf(item) > -1;
 
-        public int IndexOf(TSource item) => Array.IndexOf(_buffer, item, 0, Count);
+        public int IndexOf(T item) => Array.IndexOf(_buffer, item, 0, _count);
 
-        public void CopyTo(TSource[] array, int arrayIndex) =>
-            Array.Copy(_buffer, 0, array, arrayIndex, Count);
+        public void CopyTo(T[] array, int arrayIndex) =>
+            Array.Copy(_buffer, 0, array, arrayIndex, _count);
 
-        public bool Remove(TSource item)
+        public bool Remove(T item)
         {
             if (item is null) return false;
 
@@ -234,32 +239,32 @@ namespace ListPool
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Insert(int index, TSource item)
+        public void Insert(int index, T item)
         {
-            if (index > Count) throw new IndexOutOfRangeException(nameof(index));
+            if (index > _count) throw new IndexOutOfRangeException(nameof(index));
             if (index >= _buffer.Length) GrowBufferDoubleSize();
-            if (index < Count)
-                Array.Copy(_buffer, index, _buffer, index + 1, Count - index);
+            if (index < _count)
+                Array.Copy(_buffer, index, _buffer, index + 1, _count - index);
 
             _buffer[index] = item;
-            Count++;
+            _count++;
         }
 
         public void RemoveAt(int index)
         {
-            if (index >= Count) throw new IndexOutOfRangeException(nameof(index));
+            if (index >= _count) throw new IndexOutOfRangeException(nameof(index));
 
-            Count--;
-            Array.Copy(_buffer, index + 1, _buffer, index, Count - index);
+            _count--;
+            Array.Copy(_buffer, index + 1, _buffer, index, _count - index);
         }
 
         [MaybeNull]
-        public TSource this[int index]
+        public T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (index >= Count)
+                if (index >= _count)
                     throw new IndexOutOfRangeException(nameof(index));
 
                 return _buffer[index];
@@ -267,93 +272,93 @@ namespace ListPool
 
             set
             {
-                if (index >= Count)
+                if (index >= _count)
                     throw new IndexOutOfRangeException(nameof(index));
 
                 _buffer[index] = value;
             }
         }
 
-        IEnumerator<TSource> IEnumerable<TSource>.GetEnumerator() => GetEnumerator();
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueEnumerator<TSource> GetEnumerator() =>
-            new ValueEnumerator<TSource>(_buffer, Count);
+        public ValueEnumerator<T> GetEnumerator() =>
+            new ValueEnumerator<T>(_buffer, _count);
 
-        public void AddRange(Span<TSource> items)
+        public void AddRange(Span<T> items)
         {
-            bool isCapacityEnough = _buffer.Length - items.Length - Count > 0;
+            bool isCapacityEnough = _buffer.Length - items.Length - _count > 0;
             if (!isCapacityEnough)
                 GrowBuffer(_buffer.Length + items.Length);
 
             items.CopyTo(_buffer.AsSpan().Slice(Count));
-            Count += items.Length;
+            _count += items.Length;
         }
 
-        public void AddRange(ReadOnlySpan<TSource> items)
+        public void AddRange(ReadOnlySpan<T> items)
         {
-            bool isCapacityEnough = _buffer.Length - items.Length - Count > 0;
+            bool isCapacityEnough = _buffer.Length - items.Length - _count > 0;
             if (!isCapacityEnough)
                 GrowBuffer(_buffer.Length + items.Length);
 
             items.CopyTo(_buffer.AsSpan().Slice(Count));
-            Count += items.Length;
+            _count += items.Length;
         }
 
-        public void AddRange(TSource[] array) => AddRange(array.AsSpan());
+        public void AddRange(T[] array) => AddRange(array.AsSpan());
 
-        public void AddRange(IEnumerable<TSource> items)
+        public void AddRange(IEnumerable<T> items)
         {
-            if (items is ICollection<TSource> collection)
+            if (items is ICollection<T> collection)
             {
-                bool isCapacityEnough = _buffer.Length - collection.Count - Count > 0;
+                bool isCapacityEnough = _buffer.Length - collection.Count - _count > 0;
                 if (!isCapacityEnough)
                     GrowBuffer(_buffer.Length + collection.Count);
 
-                collection.CopyTo(_buffer, Count);
-                Count += collection.Count;
+                collection.CopyTo(_buffer, _count);
+                _count += collection.Count;
             }
             else
             {
-                foreach (TSource item in items)
+                foreach (T item in items)
                 {
                     if (Count >= _buffer.Length) GrowBufferDoubleSize();
-                    _buffer[Count++] = item;
+                    _buffer[_count++] = item;
                 }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Span<TSource> AsSpan() => _buffer.AsSpan(0, Count);
+        public Span<T> AsSpan() => _buffer.AsSpan(0, _count);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Memory<TSource> AsMemory() => _buffer.AsMemory(0, Count);
+        public Memory<T> AsMemory() => _buffer.AsMemory(0, _count);
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void GrowBufferDoubleSize()
         {
             int newLength = _buffer.Length * 2;
-            var newBuffer = ArrayPool<TSource>.Shared.Rent(newLength);
+            var newBuffer = ArrayPool<T>.Shared.Rent(newLength);
             var oldBuffer = _buffer;
 
             Array.Copy(oldBuffer, 0, newBuffer, 0, _buffer.Length);
 
             _buffer = newBuffer;
-            ArrayPool<TSource>.Shared.Return(oldBuffer);
+            ArrayPool<T>.Shared.Return(oldBuffer);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void GrowBuffer(int capacity)
         {
-            var newBuffer = ArrayPool<TSource>.Shared.Rent(capacity);
+            var newBuffer = ArrayPool<T>.Shared.Rent(capacity);
             var oldBuffer = _buffer;
 
             Array.Copy(oldBuffer, 0, newBuffer, 0, _buffer.Length);
 
             _buffer = newBuffer;
-            ArrayPool<TSource>.Shared.Return(oldBuffer);
+            ArrayPool<T>.Shared.Return(oldBuffer);
         }
     }
 }
