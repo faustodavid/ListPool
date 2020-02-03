@@ -156,13 +156,16 @@ namespace ListPool
 
         void IList.Insert(int index, object item)
         {
-            if (!(item is T itemAsTSource))
+            if (item is T itemAsTSource)
+            {
+                Insert(index, itemAsTSource);
+                
+            }
+            else
             {
                 throw new ArgumentException($"Wrong value type. Expected {typeof(T)}, got: '{item}'.",
                     nameof(item));
             }
-
-            Insert(index, itemAsTSource);
         }
 
         void ICollection.CopyTo(Array array, int arrayIndex)
@@ -173,7 +176,6 @@ namespace ListPool
         [MaybeNull]
         object IList.this[int index]
         {
-            [Pure]
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
@@ -210,9 +212,19 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(T item)
         {
-            if (Count >= _buffer.Length) GrowBufferDoubleSize();
+            T[] buffer = _buffer;
+            int count = Count;
 
-            _buffer[Count++] = item;
+            if (count < buffer.Length)
+            {
+                _buffer[count] = item;
+                count++;
+                Count = count;
+            }
+            else
+            {
+                AddWithResize(item);
+            }
         }
 
         public void Clear() => Count = 0;
@@ -239,13 +251,32 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Insert(int index, T item)
         {
-            if (index > Count) throw new IndexOutOfRangeException(nameof(index));
-            if (index >= _buffer.Length) GrowBufferDoubleSize();
-            if (index < Count)
-                Array.Copy(_buffer, index, _buffer, index + 1, Count - index);
+            int count = Count;
+            T[] buffer = _buffer;
 
-            _buffer[index] = item;
-            Count++;
+            if (index == Count)
+            {
+                if (index < buffer.Length)
+                {
+                    buffer[count] = item;
+                    count++;
+                    Count = count;
+                }
+                else
+                {
+                    AddWithResize(item);
+                }
+            }
+            else if (index < Count)
+            {
+                if (index < count)
+                    Array.Copy(buffer, index, buffer, index + 1, count - index);
+
+                buffer[index] = item;
+                count++;
+                Count = count;
+            }
+            else if (index > count) throw new IndexOutOfRangeException(nameof(index));
         }
 
         public void RemoveAt(int index)
@@ -310,22 +341,42 @@ namespace ListPool
 
         public void AddRange(IEnumerable<T> items)
         {
+            int count = Count;
+            T[] buffer = _buffer;
+
             if (items is ICollection<T> collection)
             {
-                bool isCapacityEnough = _buffer.Length - collection.Count - Count > 0;
+                bool isCapacityEnough = buffer.Length - collection.Count - count > 0;
                 if (!isCapacityEnough)
-                    GrowBuffer(_buffer.Length + collection.Count);
+                {
+                    GrowBuffer(buffer.Length + collection.Count);
+                    buffer = _buffer;
+                }
 
-                collection.CopyTo(_buffer, Count);
-                Count += collection.Count;
+                collection.CopyTo(buffer, count);
+                count += collection.Count;
+                Count = count;
             }
             else
             {
                 foreach (T item in items)
                 {
-                    if (Count >= _buffer.Length) GrowBufferDoubleSize();
-                    _buffer[Count++] = item;
+                    if (count < _buffer.Length)
+                    {
+                        buffer[count] = item;
+                        count++;
+
+                    }
+                    else
+                    {
+                        Count = count;
+                        AddWithResize(item);
+                        count++;
+                        buffer = _buffer;
+                    }
                 }
+
+                Count = count;
             }
         }
 
@@ -336,28 +387,33 @@ namespace ListPool
         public Memory<T> AsMemory() => _buffer.AsMemory(0, Count);
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void GrowBufferDoubleSize()
+        public void AddWithResize(T item)
         {
+            ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
             int newLength = _buffer.Length * 2;
-            var newBuffer = ArrayPool<T>.Shared.Rent(newLength);
-            var oldBuffer = _buffer;
+            T[] newBuffer = arrayPool.Rent(newLength);
+            T[] oldBuffer = _buffer;
+            int count = oldBuffer.Length;
 
-            Array.Copy(oldBuffer, 0, newBuffer, 0, _buffer.Length);
+            Array.Copy(oldBuffer, 0, newBuffer, 0, count);
 
+            newBuffer[count] = item;
             _buffer = newBuffer;
-            ArrayPool<T>.Shared.Return(oldBuffer);
+            Count++;
+            arrayPool.Return(oldBuffer);
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void GrowBuffer(int capacity)
         {
-            var newBuffer = ArrayPool<T>.Shared.Rent(capacity);
-            var oldBuffer = _buffer;
+            ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
+            T[] newBuffer = arrayPool.Rent(capacity);
+            T[] oldBuffer = _buffer;
 
-            Array.Copy(oldBuffer, 0, newBuffer, 0, _buffer.Length);
+            Array.Copy(oldBuffer, 0, newBuffer, 0, oldBuffer.Length);
 
             _buffer = newBuffer;
-            ArrayPool<T>.Shared.Return(oldBuffer);
+            arrayPool.Return(oldBuffer);
         }
     }
 }

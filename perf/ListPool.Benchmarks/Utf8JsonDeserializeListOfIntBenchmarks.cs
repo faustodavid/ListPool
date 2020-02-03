@@ -2,6 +2,7 @@
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
+using Collections.Pooled;
 
 namespace ListPool.Benchmarks
 {
@@ -14,7 +15,7 @@ namespace ListPool.Benchmarks
     {
         private byte[] _serializedList;
 
-        [Params(100, 1000, 1000)]
+        [Params(1_000_000)]
         public int N { get; set; }
 
         [GlobalSetup]
@@ -34,6 +35,13 @@ namespace ListPool.Benchmarks
         public int ListPool()
         {
             using ListPool<int> list = Utf8Json.JsonSerializer.Deserialize<ListPool<int>>(_serializedList);
+            return list.Count;
+        }
+
+        [Benchmark]
+        public int PooledList()
+        {
+            using PooledList<int> list = Utf8Json.JsonSerializer.Deserialize<PooledList<int>>(_serializedList);
             return list.Count;
         }
     }

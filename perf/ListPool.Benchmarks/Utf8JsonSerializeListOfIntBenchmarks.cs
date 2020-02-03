@@ -2,6 +2,7 @@
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
+using Collections.Pooled;
 using Utf8Json;
 
 namespace ListPool.Benchmarks
@@ -16,6 +17,7 @@ namespace ListPool.Benchmarks
     {
         private List<int> _list;
         private ListPool<int> _listPool;
+        private PooledList<int> _pooledList;
 
         [Params(10000)]
         public int N { get; set; }
@@ -26,6 +28,7 @@ namespace ListPool.Benchmarks
             var items = Enumerable.Range(0, N).ToArray();
             _listPool = items.ToListPool();
             _list = items.ToList();
+            _pooledList = items.ToPooledList();
         }
 
         [GlobalCleanup]
@@ -45,6 +48,13 @@ namespace ListPool.Benchmarks
         public int ListPool()
         {
             string serializedItems = JsonSerializer.ToJsonString(_listPool);
+            return serializedItems.Length;
+        }
+
+        [Benchmark]
+        public int PooledList()
+        {
+            string serializedItems = JsonSerializer.ToJsonString(_pooledList);
             return serializedItems.Length;
         }
     }
