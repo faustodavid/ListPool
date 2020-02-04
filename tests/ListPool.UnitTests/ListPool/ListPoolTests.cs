@@ -8,6 +8,7 @@ namespace ListPool.UnitTests.ListPool
 {
     public class ListPoolTests : ListPoolTestsBase
     {
+        [Fact]
         public void Add_item_without_indicate_capacity_of_list()
         {
             int expectedItem = s_fixture.Create<int>();
@@ -31,7 +32,7 @@ namespace ListPool.UnitTests.ListPool
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
         }
 
-
+        [Fact]
         public void Contains_empty_ListPool_without_indicating_capacity_returns_false()
         {
             int randomItem = s_fixture.Create<int>();
@@ -111,7 +112,7 @@ namespace ListPool.UnitTests.ListPool
             Assert.Empty(sut);
         }
 
-
+        [Fact]
         public void Create_without_parameters_should_add_and_get_items()
         {
             const int expectedItemsCount = 3;
@@ -127,7 +128,7 @@ namespace ListPool.UnitTests.ListPool
             Assert.Equal(expectedItemsCount, sut.Count);
         }
 
-
+        [Fact]
         public void Enumerate_when_capacity_is_not_set_dont_throw_exception()
         {
             using var sut = new ListPool<int>();
@@ -155,7 +156,7 @@ namespace ListPool.UnitTests.ListPool
             Assert.Throws<IndexOutOfRangeException>(() => sut[index]);
         }
 
-
+        [Fact]
         public void IndexOf_empty_ListPool_without_indicating_capacity_returns_negative_one()
         {
             int randomItem = s_fixture.Create<int>();
@@ -246,7 +247,7 @@ namespace ListPool.UnitTests.ListPool
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
         }
 
-
+        [Fact]
         public void Insert_without_indicating_capacity_of_list()
         {
             const int index = 0;
