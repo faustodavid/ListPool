@@ -15,7 +15,7 @@ namespace ListPool
     /// <typeparam name="T"></typeparam>
     public sealed class ListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable
     {
-        private const int MinimumCapacity = 10_000;
+        private const int MinimumCapacity = 64;
         private T[] _buffer;
 
         [NonSerialized]
