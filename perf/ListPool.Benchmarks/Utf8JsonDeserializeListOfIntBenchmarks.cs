@@ -14,7 +14,7 @@ namespace ListPool.Benchmarks
     {
         private byte[] _serializedList;
 
-        [Params(100, 1000, 1000)]
+        [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
         [GlobalSetup]
@@ -34,6 +34,19 @@ namespace ListPool.Benchmarks
         public int ListPool()
         {
             using ListPool<int> list = Utf8Json.JsonSerializer.Deserialize<ListPool<int>>(_serializedList);
+            return list.Count;
+        }
+        [Benchmark]
+        public int ListPool_Spreads()
+        {
+            using ListPool<int> list = Spreads.Serialization.Utf8Json.JsonSerializer.Deserialize<ListPool<int>>(_serializedList);
+            return list.Count;
+        }
+
+        [Benchmark]
+        public int List_Spreads()
+        {
+            List<int> list = Spreads.Serialization.Utf8Json.JsonSerializer.Deserialize<List<int>>(_serializedList);
             return list.Count;
         }
     }

@@ -11,53 +11,43 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolAddBenchmarks
     {
-        private List<int> _list;
-        private ListPool<int> _listPool;
-        private ValueListPool<int> _valueListPool;
-
-        [Params(1000)]
+        [Params(100, 1000, 10000)]
         public int N { get; set; }
 
-        [IterationSetup]
-        public void IterationSetup()
-        {
-            _list = new List<int>(N);
-            _listPool = new ListPool<int>(N);
-            _valueListPool = new ValueListPool<int>(N);
-        }
-
-        [IterationCleanup]
-        public void IterationCleanup()
-        {
-            _listPool.Dispose();
-            _valueListPool.Dispose();
-        }
-
         [Benchmark(Baseline = true)]
-        public void List()
+        public int List()
         {
-            for (int i = 0; i < N - 1; i++)
+            List<int> list = new List<int>(N);
+            for (int i = 0; i < N; i++)
             {
-                _list.Add(i);
+                list.Add(i);
             }
+
+            return list.Count;
         }
 
         [Benchmark]
-        public void ListPool()
+        public int ListPool()
         {
-            for (int i = 0; i < N - 1; i++)
+            using ListPool<int> list = new ListPool<int>(N);
+            for (int i = 0; i < N; i++)
             {
-                _listPool.Add(i);
+                list.Add(i);
             }
+
+            return list.Count;
         }
 
         [Benchmark]
-        public void ValueListPool()
+        public int ValueListPool()
         {
-            for (int i = 0; i < N - 1; i++)
+            using ValueListPool<int> list = new ValueListPool<int>(N);
+            for (int i = 0; i < N; i++)
             {
-                _valueListPool.Add(i);
+                list.Add(i);
             }
+
+            return list.Count;
         }
     }
 }
