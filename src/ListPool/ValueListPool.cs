@@ -54,15 +54,27 @@ namespace ListPool
             }
             else
             {
-                Count = 0;
                 _buffer = ArrayPool<T>.Shared.Rent(MinimumCapacity);
-
+                T[] buffer = _buffer;
+                Count = 0;
+                int count = 0;
                 using IEnumerator<T> enumerator = source.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
-                    // Todo: measure perf of this implementation and if we inline the Add with a stack reference of the buffer
-                    Add(enumerator.Current);
+                    if (count < buffer.Length)
+                    {
+                        buffer[count] = enumerator.Current;
+                        count++;
+                    }
+                    else
+                    {
+                        Count = count;
+                        count++;
+                        AddWithResize(enumerator.Current);
+                    }
                 }
+
+                Count = count;
             }
         }
 
