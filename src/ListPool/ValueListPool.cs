@@ -71,6 +71,7 @@ namespace ListPool
                         Count = count;
                         count++;
                         AddWithResize(enumerator.Current);
+                        buffer = _buffer;
                     }
                 }
 
@@ -117,7 +118,18 @@ namespace ListPool
         {
             if (item is T itemAsTSource)
             {
-                Add(itemAsTSource);
+                T[] buffer = _buffer;
+                int count = Count;
+
+                if (count < buffer.Length)
+                {
+                    buffer[count] = itemAsTSource;
+                    Count = count + 1;
+                }
+                else
+                {
+                    AddWithResize(itemAsTSource);
+                }
             }
             else
             {

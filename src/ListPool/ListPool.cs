@@ -77,6 +77,7 @@ namespace ListPool
                         Count = count;
                         count++;
                         AddWithResize(enumerator.Current);
+                        buffer = _buffer;
                     }
                 }
 
