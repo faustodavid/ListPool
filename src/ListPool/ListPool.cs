@@ -53,9 +53,11 @@ namespace ListPool
         {
             if (source is ICollection<T> collection)
             {
-                _buffer = ArrayPool<T>.Shared.Rent(collection.Count);
+                T[] buffer = ArrayPool<T>.Shared.Rent(collection.Count);
 
-                collection.CopyTo(_buffer, 0);
+                collection.CopyTo(buffer, 0);
+
+                _buffer = buffer;
                 Count = collection.Count;
             }
             else
@@ -65,6 +67,7 @@ namespace ListPool
                 using IEnumerator<T> enumerator = source.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
+                    // Todo: measure perf of this implementation and if we inline the Add with a stack reference of the buffer
                     Add(enumerator.Current);
                 }
             }
@@ -81,8 +84,9 @@ namespace ListPool
         public void Dispose()
         {
             Count = 0;
-            if (_buffer != null)
-                ArrayPool<T>.Shared.Return(_buffer);
+            T[] buffer = _buffer;
+            if (buffer != null)
+                ArrayPool<T>.Shared.Return(buffer);
         }
 
         int ICollection.Count => Count;
@@ -213,9 +217,8 @@ namespace ListPool
 
             if (count < buffer.Length)
             {
-                _buffer[count] = item;
-                count++;
-                Count = count;
+                buffer[count] = item;
+                Count++;
             }
             else
             {
@@ -250,37 +253,37 @@ namespace ListPool
             int count = Count;
             T[] buffer = _buffer;
 
-            if (index == Count)
+            if (index < Count)
+            {
+                if (index < count)
+                    Array.Copy(buffer, index, buffer, index + 1, count - index);
+
+                buffer[index] = item;
+                Count++;
+            }
+            else if (index == Count)
             {
                 if (index < buffer.Length)
                 {
                     buffer[count] = item;
-                    count++;
-                    Count = count;
+                    Count++;
                 }
                 else
                 {
                     AddWithResize(item);
                 }
             }
-            else if (index < Count)
-            {
-                if (index < count)
-                    Array.Copy(buffer, index, buffer, index + 1, count - index);
-
-                buffer[index] = item;
-                count++;
-                Count = count;
-            }
             else if (index > count) throw new IndexOutOfRangeException(nameof(index));
         }
 
         public void RemoveAt(int index)
         {
-            if (index >= Count) throw new IndexOutOfRangeException(nameof(index));
+            int count = Count;
+            if (index >= count) throw new IndexOutOfRangeException(nameof(index));
 
-            Count--;
-            Array.Copy(_buffer, index + 1, _buffer, index, Count - index);
+            count--;
+            Array.Copy(_buffer, index + 1, _buffer, index, count - index);
+            Count = count;
         }
 
         [MaybeNull]
@@ -315,21 +318,23 @@ namespace ListPool
 
         public void AddRange(Span<T> items)
         {
-            bool isCapacityEnough = _buffer.Length - items.Length - Count > 0;
+            int count = Count;
+            bool isCapacityEnough = _buffer.Length - items.Length - count > 0;
             if (!isCapacityEnough)
                 GrowBuffer(_buffer.Length + items.Length);
 
-            items.CopyTo(_buffer.AsSpan().Slice(Count));
+            items.CopyTo(_buffer.AsSpan().Slice(count));
             Count += items.Length;
         }
 
         public void AddRange(ReadOnlySpan<T> items)
         {
-            bool isCapacityEnough = _buffer.Length - items.Length - Count > 0;
+            int count = Count;
+            bool isCapacityEnough = _buffer.Length - items.Length - count > 0;
             if (!isCapacityEnough)
                 GrowBuffer(_buffer.Length + items.Length);
 
-            items.CopyTo(_buffer.AsSpan().Slice(Count));
+            items.CopyTo(_buffer.AsSpan().Slice(count));
             Count += items.Length;
         }
 
@@ -350,8 +355,7 @@ namespace ListPool
                 }
 
                 collection.CopyTo(buffer, count);
-                count += collection.Count;
-                Count = count;
+                Count += collection.Count;
             }
             else
             {
