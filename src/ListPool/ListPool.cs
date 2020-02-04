@@ -106,6 +106,7 @@ namespace ListPool
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         int IList.Add(object item)
         {
             if (item is T itemAsTSource)
@@ -324,7 +325,10 @@ namespace ListPool
 
             bool isCapacityEnough = buffer.Length - items.Length - count > 0;
             if (!isCapacityEnough)
+            {
                 GrowBuffer(buffer.Length + items.Length);
+                buffer = _buffer;
+            }
 
             items.CopyTo(buffer.AsSpan().Slice(count));
             Count += items.Length;
@@ -337,7 +341,10 @@ namespace ListPool
 
             bool isCapacityEnough = buffer.Length - items.Length - count > 0;
             if (!isCapacityEnough)
+            {
                 GrowBuffer(buffer.Length + items.Length);
+                buffer = _buffer;
+            }
 
             items.CopyTo(buffer.AsSpan().Slice(count));
             Count += items.Length;

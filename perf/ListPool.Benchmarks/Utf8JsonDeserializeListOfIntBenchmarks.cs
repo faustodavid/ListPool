@@ -15,7 +15,7 @@ namespace ListPool.Benchmarks
     {
         private byte[] _serializedList;
 
-        [Params(1_000_000)]
+        [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
         [GlobalSetup]

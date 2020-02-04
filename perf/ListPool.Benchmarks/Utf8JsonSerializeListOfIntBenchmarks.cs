@@ -19,7 +19,7 @@ namespace ListPool.Benchmarks
         private ListPool<int> _listPool;
         private PooledList<int> _pooledList;
 
-        [Params(10000)]
+        [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
         [GlobalSetup]
@@ -35,26 +35,27 @@ namespace ListPool.Benchmarks
         public void GlobalCleanup()
         {
             _listPool.Dispose();
+            _pooledList.Dispose();
         }
 
         [Benchmark(Baseline = true)]
         public int List()
         {
-            string serializedItems = JsonSerializer.ToJsonString(_list);
+            byte[] serializedItems = JsonSerializer.Serialize(_list);
             return serializedItems.Length;
         }
 
         [Benchmark]
         public int ListPool()
         {
-            string serializedItems = JsonSerializer.ToJsonString(_listPool);
+            byte[] serializedItems = JsonSerializer.Serialize(_listPool);
             return serializedItems.Length;
         }
 
         [Benchmark]
         public int PooledList()
         {
-            string serializedItems = JsonSerializer.ToJsonString(_pooledList);
+            byte[] serializedItems = JsonSerializer.Serialize(_pooledList);
             return serializedItems.Length;
         }
     }
