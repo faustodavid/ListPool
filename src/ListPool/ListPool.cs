@@ -287,9 +287,6 @@ namespace ListPool
             Count = count;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ref T FastGet(int index) => ref _buffer[index];
-
         [MaybeNull]
         public T this[int index]
         {
@@ -394,16 +391,15 @@ namespace ListPool
         private void AddWithResize(T item)
         {
             ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
-            int newLength = _buffer.Length * 2;
-            T[] newBuffer = arrayPool.Rent(newLength);
             T[] oldBuffer = _buffer;
+            T[] newBuffer = arrayPool.Rent(oldBuffer.Length * 2);
             int count = oldBuffer.Length;
 
             Array.Copy(oldBuffer, 0, newBuffer, 0, count);
 
             newBuffer[count] = item;
             _buffer = newBuffer;
-            Count++;
+            Count = count + 1;
             arrayPool.Return(oldBuffer);
         }
 
