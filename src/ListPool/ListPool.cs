@@ -13,11 +13,9 @@ namespace ListPool
     ///     With overhead being the class itself regardless the size of the underlying array.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class ListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable,
-                                      IValueEnumerable<T>
-
+    public sealed class ListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable
     {
-        private const int MinimumCapacity = 128;
+        private const int MinimumCapacity = 10_000;
         private T[] _buffer;
 
         [NonSerialized]
@@ -309,15 +307,6 @@ namespace ListPool
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new ValueEnumerator<T>(_buffer, Count);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator IEnumerable.GetEnumerator() => new ValueEnumerator<T>(_buffer, Count);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ValueEnumerator<T> GetEnumerator() => new ValueEnumerator<T>(_buffer, Count);
-
         public void AddRange(Span<T> items)
         {
             int count = Count;
@@ -398,7 +387,7 @@ namespace ListPool
         public Memory<T> AsMemory() => _buffer.AsMemory(0, Count);
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void AddWithResize(T item)
+        private void AddWithResize(T item)
         {
             ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
             int newLength = _buffer.Length * 2;
@@ -415,7 +404,7 @@ namespace ListPool
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public void GrowBuffer(int capacity)
+        private void GrowBuffer(int capacity)
         {
             ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
             T[] newBuffer = arrayPool.Rent(capacity);
@@ -425,6 +414,64 @@ namespace ListPool
 
             _buffer = newBuffer;
             arrayPool.Return(oldBuffer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(_buffer, Count);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(_buffer, Count);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Enumerator GetEnumerator() => new Enumerator(_buffer, Count);
+
+        public struct Enumerator : IEnumerator<T>
+        {
+            private readonly T[] _source;
+            private readonly int _itemsCount;
+            private int _index;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Enumerator(T[] source, int itemsCount)
+            {
+                _source = source;
+                _itemsCount = itemsCount;
+                _index = -1;
+            }
+
+            [MaybeNull]
+            public readonly ref T Current
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => ref _source[_index];
+            }
+
+            [MaybeNull]
+            readonly T IEnumerator<T>.Current
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _source[_index];
+            }
+
+            [MaybeNull]
+            readonly object? IEnumerator.Current
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _source[_index];
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool MoveNext() => ++_index < _itemsCount;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Reset()
+            {
+                _index = -1;
+            }
+
+            public readonly void Dispose()
+            {
+            }
         }
     }
 }

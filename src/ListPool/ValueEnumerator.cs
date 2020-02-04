@@ -30,14 +30,14 @@ namespace ListPool
         readonly T IEnumerator<T>.Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return _source[_index]; }
+            get => _source[_index];
         }
 
         [MaybeNull]
         readonly object? IEnumerator.Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return _source[_index]; }
+            get => _source[_index];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
