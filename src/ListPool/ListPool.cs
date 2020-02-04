@@ -13,6 +13,7 @@ namespace ListPool
     ///     With overhead being the class itself regardless the size of the underlying array.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public sealed class ListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable
     {
         private const int MinimumCapacity = 64;
