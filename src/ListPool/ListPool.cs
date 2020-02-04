@@ -140,18 +140,15 @@ namespace ListPool
 
         void IList.Remove(object item)
         {
-            if (item is null)
+            if (item is T itemAsTSource)
             {
-                return;
+                Remove(itemAsTSource);
             }
-
-            if (!(item is T itemAsTSource))
+            else if (item != null)
             {
                 throw new ArgumentException($"Wrong value type. Expected {typeof(T)}, got: '{item}'.",
                     nameof(item));
             }
-
-            Remove(itemAsTSource);
         }
 
         void IList.Insert(int index, object item)
@@ -159,7 +156,6 @@ namespace ListPool
             if (item is T itemAsTSource)
             {
                 Insert(index, itemAsTSource);
-                
             }
             else
             {
