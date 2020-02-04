@@ -51,7 +51,7 @@ namespace ListPool
         {
             if (source is ICollection<T> collection)
             {
-                T[] buffer = ArrayPool<T>.Shared.Rent(collection.Count);
+                T[] buffer = ArrayPool<T>.Shared.Rent(collection.Count > MinimumCapacity ? collection.Count : MinimumCapacity);
 
                 collection.CopyTo(buffer, 0);
 
@@ -266,6 +266,13 @@ namespace ListPool
             int count = Count;
             T[] buffer = _buffer;
 
+            if (buffer.Length == count)
+            {
+                count *= 2;
+                GrowBuffer(count);
+                buffer = _buffer;
+            }
+
             if (index < Count)
             {
                 if (index < count)
@@ -276,15 +283,8 @@ namespace ListPool
             }
             else if (index == Count)
             {
-                if (index < buffer.Length)
-                {
-                    buffer[count] = item;
-                    Count++;
-                }
-                else
-                {
-                    AddWithResize(item);
-                }
+                buffer[index] = item;
+                Count++;
             }
             else if (index > count) throw new IndexOutOfRangeException(nameof(index));
         }
