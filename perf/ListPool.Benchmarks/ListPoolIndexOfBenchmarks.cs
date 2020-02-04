@@ -15,7 +15,7 @@ namespace ListPool.Benchmarks
         private ListPool<int> _listPool;
         private ValueListPool<int> _valueListPool;
 
-        [Params(10, 100, 1000, 10000)]
+        [Params(100, 1000, 10000)]
         public int N { get; set; }
 
         [IterationSetup]
@@ -41,21 +41,21 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark(Baseline = true)]
-        public void List()
+        public int List()
         {
-            _list.IndexOf(N / 2);
+            return _list.IndexOf(N / 2);
         }
 
         [Benchmark]
-        public void ListPool()
+        public int ListPool()
         {
-            _listPool.IndexOf(N / 2);
+           return _listPool.IndexOf(N / 2);
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public int ValueListPool()
         {
-            _valueListPool.IndexOf(N / 2);
+            return _valueListPool.IndexOf(N / 2);
         }
     }
 }

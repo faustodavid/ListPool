@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
@@ -12,23 +13,10 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class EnumerableToListPoolBenchmark
     {
-        private IEnumerable<int> _items;
+        private IEnumerable<int> _items => Enumerable.Range(0, N);
 
-        [Params(10, 50, 100, 1000)]
+        [Params(100, 1000, 10000)]
         public int N { get; set; }
-
-        [IterationSetup]
-        public void IterationSetup()
-        {
-            int[] items = new int[N];
-
-            for (int i = 0; i < N - 1; i++)
-            {
-                items[i] = 1;
-            }
-
-            _items = items.Select(i => i);
-        }
 
         [Benchmark]
         public void ListPool()
@@ -37,9 +25,9 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public void ValueListPool()
         {
-            using var _ = _items.ToListPoolValue();
+            using var _ = _items.ToValueListPool();
         }
 
         [Benchmark(Baseline = true)]

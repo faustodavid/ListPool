@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace ListPool
 {
     public static class ListPoolExtensions
     {
-        public static ListPool<TSource> ToListPool<TSource>(this IEnumerable<TSource> source)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ListPool<T> ToListPool<T>(this IEnumerable<T> source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
-            return new ListPool<TSource>(source);
+            return new ListPool<T>(source);
         }
 
-        public static ValueListPool<TSource> ToListPoolValue<TSource>(this IEnumerable<TSource> source)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ValueListPool<T> ToValueListPool<T>(this IEnumerable<T> source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
-            return new ValueListPool<TSource>(source);
+            return new ValueListPool<T>(source);
         }
     }
 }

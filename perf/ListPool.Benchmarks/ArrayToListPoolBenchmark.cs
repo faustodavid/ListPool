@@ -13,7 +13,7 @@ namespace ListPool.Benchmarks
     {
         private int[] _array;
 
-        [Params(10, 50, 100, 1000)]
+        [Params(100, 1000, 10000)]
         public int N { get; set; }
 
         [GlobalSetup]
@@ -40,9 +40,9 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public void ValueListPool()
         {
-            using var _ = _array.ToListPoolValue();
+            using var _ = _array.ToValueListPool();
         }
     }
 }

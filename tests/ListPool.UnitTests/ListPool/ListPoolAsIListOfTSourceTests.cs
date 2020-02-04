@@ -8,16 +8,6 @@ namespace ListPool.UnitTests.ListPool
 {
     public class ListPoolAsIListOfTSourceTests : ListPoolTestsBase
     {
-        public override void Add_item_without_indicate_capacity_of_list()
-        {
-            int expectedItem = s_fixture.Create<int>();
-            using var listPool = new ListPool<int> {expectedItem};
-            IList<int> sut = listPool;
-
-            Assert.Equal(expectedItem, sut[0]);
-        }
-
-
         public override void Add_items_when_capacity_is_full_then_buffer_autogrow()
         {
             using var listPool = new ListPool<int>(128);
@@ -31,18 +21,6 @@ namespace ListPool.UnitTests.ListPool
 
             Assert.Equal(expectedItems.Count, sut.Count);
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
-        }
-
-
-        public override void Contains_empty_ListPool_without_indicating_capacity_returns_false()
-        {
-            int randomItem = s_fixture.Create<int>();
-            using var listPool = new ListPool<int>();
-            IList<int> sut = listPool;
-
-            bool actual = sut.Contains(randomItem);
-
-            Assert.False(actual);
         }
 
 
@@ -120,68 +98,23 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Create_without_parameters_should_add_and_get_items()
-        {
-            const int expectedItemsCount = 3;
-            int expectedAt0 = s_fixture.Create<int>();
-            int expectedAt1 = s_fixture.Create<int>();
-            int expectedAt2 = s_fixture.Create<int>();
-
-            using var listPool = new ListPool<int> {expectedAt0, expectedAt1, expectedAt2};
-            IList<int> sut = listPool;
-
-            Assert.Equal(expectedAt0, sut[0]);
-            Assert.Equal(expectedAt1, sut[1]);
-            Assert.Equal(expectedAt2, sut[2]);
-            Assert.Equal(expectedItemsCount, sut.Count);
-        }
-
-
-        public override void Enumerate_when_capacity_is_not_set_dont_throw_exception()
-        {
-            using var listPool = new ListPool<int>();
-            IList<int> sut = listPool;
-
-            foreach (int _ in sut)
-            {
-            }
-        }
-
-
-        public override void Get_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        public override void Get_item_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
             const int index = 2;
             using var listPool = new ListPool<int> {s_fixture.Create<int>()};
             IList<int> sut = listPool;
 
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut[index]);
         }
 
 
-        public override void Get_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
+        public override void Get_item_with_index_bellow_zero_throws_IndexOutOfRangeException()
         {
             int index = -1;
             var listPool = new ListPool<int>();
             IList<int> sut = listPool;
 
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index]);
-
-            Assert.Equal(nameof(index), exception.ParamName);
-        }
-
-
-        public override void IndexOf_empty_ListPool_without_indicating_capacity_returns_negative_one()
-        {
-            int randomItem = s_fixture.Create<int>();
-            const int expected = -1;
-            using var listPool = new ListPool<int>();
-            IList<int> sut = listPool;
-
-            int actual = sut.IndexOf(randomItem);
-
-            Assert.Equal(expected, actual);
+            Assert.Throws<IndexOutOfRangeException>(() => sut[index]);
         }
 
 
@@ -231,17 +164,14 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Insert_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        public override void Insert_item_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
             const int index = 2;
             using var listPool = new ListPool<int> {s_fixture.Create<int>()};
             IList<int> sut = listPool;
             int item = s_fixture.Create<int>();
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut.Insert(index, item));
         }
 
 
@@ -252,10 +182,7 @@ namespace ListPool.UnitTests.ListPool
             using var listPool = new ListPool<int>();
             IList<int> sut = listPool;
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.Insert(index, item));
         }
 
 
@@ -273,19 +200,6 @@ namespace ListPool.UnitTests.ListPool
 
             Assert.Equal(expectedItems.Count, sut.Count);
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
-        }
-
-
-        public override void Insert_without_indicating_capacity_of_list()
-        {
-            const int index = 0;
-            int expectedItem = s_fixture.Create<int>();
-            using var listPool = new ListPool<int>();
-            IList<int> sut = listPool;
-
-            sut.Insert(index, expectedItem);
-
-            Assert.Equal(expectedItem, sut[0]);
         }
 
 
@@ -348,16 +262,13 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void RemoveAt_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        public override void RemoveAt_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
             const int index = 2;
             using var listPool = new ListPool<int> {s_fixture.Create<int>()};
             IList<int> sut = listPool;
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut.RemoveAt(index));
         }
 
 
@@ -367,23 +278,17 @@ namespace ListPool.UnitTests.ListPool
             using var listPool = new ListPool<int>();
             IList<int> sut = listPool;
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
         }
 
 
-        public override void RemoveAt_with_index_zero_when_not_item_added_throws_ArgumentOutOfRangeException()
+        public override void RemoveAt_with_index_zero_when_not_item_added_throws_IndexOutOfRangeException()
         {
             const int index = 0;
             using var listPool = new ListPool<int>();
             IList<int> sut = listPool;
 
-            ArgumentOutOfRangeException exception =
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.RemoveAt(index));
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut.RemoveAt(index));
         }
 
 
@@ -402,29 +307,25 @@ namespace ListPool.UnitTests.ListPool
         }
 
 
-        public override void Set_item_with_index_above_itemsCount_throws_ArgumentOutOfRangeException()
+        public override void Set_item_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
             const int index = 2;
             using var listPool = new ListPool<int> {s_fixture.Create<int>()};
             IList<int> sut = listPool;
             int item = s_fixture.Create<int>();
 
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut[index] = item);
         }
 
 
-        public override void Set_item_with_index_bellow_zero_throws_ArgumentOutOfRangeException()
+        public override void Set_item_with_index_bellow_zero_throws_IndexOutOfRangeException()
         {
             const int index = -1;
             int item = s_fixture.Create<int>();
             var listPool = new ListPool<int>();
             IList<int> sut = listPool;
 
-            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(() => sut[index] = item);
-
-            Assert.Equal(nameof(index), exception.ParamName);
+            Assert.Throws<IndexOutOfRangeException>(() => sut[index] = item);
         }
     }
 }

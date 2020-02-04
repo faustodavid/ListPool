@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ListPool.UnitTests.ListPool.Serializer
+﻿namespace ListPool.UnitTests.ListPool.Serializer
 {
     public class CustomObject
     {

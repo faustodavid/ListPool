@@ -15,7 +15,7 @@ namespace ListPool.Benchmarks
         private ListPool<int> _listPool;
         private ValueListPool<int> _valueListPool;
 
-        [Params(1000, 10000, 100000)]
+        [Params(100, 1000, 10000)]
         public int N { get; set; }
 
         [IterationSetup]
@@ -52,7 +52,7 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark]
-        public void ListPoolValue()
+        public void ValueListPool()
         {
             _valueListPool.Insert(N / 2, 22222);
         }
