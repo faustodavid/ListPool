@@ -3,7 +3,6 @@ using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -279,10 +278,12 @@ namespace ListPool
         public void RemoveAt(int index)
         {
             int count = Count;
+            T[] buffer = _buffer;
+
             if (index >= count) throw new IndexOutOfRangeException(nameof(index));
 
             count--;
-            Array.Copy(_buffer, index + 1, _buffer, index, count - index);
+            Array.Copy(buffer, index + 1, buffer, index, count - index);
             Count = count;
         }
 
@@ -319,22 +320,26 @@ namespace ListPool
         public void AddRange(Span<T> items)
         {
             int count = Count;
-            bool isCapacityEnough = _buffer.Length - items.Length - count > 0;
-            if (!isCapacityEnough)
-                GrowBuffer(_buffer.Length + items.Length);
+            T[] buffer = _buffer;
 
-            items.CopyTo(_buffer.AsSpan().Slice(count));
+            bool isCapacityEnough = buffer.Length - items.Length - count > 0;
+            if (!isCapacityEnough)
+                GrowBuffer(buffer.Length + items.Length);
+
+            items.CopyTo(buffer.AsSpan().Slice(count));
             Count += items.Length;
         }
 
         public void AddRange(ReadOnlySpan<T> items)
         {
             int count = Count;
-            bool isCapacityEnough = _buffer.Length - items.Length - count > 0;
-            if (!isCapacityEnough)
-                GrowBuffer(_buffer.Length + items.Length);
+            T[] buffer = _buffer;
 
-            items.CopyTo(_buffer.AsSpan().Slice(count));
+            bool isCapacityEnough = buffer.Length - items.Length - count > 0;
+            if (!isCapacityEnough)
+                GrowBuffer(buffer.Length + items.Length);
+
+            items.CopyTo(buffer.AsSpan().Slice(count));
             Count += items.Length;
         }
 
@@ -361,11 +366,10 @@ namespace ListPool
             {
                 foreach (T item in items)
                 {
-                    if (count < _buffer.Length)
+                    if (count < buffer.Length)
                     {
                         buffer[count] = item;
                         count++;
-
                     }
                     else
                     {
