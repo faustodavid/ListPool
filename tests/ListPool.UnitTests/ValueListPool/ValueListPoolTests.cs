@@ -22,6 +22,15 @@ namespace ListPool.UnitTests.ValueListPool
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
         }
 
+        [Fact]
+        public void Create_list_by_passing_another_without_items_set_minimum_capacity()
+        {
+            List<int> emptyList = new List<int>();
+
+            using ValueListPool<int> sut = new ValueListPool<int>(emptyList);
+
+            Assert.Equal(0, sut.Capacity);
+        }
 
         public override void Contains_return_true_when_item_exists()
         {
