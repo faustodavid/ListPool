@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
-using Collections.Pooled;
 
 namespace ListPool.Benchmarks
 {
@@ -31,18 +30,6 @@ namespace ListPool.Benchmarks
         public int ListPool()
         {
             using ListPool<int> list = new ListPool<int>(N);
-            for (int i = 0; i < N; i++)
-            {
-                list.Add(i);
-            }
-
-            return list.Count;
-        }
-
-        [Benchmark]
-        public int PooledList()
-        {
-            using PooledList<int> list = new PooledList<int>(N);
             for (int i = 0; i < N; i++)
             {
                 list.Add(i);

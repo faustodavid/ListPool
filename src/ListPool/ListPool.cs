@@ -217,7 +217,7 @@ namespace ListPool
             if (count < buffer.Length)
             {
                 buffer[count] = item;
-                Count++;
+                Count = count + 1;
             }
             else
             {
@@ -286,6 +286,9 @@ namespace ListPool
             Array.Copy(buffer, index + 1, buffer, index, count - index);
             Count = count;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ref T FastGet(int index) => ref _buffer[index];
 
         [MaybeNull]
         public T this[int index]
@@ -462,7 +465,7 @@ namespace ListPool
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool MoveNext() => ++_index < _itemsCount;
+            public bool MoveNext() => unchecked(++_index < _itemsCount);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Reset()
