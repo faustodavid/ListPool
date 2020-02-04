@@ -29,7 +29,7 @@ namespace ListPool.UnitTests.ValueListPool
 
             using ValueListPool<int> sut = new ValueListPool<int>(emptyList);
 
-            Assert.Equal(0, sut.Capacity);
+            Assert.Equal(64, sut.Capacity);
         }
 
         public override void Contains_return_true_when_item_exists()

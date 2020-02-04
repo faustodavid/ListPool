@@ -24,7 +24,7 @@ namespace ListPool.UnitTests.ListPool
 
             using ListPool<int> sut = new ListPool<int>(emptyList);
 
-            Assert.Equal(0, sut.Capacity);
+            Assert.Equal(64, sut.Capacity);
         }
 
         public override void Add_items_when_capacity_is_full_then_buffer_autogrow()
