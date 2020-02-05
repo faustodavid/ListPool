@@ -16,7 +16,7 @@ namespace ListPool
     [Serializable]
     public sealed class ListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable
     {
-        private const int MinimumCapacity = 64;
+        private const int MinimumCapacity = 32;
         private T[] _buffer;
 
         [NonSerialized]
@@ -275,9 +275,7 @@ namespace ListPool
 
             if (index < Count)
             {
-                if (index < count)
-                    Array.Copy(buffer, index, buffer, index + 1, count - index);
-
+                Array.Copy(buffer, index, buffer, index + 1, count - index);
                 buffer[index] = item;
                 Count++;
             }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
@@ -22,12 +21,6 @@ namespace ListPool.Benchmarks
         public void ListPool()
         {
             using var _ = _items.ToListPool();
-        }
-
-        [Benchmark]
-        public void ValueListPool()
-        {
-            using var _ = _items.ToValueListPool();
         }
 
         [Benchmark(Baseline = true)]
