@@ -137,18 +137,18 @@ namespace ListPool
 
             if (buffer.Length == count)
             {
-                count *= 2;
-                GrowBuffer(count);
+                int newCapacity = count * 2;
+                GrowBuffer(newCapacity);
                 buffer = _buffer;
             }
 
-            if (index < Count)
+            if (index < count)
             {
-                buffer.Slice(index, Count).CopyTo(buffer.Slice(index + 1));
+                buffer.Slice(index, count).CopyTo(buffer.Slice(index + 1));
                 buffer[index] = item;
                 Count++;
             }
-            else if (index == Count)
+            else if (index == count)
             {
                 buffer[index] = item;
                 Count++;
