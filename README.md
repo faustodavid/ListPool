@@ -21,7 +21,7 @@ Requirements:
 
 When performance matter, **ListPool<T>** provides all the goodness of ArrayPool with the usability of `IList` and support for `Span<T>`.
 
-It has two variants `ListPool<T>` and `ValueListPool<T>`.
+It has two high-performance variants `ListPool<T>` and `ValueListPool<T>`.
 
 Differences:
 
@@ -31,16 +31,16 @@ Differences:
   * Because it is a class it has a constant heap allocation of ~56 bytes regardless the size
 
 * ValueListPool<T>
-  * ValueType
-  * High-performance
+  * stack only
   * Allocation-free
+  * Can be created using stackalloc as initial buffer
   * Cannot be deserialized
   * Cannot be created with parameterless constructors, otherwise it is created in an invalid state
   * Because it is ValueType when it is passed to other methods, it is passed by copy, not by reference. It is good for performance, but any modifications don't affect the original instance. In case it is required to be updated, it is required to use the "ref" keyword in the parameter.
 
  ## How to use
 
- `ListPool<T>` and `ValueListPool<T>` implement IDisposable. After finishing their use, you must dispose the list.
+ `ListPool<T>` and `ValueListPool<T>` implement IDisposable. After finishing their use, you must **dispose** the list.
 
  Examples
 
@@ -58,19 +58,19 @@ static async Task Main()
 
  Mapping domain object to dto:
 
- *Note: `ValueListPool<T>` is not been dispose at `MapToResult`. It is dispose at the caller.*
+ *Note: `ListPool<T>` is not been dispose at `MapToResult`. It is dispose at the caller.*
 
   ```csharp
 static void Main()
 {
-    using ValueListPool<Example> examples = new GetAllExamplesUseCase().Query();
-    using ValueListPool<ExampleResult> exampleResults = MapToResult(examples); 
+    using ListPool<Example> examples = new GetAllExamplesUseCase().Query();
+    using ListPool<ExampleResult> exampleResults = MapToResult(examples); 
     ...
 }
 
-public static ValueListPool<ExampleResult> MapToResult(IReadOnlyCollection<Example> examples)
+public static ListPool<ExampleResult> MapToResult(IReadOnlyCollection<Example> examples)
 {
-    ValueListPool<ExampleResult> examplesResult = new ValueListPool<ExampleResult>(examples.Count);
+    ListPool<ExampleResult> examplesResult = new ListPool<ExampleResult>(examples.Count);
     foreach (var example in examples)
     {
         examplesResult.Add(new ExampleResult(example));
@@ -85,8 +85,8 @@ Mapping a domain object to dto using LINQ (It perform slower than with foreach):
   ```csharp
 static void Main()
 {
-    using ValueListPool<Example> examples = new GetAllExamplesUseCase().Query();
-    using ValueListPool<ExampleResult> examplesResult = examples.Select(example => new ExampleResult(example)).ToValueListPool();
+    using ListPool<Example> examples = new GetAllExamplesUseCase().Query();
+    using ListPool<ExampleResult> examplesResult = examples.Select(example => new ExampleResult(example)).ToListPool();
     ...
 }
   ```
@@ -98,7 +98,13 @@ Updating ValueListPool<T> in other methods:
   ```csharp
 static void Main()
 {
-    ValueListPool<int> numbers = Enumerable.Range(0, 1000).ToValueListPool();
+    Span<int> initialBuffer = stackalloc int[500];
+    ValueListPool<int> numbers = new ValueListPool<int>(initialBuffer, ValueListPool<int>.SourceType.UseAsInitialBuffer)
+    for(int i; i < 500; i++)
+    {
+        numbers.Add(i);
+    }
+
     AddNumbers(ref numbers);
     ...
     numbers.Dispose();
@@ -106,7 +112,8 @@ static void Main()
 
 static void AddNumbers(ref ValueListPool<int> numbers)
 {
-    numbers.AddRange(Enumerable.Range(0, 1000));
+    numbers.Add(1);
+    numbers.Add(2);
 }
   ```
 
