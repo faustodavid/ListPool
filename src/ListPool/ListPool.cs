@@ -16,7 +16,7 @@ namespace ListPool
     [Serializable]
     public sealed class ListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable
     {
-        private const int MinimumCapacity = 64;
+        private const int MinimumCapacity = 32;
         private T[] _buffer;
 
         [NonSerialized]
@@ -93,6 +93,7 @@ namespace ListPool
         /// <summary>
         ///     Returns underlying array to the pool
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
             Count = 0;
@@ -239,11 +240,16 @@ namespace ListPool
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear() => Count = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(T item) => IndexOf(item) > -1;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int IndexOf(T item) => Array.IndexOf(_buffer, item, 0, Count);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CopyTo(T[] array, int arrayIndex) =>
             Array.Copy(_buffer, 0, array, arrayIndex, Count);
 
@@ -268,25 +274,23 @@ namespace ListPool
 
             if (buffer.Length == count)
             {
-                count *= 2;
-                GrowBuffer(count);
+                int newCapacity = count * 2;
+                GrowBuffer(newCapacity);
                 buffer = _buffer;
             }
 
-            if (index < Count)
+            if (index < count)
             {
-                if (index < count)
-                    Array.Copy(buffer, index, buffer, index + 1, count - index);
-
+                Array.Copy(buffer, index, buffer, index + 1, count - index);
                 buffer[index] = item;
                 Count++;
             }
-            else if (index == Count)
+            else if (index == count)
             {
                 buffer[index] = item;
                 Count++;
             }
-            else if (index > count) throw new IndexOutOfRangeException(nameof(index));
+            else throw new IndexOutOfRangeException(nameof(index));
         }
 
         public void RemoveAt(int index)
@@ -354,6 +358,7 @@ namespace ListPool
             Count += items.Length;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddRange(T[] array) => AddRange(array.AsSpan());
 
         public void AddRange(IEnumerable<T> items)

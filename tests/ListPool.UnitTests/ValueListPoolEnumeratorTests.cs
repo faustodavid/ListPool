@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace ListPool.UnitTests
         public void GetEnumerator_Enumerate_All_Items()
         {
             int[] expectedItems = s_fixture.CreateMany<int>(10).ToArray();
-            using ValueListPool<int> listPool = new ValueListPool<int>(expectedItems);
-            using ValueListPool<int>.Enumerator sut = listPool.GetEnumerator();
+            using ValueListPool<int> valueListPool = new ValueListPool<int>(expectedItems, ValueListPool<int>.SourceType.UseAsReferenceData);
+            ValueListPool<int>.Enumerator sut = valueListPool.GetEnumerator();
             List<int> actualItems = new List<int>(expectedItems.Length);
 
             while (sut.MoveNext())
@@ -32,21 +33,7 @@ namespace ListPool.UnitTests
         {
             string[] items = s_fixture.CreateMany<string>(10).ToArray();
             IEnumerator expectedEnumerator = items.GetEnumerator();
-            var sut = new ValueListPool<string>.Enumerator(items, items.Length);
-
-            while (expectedEnumerator.MoveNext())
-            {
-                Assert.True(sut.MoveNext());
-                Assert.Equal(expectedEnumerator.Current, sut.Current);
-            }
-        }
-
-        [Fact]
-        public void Current_is_updated_in_each_iteration_using_IEnumerator()
-        {
-            string[] items = s_fixture.CreateMany<string>(10).ToArray();
-            IEnumerator expectedEnumerator = items.GetEnumerator();
-            IEnumerator sut = new ValueListPool<string>.Enumerator(items, items.Length);
+            var sut = new ValueListPool<string>.Enumerator(items.AsSpan());
 
             while (expectedEnumerator.MoveNext())
             {
@@ -60,7 +47,7 @@ namespace ListPool.UnitTests
         {
             string[] items = s_fixture.CreateMany<string>(10).ToArray();
             IEnumerator expectedEnumerator = items.GetEnumerator();
-            var sut = new ValueListPool<string>.Enumerator(items, items.Length);
+            var sut = new ValueListPool<string>.Enumerator(items.AsSpan());
 
             while (expectedEnumerator.MoveNext())
             {

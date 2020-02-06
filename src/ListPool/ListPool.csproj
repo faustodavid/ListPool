@@ -8,15 +8,15 @@
     <Title>ListPool</Title>
     <AssemblyName>ListPool</AssemblyName>
     <PackageId>ListPool</PackageId>
-    <Description>ListPool and ValueListPool are an optimized allocation free implementations of IList using ArrayPool.</Description>
+    <Description>ListPool and ValueListPool are optimized allocation free implementations of IList using ArrayPool.</Description>
     <PackageTags>ASP.NET;List;System.Buffers;ArrayPool;ListPool;Performance;Span</PackageTags>
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>2.2.1</PackageVersion>
+    <PackageVersion>2.3.0</PackageVersion>
     <PackageReleaseNotes>
       Changelog:
-      * Improve overall performance of ListPool and ValueListPool
+      * Breaking change for ValueListPool, now it doesn't implement IList but in exachnge is a ref struct and suppor stackalloc as a buffer for high performance with small dataset.
 
       ListPool is the general use of the implementation. ValueListPool is the zero heap allocations implementation. Note, because it is a struct it is passed by value, not by reference.
     </PackageReleaseNotes>

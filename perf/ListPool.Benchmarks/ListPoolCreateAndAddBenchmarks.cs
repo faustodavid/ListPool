@@ -9,9 +9,9 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolAddBenchmarks
+    public class ListPoolCreateAndAddBenchmarks
     {
-        [Params(100, 1000, 10000)]
+        [Params(50, 500, 1000)]
         public int N { get; set; }
 
         [Benchmark(Baseline = true)]
@@ -41,7 +41,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public int ValueListPool()
         {
-            using ValueListPool<int> list = new ValueListPool<int>(N);
+            using ValueListPool<int> list = new ValueListPool<int>(stackalloc int[N], ValueListPool<int>.SourceType.UseAsInitialBuffer);
             for (int i = 0; i < N; i++)
             {
                 list.Add(i);
