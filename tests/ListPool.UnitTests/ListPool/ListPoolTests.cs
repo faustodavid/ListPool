@@ -603,13 +603,26 @@ namespace ListPool.UnitTests.ListPool
         }
 
         [Fact]
-        public void Create_ListPool_from_collection()
+        public void Create_ListPool_from_small_collection_it_uses_minimum_capacity()
         {
             ICollection<int> expectedValues = Enumerable.Range(0, 10).ToArray();
 
             using var sut = new ListPool<int>(expectedValues);
 
-            Assert.Equal(expectedValues.Count(), sut.Count);
+            Assert.Equal(expectedValues.Count, sut.Count);
+            Assert.Equal(32, sut.Capacity);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void Create_ListPool_from_large_collection_it_uses_capacity_equal_or_bigger_than_collection()
+        {
+            ICollection<int> expectedValues = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = new ListPool<int>(expectedValues);
+
+            Assert.Equal(expectedValues.Count, sut.Count);
+            Assert.True(sut.Capacity >= expectedValues.Count);
             Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
         }
 

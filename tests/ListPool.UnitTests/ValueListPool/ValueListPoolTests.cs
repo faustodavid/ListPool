@@ -644,5 +644,32 @@ namespace ListPool.UnitTests.ValueListPool
                 Assert.True(sut.Contains(i));
             }
         }
+
+        [Fact]
+        public void Create_ValueListPool_by_copying_from_small_array_it_uses_minimum_capacity()
+        {
+            int[] expectedValues = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = new ListPool<int>(expectedValues);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            Assert.Equal(32, sut.Capacity);
+            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void Create_ValueListPool_by_copying__from_large_array_it_uses_capacity_equal_or_bigger_than_collection()
+        {
+            int[] expectedValues = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = new ValueListPool<int>(expectedValues, ValueListPool<int>.SourceType.Copy);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            Assert.True(sut.Capacity >= expectedValues.Length);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.True(sut.Contains(expectedValue));
+            }
+        }
     }
 }

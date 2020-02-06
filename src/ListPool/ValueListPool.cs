@@ -274,7 +274,7 @@ namespace ListPool
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public bool MoveNext() => ++_index < _source.Length;
+            public bool MoveNext() => unchecked(++_index < _source.Length);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Reset()
