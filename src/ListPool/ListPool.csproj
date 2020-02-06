@@ -16,7 +16,7 @@
     <PackageVersion>2.3.0</PackageVersion>
     <PackageReleaseNotes>
       Changelog:
-      * Breaking change for ValueListPool, now it doesn't implement IList but in exachnge is a ref struct and suppor stackalloc as a buffer for high performance with small dataset.
+      * Breaking change for ValueListPool, now it doesn't implement IList but in exachnge is a ref struct and it supports stackalloc as a buffer for high performance with small dataset.
 
       ListPool is the general use of the implementation. ValueListPool is the zero heap allocations implementation. Note, because it is a struct it is passed by value, not by reference.
     </PackageReleaseNotes>

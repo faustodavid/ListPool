@@ -14,7 +14,7 @@ namespace ListPool.Benchmarks
         private List<int> _list;
         private ListPool<int> _listPool;
 
-        [Params(100, 1000, 10000)]
+        [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
         [GlobalSetup]
