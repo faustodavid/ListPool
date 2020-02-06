@@ -674,5 +674,39 @@ namespace ListPool.UnitTests.ValueListPool
                 Assert.True(sut.Contains(expectedValue));
             }
         }
+
+        [Fact]
+        public void Create_ValueListPool_from_empty_InitialBuffer_and_add_new_value_it_grows_using_minimum_capacity()
+        {
+            Span<int> emptyBuffer = stackalloc int[0];
+            int expectedItem = s_fixture.Create<int>();
+            using var sut = new ValueListPool<int>(emptyBuffer, ValueListPool<int>.SourceType.UseAsInitialBuffer);
+
+            sut.Add(expectedItem);
+
+            Assert.Equal(16, sut.Capacity);
+            Assert.Equal(1, sut.Count);
+            Assert.Equal(expectedItem, sut[0]);
+        }
+
+        [Fact]
+        public void Create_ValueListPool_from_small_InitialBuffer_and_when_it_grows_it_use_minimum_capacity()
+        {
+            Span<int> emptyBuffer = stackalloc int[1];
+            int expectedItemAt0 = s_fixture.Create<int>();
+            int expectedItemAt1 = s_fixture.Create<int>();
+            int expectedItemAt2 = s_fixture.Create<int>();
+
+            using var sut = new ValueListPool<int>(emptyBuffer, ValueListPool<int>.SourceType.UseAsInitialBuffer);
+            sut.Add(expectedItemAt0);
+            sut.Add(expectedItemAt1);
+            sut.Add(expectedItemAt2);
+
+            Assert.Equal(16, sut.Capacity);
+            Assert.Equal(3, sut.Count);
+            Assert.Equal(expectedItemAt0, sut[0]);
+            Assert.Equal(expectedItemAt1, sut[1]);
+            Assert.Equal(expectedItemAt2, sut[2]);
+        }
     }
 }
