@@ -109,11 +109,16 @@ namespace ListPool
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear() => Count = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly bool Contains(T item) => IndexOf(item) > -1;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly int IndexOf(T item) => _buffer.Slice(0, Count).IndexOf(item);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void CopyTo(Span<T> array) => _buffer.Slice(0, Count).CopyTo(array);
 
         public bool Remove(T item)
@@ -197,6 +202,7 @@ namespace ListPool
             Count += items.Length;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddRange(T[] array) => AddRange(array.AsSpan());
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

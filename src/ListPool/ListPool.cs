@@ -93,6 +93,7 @@ namespace ListPool
         /// <summary>
         ///     Returns underlying array to the pool
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
             Count = 0;
@@ -239,11 +240,16 @@ namespace ListPool
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear() => Count = 0;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(T item) => IndexOf(item) > -1;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int IndexOf(T item) => Array.IndexOf(_buffer, item, 0, Count);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CopyTo(T[] array, int arrayIndex) =>
             Array.Copy(_buffer, 0, array, arrayIndex, Count);
 
@@ -352,6 +358,7 @@ namespace ListPool
             Count += items.Length;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddRange(T[] array) => AddRange(array.AsSpan());
 
         public void AddRange(IEnumerable<T> items)
