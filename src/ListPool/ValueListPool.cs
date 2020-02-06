@@ -158,7 +158,7 @@ namespace ListPool
                 buffer[index] = item;
                 Count++;
             }
-            else if (index > count) throw new ArgumentOutOfRangeException(nameof(index));
+            else throw new ArgumentOutOfRangeException(nameof(index));
         }
 
         public void RemoveAt(int index)
