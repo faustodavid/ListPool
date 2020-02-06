@@ -14,7 +14,7 @@ namespace ListPool.Benchmarks
     {
         private IEnumerable<int> _items => Enumerable.Range(0, N);
 
-        [Params(100, 1000, 10000)]
+        [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
         [Benchmark]

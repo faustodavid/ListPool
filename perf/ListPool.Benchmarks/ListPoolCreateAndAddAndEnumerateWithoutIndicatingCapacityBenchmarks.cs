@@ -9,16 +9,16 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolCreateAndAddAndEnumerateBenchmarks
+    public class ListPoolCreateAndAddAndEnumerateWithoutIndicatingCapacityBenchmarks
     {
-        [Params(50, 1000, 10_000)]
+        [Params(50, 1_000, 10_000)]
         public int N { get; set; }
 
         [Benchmark(Baseline = true)]
         public int List()
         {
             int count = 0;
-            List<int> list = new List<int>(N);
+            List<int> list = new List<int>();
             for (int i = 0; i < N; i++)
             {
                 list.Add(i);
@@ -36,7 +36,7 @@ namespace ListPool.Benchmarks
         public int ListPool()
         {
             int count = 0;
-            using ListPool<int> list = new ListPool<int>(N);
+            using ListPool<int> list = new ListPool<int>();
             for (int i = 0; i < N; i++)
             {
                 list.Add(i);
@@ -54,7 +54,7 @@ namespace ListPool.Benchmarks
         public int ListPool_AsSpan()
         {
             int count = 0;
-            using ListPool<int> list = new ListPool<int>(N);
+            using ListPool<int> list = new ListPool<int>();
             for (int i = 0; i < N; i++)
             {
                 list.Add(i);
@@ -72,10 +72,7 @@ namespace ListPool.Benchmarks
         public int ValueListPool()
         {
             int count = 0;
-            using ValueListPool<int> list = N < 1024
-                ? new ValueListPool<int>(stackalloc int[N], ValueListPool<int>.SourceType.UseAsInitialBuffer)
-                : new ValueListPool<int>(N);
-
+            using ValueListPool<int> list = new ValueListPool<int>(0);
             for (int i = 0; i < N; i++)
             {
                 list.Add(i);
@@ -93,9 +90,7 @@ namespace ListPool.Benchmarks
         public int ValueListPool_AsSpan()
         {
             int count = 0;
-            using ValueListPool<int> list = N < 1024
-                ? new ValueListPool<int>(stackalloc int[N], ValueListPool<int>.SourceType.UseAsInitialBuffer)
-                : new ValueListPool<int>(N);
+            using ValueListPool<int> list = new ValueListPool<int>(0);
 
             for (int i = 0; i < N; i++)
             {
