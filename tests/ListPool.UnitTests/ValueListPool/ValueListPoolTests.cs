@@ -650,11 +650,14 @@ namespace ListPool.UnitTests.ValueListPool
         {
             int[] expectedValues = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = new ListPool<int>(expectedValues);
+            using var sut = new ValueListPool<int>(expectedValues, ValueListPool<int>.SourceType.Copy);
 
             Assert.Equal(expectedValues.Length, sut.Count);
-            Assert.Equal(32, sut.Capacity);
-            Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+            Assert.Equal(16, sut.Capacity);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.True(sut.Contains(expectedValue));
+            }
         }
 
         [Fact]
