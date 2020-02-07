@@ -8,25 +8,6 @@ namespace ListPool.UnitTests.ListPool
 {
     public class ListPoolTests : ListPoolTestsBase
     {
-        [Fact]
-        public void Add_item_without_indicate_capacity_of_list()
-        {
-            int expectedItem = s_fixture.Create<int>();
-            using var sut = new ListPool<int> {expectedItem};
-
-            Assert.Equal(expectedItem, sut[0]);
-        }
-
-        [Fact]
-        public void Create_list_by_passing_another_without_items_set_minimum_capacity()
-        {
-            List<int> emptyList = new List<int>();
-
-            using ListPool<int> sut = new ListPool<int>(emptyList);
-
-            Assert.Equal(32, sut.Capacity);
-        }
-
         public override void Add_items_when_capacity_is_full_then_buffer_autogrow()
         {
             using var sut = new ListPool<int>(128);
@@ -37,19 +18,10 @@ namespace ListPool.UnitTests.ListPool
                 sut.Add(expectedItem);
             }
 
+            var a = sut.AsSpan().Slice(0, 2).ToListPool();
+
             Assert.Equal(expectedItems.Count, sut.Count);
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
-        }
-
-        [Fact]
-        public void Contains_empty_ListPool_without_indicating_capacity_returns_false()
-        {
-            int randomItem = s_fixture.Create<int>();
-            using var sut = new ListPool<int>();
-
-            bool actual = sut.Contains(randomItem);
-
-            Assert.False(actual);
         }
 
 
@@ -121,32 +93,6 @@ namespace ListPool.UnitTests.ListPool
             Assert.Empty(sut);
         }
 
-        [Fact]
-        public void Create_without_parameters_should_add_and_get_items()
-        {
-            const int expectedItemsCount = 3;
-            int expectedAt0 = s_fixture.Create<int>();
-            int expectedAt1 = s_fixture.Create<int>();
-            int expectedAt2 = s_fixture.Create<int>();
-
-            using var sut = new ListPool<int> {expectedAt0, expectedAt1, expectedAt2};
-
-            Assert.Equal(expectedAt0, sut[0]);
-            Assert.Equal(expectedAt1, sut[1]);
-            Assert.Equal(expectedAt2, sut[2]);
-            Assert.Equal(expectedItemsCount, sut.Count);
-        }
-
-        [Fact]
-        public void Enumerate_when_capacity_is_not_set_dont_throw_exception()
-        {
-            using var sut = new ListPool<int>();
-
-            foreach (int _ in sut)
-            {
-            }
-        }
-
 
         public override void Get_item_with_index_above_itemsCount_throws_IndexOutOfRangeException()
         {
@@ -163,18 +109,6 @@ namespace ListPool.UnitTests.ListPool
             var sut = new ListPool<int>();
 
             Assert.Throws<IndexOutOfRangeException>(() => sut[index]);
-        }
-
-        [Fact]
-        public void IndexOf_empty_ListPool_without_indicating_capacity_returns_negative_one()
-        {
-            int randomItem = s_fixture.Create<int>();
-            const int expected = -1;
-            using var sut = new ListPool<int>();
-
-            int actual = sut.IndexOf(randomItem);
-
-            Assert.Equal(expected, actual);
         }
 
 
@@ -254,18 +188,6 @@ namespace ListPool.UnitTests.ListPool
 
             Assert.Equal(expectedItems.Count, sut.Count);
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
-        }
-
-        [Fact]
-        public void Insert_without_indicating_capacity_of_list()
-        {
-            const int index = 0;
-            int expectedItem = s_fixture.Create<int>();
-            using var sut = new ListPool<int>();
-
-            sut.Insert(index, expectedItem);
-
-            Assert.Equal(expectedItem, sut[0]);
         }
 
 
@@ -384,6 +306,15 @@ namespace ListPool.UnitTests.ListPool
         }
 
         [Fact]
+        public void Add_item_without_indicate_capacity_of_list()
+        {
+            int expectedItem = s_fixture.Create<int>();
+            using var sut = new ListPool<int> {expectedItem};
+
+            Assert.Equal(expectedItem, sut[0]);
+        }
+
+        [Fact]
         public void AddRange_adds_all_items()
         {
             int[] expectedValues = Enumerable.Range(0, 10).ToArray();
@@ -392,10 +323,7 @@ namespace ListPool.UnitTests.ListPool
             int expectedItem2 = s_fixture.Create<int>();
             int expectedItemAtTheEnd = s_fixture.Create<int>();
             int expectedCount = expectedValues.Length + 4;
-            using var sut = new ListPool<int>(20)
-            {
-                expectedItem0, expectedItem1, expectedItem2
-            };
+            using var sut = new ListPool<int>(20) {expectedItem0, expectedItem1, expectedItem2};
 
             sut.AddRange(expectedValues);
             sut.Add(expectedItemAtTheEnd);
@@ -591,6 +519,17 @@ namespace ListPool.UnitTests.ListPool
         }
 
         [Fact]
+        public void Contains_empty_ListPool_without_indicating_capacity_returns_false()
+        {
+            int randomItem = s_fixture.Create<int>();
+            using var sut = new ListPool<int>();
+
+            bool actual = sut.Contains(randomItem);
+
+            Assert.False(actual);
+        }
+
+        [Fact]
         public void Create_large_ListPool_from_enumerable()
         {
             IEnumerable<int> values = Enumerable.Range(0, 1000);
@@ -603,14 +542,74 @@ namespace ListPool.UnitTests.ListPool
         }
 
         [Fact]
-        public void Create_ListPool_from_small_collection_it_uses_minimum_capacity()
+        public void Create_list_by_passing_array_bigger_than_minimum_capacity_use_new_one()
         {
-            ICollection<int> expectedValues = Enumerable.Range(0, 10).ToArray();
+            int[] largeArray = new int[128];
 
-            using var sut = new ListPool<int>(expectedValues);
+            using ListPool<int> sut = new ListPool<int>(largeArray);
 
-            Assert.Equal(expectedValues.Count, sut.Count);
+            Assert.Equal(128, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_array_without_items_set_minimum_capacity()
+        {
+            int[] emptyArray = new int[0];
+
+            using ListPool<int> sut = new ListPool<int>(emptyArray);
+
             Assert.Equal(32, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_collection_bigger_than_minimum_capacity_use_new_one()
+        {
+            ICollection<int> largeCollection = Enumerable.Range(0, 128).ToList();
+
+            using ListPool<int> sut = new ListPool<int>(largeCollection);
+
+            Assert.Equal(128, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_small_collection_set_minimum_capacity()
+        {
+            ICollection<int> emptyCollection = Enumerable.Range(0, 10).ToList();
+
+            using ListPool<int> sut = new ListPool<int>(emptyCollection);
+
+            Assert.Equal(32, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_small_span_set_minimum_capacity()
+        {
+            Span<int> emptySpan = new int[0];
+
+            using ListPool<int> sut = new ListPool<int>(emptySpan);
+
+            Assert.Equal(32, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_span_bigger_than_minimum_capacity_use_new_one()
+        {
+            Span<int> largeSpan = new int[128];
+
+            using ListPool<int> sut = new ListPool<int>(largeSpan);
+
+            Assert.Equal(128, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_ListPool_from_enumerable()
+        {
+            IEnumerable<int> values = Enumerable.Range(0, 10);
+
+            using var sut = new ListPool<int>(values);
+
+            IEnumerable<int> expectedValues = values.ToArray();
+            Assert.Equal(expectedValues.Count(), sut.Count);
             Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
         }
 
@@ -626,16 +625,75 @@ namespace ListPool.UnitTests.ListPool
             Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
         }
 
+
         [Fact]
-        public void Create_ListPool_from_enumerable()
+        public void Create_ListPool_from_null_array_throws_ArgumentNullException()
         {
-            IEnumerable<int> values = Enumerable.Range(0, 10);
+            int[] nullArray = null;
 
-            using var sut = new ListPool<int>(values);
+            Assert.Throws<ArgumentNullException>(() => _ = new ListPool<int>(nullArray));
+        }
 
-            IEnumerable<int> expectedValues = values.ToArray();
-            Assert.Equal(expectedValues.Count(), sut.Count);
+        [Fact]
+        public void Create_ListPool_from_small_collection_it_uses_minimum_capacity()
+        {
+            ICollection<int> expectedValues = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = new ListPool<int>(expectedValues);
+
+            Assert.Equal(expectedValues.Count, sut.Count);
+            Assert.Equal(32, sut.Capacity);
             Assert.All(expectedValues, expectedValue => sut.Contains(expectedValue));
+        }
+
+        [Fact]
+        public void Create_without_parameters_should_add_and_get_items()
+        {
+            const int expectedItemsCount = 3;
+            int expectedAt0 = s_fixture.Create<int>();
+            int expectedAt1 = s_fixture.Create<int>();
+            int expectedAt2 = s_fixture.Create<int>();
+
+            using var sut = new ListPool<int> {expectedAt0, expectedAt1, expectedAt2};
+
+            Assert.Equal(expectedAt0, sut[0]);
+            Assert.Equal(expectedAt1, sut[1]);
+            Assert.Equal(expectedAt2, sut[2]);
+            Assert.Equal(expectedItemsCount, sut.Count);
+        }
+
+        [Fact]
+        public void Enumerate_when_capacity_is_not_set_dont_throw_exception()
+        {
+            using var sut = new ListPool<int>();
+
+            foreach (int _ in sut)
+            {
+            }
+        }
+
+        [Fact]
+        public void IndexOf_empty_ListPool_without_indicating_capacity_returns_negative_one()
+        {
+            int randomItem = s_fixture.Create<int>();
+            const int expected = -1;
+            using var sut = new ListPool<int>();
+
+            int actual = sut.IndexOf(randomItem);
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Insert_without_indicating_capacity_of_list()
+        {
+            const int index = 0;
+            int expectedItem = s_fixture.Create<int>();
+            using var sut = new ListPool<int>();
+
+            sut.Insert(index, expectedItem);
+
+            Assert.Equal(expectedItem, sut[0]);
         }
     }
 }

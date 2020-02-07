@@ -48,7 +48,7 @@ namespace ListPool.Benchmarks
             return serializedItems.Length;
         }
 
-        
+
         [Benchmark]
         public int ListPool_Spreads()
         {

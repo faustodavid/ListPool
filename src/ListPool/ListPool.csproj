@@ -13,12 +13,13 @@
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>2.3.0</PackageVersion>
+    <PackageVersion>2.3.1</PackageVersion>
     <PackageReleaseNotes>
       Changelog:
-      * Breaking change for ValueListPool, now it doesn't implement IList but in exachnge is a ref struct and it supports stackalloc as a buffer for high performance with small dataset.
+      * We added support for ReadOnlySpan and Span in ListPool from constructor and extension methods
+      * Optimize creation of ListPool from Array
 
-      ListPool is the general use of the implementation. ValueListPool is the zero heap allocations implementation. Note, because it is a struct it is passed by value, not by reference.
+      ListPool is the general use of the implementation, we recommend to use ListPool for most of the cases. ValueListPool is the zero heap allocations implementation, it is optimal working along stackalloc initial buffer for small lists. Note, because it is a struct it is passed by value, not by reference.
     </PackageReleaseNotes>
     <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
   </PropertyGroup>
