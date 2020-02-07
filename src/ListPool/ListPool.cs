@@ -144,7 +144,7 @@ namespace ListPool
             {
                 if (_syncRoot is null)
                 {
-                    _ = Interlocked.CompareExchange<object>(ref _syncRoot, new object(), null);
+                    Interlocked.CompareExchange<object>(ref _syncRoot, new object(), null);
                 }
 
                 return _syncRoot;
