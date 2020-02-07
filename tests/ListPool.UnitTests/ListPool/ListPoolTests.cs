@@ -37,6 +37,8 @@ namespace ListPool.UnitTests.ListPool
                 sut.Add(expectedItem);
             }
 
+            var a = sut.AsSpan().Slice(0, 2).ToListPool();
+
             Assert.Equal(expectedItems.Count, sut.Count);
             Assert.True(expectedItems.All(expectedItem => sut.Contains(expectedItem)));
         }
