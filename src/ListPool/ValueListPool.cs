@@ -45,8 +45,6 @@ namespace ListPool
         /// <param name="sourceType">Action to take with the source</param>
         public ValueListPool(Span<T> source, SourceType sourceType)
         {
-            if (source == default) throw new ArgumentNullException(nameof(source));
-
             if (sourceType == SourceType.UseAsInitialBuffer)
             {
                 _buffer = source;

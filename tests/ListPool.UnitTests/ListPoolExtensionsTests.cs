@@ -8,13 +8,50 @@ namespace ListPool.UnitTests
     public class ListPoolExtensionsTests
     {
         [Fact]
-        public void ToListPool_from_collection_contains_all_items()
+        public void ToListPool_from_array_contains_all_items()
         {
             int[] expectedItems = Enumerable.Range(0, 10).ToArray();
 
             using var sut = expectedItems.ToListPool();
 
             Assert.All(expectedItems, value => sut.Contains(value));
+        }
+
+        [Fact]
+        public void ToListPool_from_collection_contains_all_items()
+        {
+            ICollection<int> expectedItems = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = expectedItems.ToListPool();
+
+            Assert.All(expectedItems, value => sut.Contains(value));
+        }
+
+        [Fact]
+        public void ToListPool_from_ReadOnlySpan_contains_all_items()
+        {
+            ReadOnlySpan<int> expectedItems = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = expectedItems.ToListPool();
+
+            foreach (int expectedItem in expectedItems)
+            {
+                Assert.Contains(expectedItem, sut);
+            }
+        }
+
+        
+        [Fact]
+        public void ToListPool_from_Span_contains_all_items()
+        {
+            ReadOnlySpan<int> expectedItems = Enumerable.Range(0, 10).ToArray();
+
+            using var sut = expectedItems.ToListPool();
+
+            foreach (int expectedItem in expectedItems)
+            {
+                Assert.Contains(expectedItem, sut);
+            }
         }
 
         [Fact]
@@ -89,18 +126,6 @@ namespace ListPool.UnitTests
             {
                 Assert.True(sut.Contains(expectedItem));
             }
-        }
-
-
-        [Fact]
-        public void ToValueListPool_when_source_is_null_throw_ArgumentNullException()
-        {
-            int[] source = null;
-            string expectedName = nameof(source);
-
-            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(() => source.ToValueListPool());
-
-            Assert.Contains(expectedName, exception.Message);
         }
     }
 }

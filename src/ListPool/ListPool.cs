@@ -108,8 +108,6 @@ namespace ListPool
         /// <param name="source"></param>
         public ListPool(ReadOnlySpan<T> source)
         {
-            if (source == default) throw new ArgumentNullException(nameof(source));
-
             int capacity = source.Length > MinimumCapacity ? source.Length : MinimumCapacity;
             T[] buffer = ArrayPool<T>.Shared.Rent(capacity);
             source.CopyTo(buffer);

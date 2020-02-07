@@ -27,6 +27,14 @@ namespace ListPool.UnitTests.ListPool
             Assert.Equal(32, sut.Capacity);
         }
 
+        [Fact]
+        public void Create_ListPool_from_null_array_throws_ArgumentNullException()
+        {
+            int[] nullArray = null;
+
+            Assert.Throws<ArgumentNullException>(() => _ = new ListPool<int>(nullArray));
+        }
+
         public override void Add_items_when_capacity_is_full_then_buffer_autogrow()
         {
             using var sut = new ListPool<int>(128);
