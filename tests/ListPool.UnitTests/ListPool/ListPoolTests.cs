@@ -18,14 +18,65 @@ namespace ListPool.UnitTests.ListPool
         }
 
         [Fact]
-        public void Create_list_by_passing_another_without_items_set_minimum_capacity()
+        public void Create_list_by_passing_small_collection_set_minimum_capacity()
         {
-            List<int> emptyList = new List<int>();
+            ICollection<int> emptyCollection = Enumerable.Range(0, 10).ToList();
 
-            using ListPool<int> sut = new ListPool<int>(emptyList);
+            using ListPool<int> sut = new ListPool<int>(emptyCollection);
 
             Assert.Equal(32, sut.Capacity);
         }
+
+        [Fact]
+        public void Create_list_by_passing_collection_bigger_than_minimum_capacity_use_new_one()
+        {
+            ICollection<int> largeCollection =  Enumerable.Range(0, 128).ToList();
+
+            using ListPool<int> sut = new ListPool<int>(largeCollection);
+
+            Assert.Equal(128, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_array_without_items_set_minimum_capacity()
+        {
+            int[] emptyArray = new int[0];
+
+            using ListPool<int> sut = new ListPool<int>(emptyArray);
+
+            Assert.Equal(32, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_array_bigger_than_minimum_capacity_use_new_one()
+        {
+            int[] largeArray = new int[128];
+
+            using ListPool<int> sut = new ListPool<int>(largeArray);
+
+            Assert.Equal(128, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_small_span_set_minimum_capacity()
+        {
+            Span<int> emptySpan = new int[0];
+
+            using ListPool<int> sut = new ListPool<int>(emptySpan);
+
+            Assert.Equal(32, sut.Capacity);
+        }
+
+        [Fact]
+        public void Create_list_by_passing_span_bigger_than_minimum_capacity_use_new_one()
+        {
+            Span<int> largeSpan = new int[128];
+
+            using ListPool<int> sut = new ListPool<int>(largeSpan);
+
+            Assert.Equal(128, sut.Capacity);
+        }
+
 
         [Fact]
         public void Create_ListPool_from_null_array_throws_ArgumentNullException()
