@@ -20,11 +20,16 @@ namespace ListPool
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueListPool<T> ToValueListPool<T>(this Span<T> source,
-                                                          ValueListPool<T>.SourceType sourceType = ValueListPool<T>.SourceType.UseAsReferenceData) where T : IEquatable<T>
+                                                          ValueListPool<T>.SourceType sourceType =
+                                                              ValueListPool<T>.SourceType.UseAsReferenceData)
+            where T : IEquatable<T>
             => new ValueListPool<T>(source, sourceType);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ValueListPool<T> ToValueListPool<T>(this T[] source, ValueListPool<T>.SourceType sourceType = ValueListPool<T>.SourceType.UseAsReferenceData) where T : IEquatable<T>
+        public static ValueListPool<T> ToValueListPool<T>(this T[] source,
+                                                          ValueListPool<T>.SourceType sourceType =
+                                                              ValueListPool<T>.SourceType.UseAsReferenceData)
+            where T : IEquatable<T>
             => new ValueListPool<T>(source, sourceType);
     }
 }

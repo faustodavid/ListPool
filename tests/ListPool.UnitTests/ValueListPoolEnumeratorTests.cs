@@ -12,23 +12,6 @@ namespace ListPool.UnitTests
         private static readonly Fixture s_fixture = new Fixture();
 
         [Fact]
-        public void GetEnumerator_Enumerate_All_Items()
-        {
-            int[] expectedItems = s_fixture.CreateMany<int>(10).ToArray();
-            using ValueListPool<int> valueListPool = new ValueListPool<int>(expectedItems, ValueListPool<int>.SourceType.UseAsReferenceData);
-            ValueListPool<int>.Enumerator sut = valueListPool.GetEnumerator();
-            List<int> actualItems = new List<int>(expectedItems.Length);
-
-            while (sut.MoveNext())
-            {
-                actualItems.Add(sut.Current);
-            }
-
-            Assert.Equal(expectedItems.Length, actualItems.Count);
-            Assert.Contains(expectedItems, expectedItem => actualItems.Contains(expectedItem));
-        }
-
-        [Fact]
         public void Current_is_updated_in_each_iteration()
         {
             string[] items = s_fixture.CreateMany<string>(10).ToArray();
@@ -40,6 +23,24 @@ namespace ListPool.UnitTests
                 Assert.True(sut.MoveNext());
                 Assert.Equal(expectedEnumerator.Current, sut.Current);
             }
+        }
+
+        [Fact]
+        public void GetEnumerator_Enumerate_All_Items()
+        {
+            int[] expectedItems = s_fixture.CreateMany<int>(10).ToArray();
+            using ValueListPool<int> valueListPool =
+                new ValueListPool<int>(expectedItems, ValueListPool<int>.SourceType.UseAsReferenceData);
+            ValueListPool<int>.Enumerator sut = valueListPool.GetEnumerator();
+            List<int> actualItems = new List<int>(expectedItems.Length);
+
+            while (sut.MoveNext())
+            {
+                actualItems.Add(sut.Current);
+            }
+
+            Assert.Equal(expectedItems.Length, actualItems.Count);
+            Assert.Contains(expectedItems, expectedItem => actualItems.Contains(expectedItem));
         }
 
         [Fact]

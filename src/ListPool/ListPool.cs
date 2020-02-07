@@ -52,7 +52,8 @@ namespace ListPool
 
             if (source is ICollection<T> collection)
             {
-                T[] buffer = ArrayPool<T>.Shared.Rent(collection.Count > MinimumCapacity ? collection.Count : MinimumCapacity);
+                T[] buffer =
+                    ArrayPool<T>.Shared.Rent(collection.Count > MinimumCapacity ? collection.Count : MinimumCapacity);
 
                 collection.CopyTo(buffer, 0);
 
@@ -87,7 +88,7 @@ namespace ListPool
         }
 
         /// <summary>
-        /// Construct ListPool and copy source into new pooled buffer
+        ///     Construct ListPool and copy source into new pooled buffer
         /// </summary>
         /// <param name="source"></param>
         public ListPool(T[] source)
@@ -103,7 +104,7 @@ namespace ListPool
         }
 
         /// <summary>
-        /// Construct ListPool and copy source into new pooled buffer
+        ///     Construct ListPool and copy source into new pooled buffer
         /// </summary>
         /// <param name="source"></param>
         public ListPool(ReadOnlySpan<T> source)
@@ -272,15 +273,15 @@ namespace ListPool
         }
 
         /// <summary>
-        ///  Clears the contents of List.
+        ///     Clears the contents of List.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear() => Count = 0;
 
         /// <summary>
-        /// Contains returns true if the specified element is in the List.
-        /// It does a linear, O(n) search.  Equality is determined by calling
-        /// EqualityComparer&lt;T&gt;.Default.Equals().
+        ///     Contains returns true if the specified element is in the List.
+        ///     It does a linear, O(n) search.  Equality is determined by calling
+        ///     EqualityComparer&lt;T&gt;.Default.Equals().
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
@@ -308,9 +309,9 @@ namespace ListPool
         }
 
         /// <summary>
-        /// Inserts an element into this list at a given index. The size of the list
-        /// is increased by one. If required, the capacity of the list is doubled
-        /// before inserting the new element.
+        ///     Inserts an element into this list at a given index. The size of the list
+        ///     is increased by one. If required, the capacity of the list is doubled
+        ///     before inserting the new element.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="item"></param>
@@ -372,6 +373,12 @@ namespace ListPool
                 _buffer[index] = value;
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(_buffer, Count);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(_buffer, Count);
 
         public void AddRange(Span<T> items)
         {
@@ -448,14 +455,14 @@ namespace ListPool
         }
 
         /// <summary>
-        /// Get span of the items added
+        ///     Get span of the items added
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Span<T> AsSpan() => _buffer.AsSpan(0, Count);
 
         /// <summary>
-        /// Get memory of the items added
+        ///     Get memory of the items added
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -489,12 +496,6 @@ namespace ListPool
             _buffer = newBuffer;
             arrayPool.Return(oldBuffer);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(_buffer, Count);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(_buffer, Count);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(_buffer, Count);

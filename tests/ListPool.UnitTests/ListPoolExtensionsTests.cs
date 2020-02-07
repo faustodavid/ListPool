@@ -28,6 +28,16 @@ namespace ListPool.UnitTests
         }
 
         [Fact]
+        public void ToListPool_from_IEnumerable_contains_all_items()
+        {
+            IEnumerable<int> expectedItems = Enumerable.Range(0, 10);
+
+            using var sut = expectedItems.ToListPool();
+
+            Assert.All(expectedItems, value => sut.Contains(value));
+        }
+
+        [Fact]
         public void ToListPool_from_ReadOnlySpan_contains_all_items()
         {
             ReadOnlySpan<int> expectedItems = Enumerable.Range(0, 10).ToArray();
@@ -40,7 +50,7 @@ namespace ListPool.UnitTests
             }
         }
 
-        
+
         [Fact]
         public void ToListPool_from_Span_contains_all_items()
         {
@@ -52,16 +62,6 @@ namespace ListPool.UnitTests
             {
                 Assert.Contains(expectedItem, sut);
             }
-        }
-
-        [Fact]
-        public void ToListPool_from_IEnumerable_contains_all_items()
-        {
-            IEnumerable<int> expectedItems = Enumerable.Range(0, 10);
-
-            using var sut = expectedItems.ToListPool();
-
-            Assert.All(expectedItems, value => sut.Contains(value));
         }
 
         [Fact]
@@ -101,13 +101,12 @@ namespace ListPool.UnitTests
             }
         }
 
-        
         [Fact]
-        public void ToValueListPool_from_span_contains_all_items()
+        public void ToValueListPool_from_span__copy_contains_all_items()
         {
             Span<int> expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToValueListPool();
+            using var sut = expectedItems.ToValueListPool(ValueListPool<int>.SourceType.Copy);
 
             foreach (int expectedItem in expectedItems)
             {
@@ -115,12 +114,13 @@ namespace ListPool.UnitTests
             }
         }
 
+
         [Fact]
-        public void ToValueListPool_from_span__copy_contains_all_items()
+        public void ToValueListPool_from_span_contains_all_items()
         {
             Span<int> expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToValueListPool(ValueListPool<int>.SourceType.Copy);
+            using var sut = expectedItems.ToValueListPool();
 
             foreach (int expectedItem in expectedItems)
             {
