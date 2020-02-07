@@ -117,7 +117,7 @@ namespace ListPool
         }
 
         /// <summary>
-        ///     Capacity of the underlying array.
+        ///     Capacity of the underlying pooled array.
         /// </summary>
         public int Capacity => _buffer.Length;
 
@@ -271,9 +271,19 @@ namespace ListPool
             }
         }
 
+        /// <summary>
+        ///  Clears the contents of List.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear() => Count = 0;
 
+        /// <summary>
+        /// Contains returns true if the specified element is in the List.
+        /// It does a linear, O(n) search.  Equality is determined by calling
+        /// EqualityComparer&lt;T&gt;.Default.Equals().
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(T item) => IndexOf(item) > -1;
 
@@ -297,6 +307,13 @@ namespace ListPool
             return true;
         }
 
+        /// <summary>
+        /// Inserts an element into this list at a given index. The size of the list
+        /// is increased by one. If required, the capacity of the list is doubled
+        /// before inserting the new element.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="item"></param>
         public void Insert(int index, T item)
         {
             int count = Count;
@@ -430,9 +447,17 @@ namespace ListPool
             }
         }
 
+        /// <summary>
+        /// Get span of the items added
+        /// </summary>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Span<T> AsSpan() => _buffer.AsSpan(0, Count);
 
+        /// <summary>
+        /// Get memory of the items added
+        /// </summary>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Memory<T> AsMemory() => _buffer.AsMemory(0, Count);
 
