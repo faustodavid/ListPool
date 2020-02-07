@@ -90,9 +90,24 @@ namespace ListPool
         /// Construct ListPool and copy source into new pooled buffer
         /// </summary>
         /// <param name="source"></param>
+        public ListPool(T[] source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            int capacity = source.Length > MinimumCapacity ? source.Length : MinimumCapacity;
+            T[] buffer = ArrayPool<T>.Shared.Rent(capacity);
+            source.CopyTo(buffer, 0);
+
+            _buffer = buffer;
+            Count = source.Length;
+        }
+
+        /// <summary>
+        /// Construct ListPool and copy source into new pooled buffer
+        /// </summary>
+        /// <param name="source"></param>
         public ListPool(ReadOnlySpan<T> source)
         {
-            //TODO: Check perf using in modifier
             if (source == default) throw new ArgumentNullException(nameof(source));
 
             int capacity = source.Length > MinimumCapacity ? source.Length : MinimumCapacity;

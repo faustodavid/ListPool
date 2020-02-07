@@ -16,6 +16,9 @@ namespace ListPool
         public static ListPool<T> ToListPool<T>(this ReadOnlySpan<T> source) => new ListPool<T>(source);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ListPool<T> ToListPool<T>(this T[] source) => new ListPool<T>(source);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueListPool<T> ToValueListPool<T>(this Span<T> source,
                                                           ValueListPool<T>.SourceType sourceType = ValueListPool<T>.SourceType.UseAsReferenceData) where T : IEquatable<T>
             => new ValueListPool<T>(source, sourceType);
