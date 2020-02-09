@@ -5,6 +5,7 @@ Allocation-free implementation of IList using ArrayPool with two variants, `List
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/faustodavid/ListPool/Build)](https://github.com/faustodavid/ListPool/actions)
 [![Coveralls github](https://img.shields.io/coveralls/github/faustodavid/ListPool)](https://coveralls.io/github/faustodavid/ListPool)
 [![Nuget](https://img.shields.io/nuget/v/ListPool)](https://www.nuget.org/packages/ListPool/)
+[![Nuget](https://img.shields.io/nuget/dt/listpool)](https://www.nuget.org/packages/ListPool/)
 [![GitHub](https://img.shields.io/github/license/faustodavid/ListPool)](https://github.com/faustodavid/ListPool/blob/master/LICENSE)
 
 
