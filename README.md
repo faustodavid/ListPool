@@ -55,6 +55,7 @@ By indicating the capacity, we avoid regrowing, which is one of the slowest oper
 <img src="https://raw.githubusercontent.com/faustodavid/ListPool/UpdateBenchmarksAndResults/perf/docs/results/graph/CreateAndAddAndEnumerateAReferenceBenchmarks.JPG" />
 
 ### Doing a foreach in a list of N size.
+ListPool enumeration is way faster than List for small and large sizes.
 
 <img src="https://github.com/faustodavid/ListPool/raw/UpdateBenchmarksAndResults/perf/docs/results/graph/ListPoolEnumerateBenchmarks.JPG" />
 
