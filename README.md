@@ -37,6 +37,23 @@ Differences:
   * Cannot be deserialized
   * Cannot be created with parameterless constructors, otherwise it is created in an invalid state
   * Because it is ValueType when it is passed to other methods, it is passed by copy, not by reference. It is good for performance, but any modifications don't affect the original instance. In case it is required to be updated, it is required to use the "ref" keyword in the parameter.
+    
+ ## Benchmarks
+To see all the benchmarks and details, please click the following link <a>https://github.com/faustodavid/ListPool/tree/UpdateBenchmarksAndResults/perf/docs/results<a/>
+    
+### Inserting an item in the middle of the list
+
+<img src="https://github.com/faustodavid/ListPool/raw/UpdateBenchmarksAndResults/perf/docs/results/graph/ListPoolInsertBenchmarks.JPG" />
+
+### Create indicating the capacity, adding N items and performing a foreach
+
+<img src="https://raw.githubusercontent.com/faustodavid/ListPool/UpdateBenchmarksAndResults/perf/docs/results/graph/CreateAndAddAndEnumerateAReferenceBenchmarks.JPG" />
+
+### Doing a foreach in a list of N size.
+
+<img src="https://github.com/faustodavid/ListPool/raw/UpdateBenchmarksAndResults/perf/docs/results/graph/ListPoolEnumerateBenchmarks.JPG" />
+
+
 
  ## How to use
 
