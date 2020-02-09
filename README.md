@@ -38,10 +38,13 @@ Differences:
   * Cannot be created with parameterless constructors, otherwise it is created in an invalid state
   * Because it is ValueType when it is passed to other methods, it is passed by copy, not by reference. It is good for performance, but any modifications don't affect the original instance. In case it is required to be updated, it is required to use the "ref" keyword in the parameter.
     
+    
  ## Benchmarks
 To see all the benchmarks and details, please click the following link <a>https://github.com/faustodavid/ListPool/tree/UpdateBenchmarksAndResults/perf/docs/results<a/>
     
 ### Inserting an item in the middle of the list
+
+You can observe that ListPool Mean is faster and it does not allocate in the heap when resizing. Zero heap allocation is vital to reduce "GC Wait" time.
 
 <img src="https://github.com/faustodavid/ListPool/raw/UpdateBenchmarksAndResults/perf/docs/results/graph/ListPoolInsertBenchmarks.JPG" />
 
