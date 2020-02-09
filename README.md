@@ -17,11 +17,14 @@ Available on [nuget](https://www.nuget.org/packages/ListPool/)
 Requirements:
 * dotnet core 3.0 or above
 
+
 ## Introduction
 
-When performance matter, **ListPool<T>** provides all the goodness of ArrayPool with the usability of `IList` and support for `Span<T>`.
-
+When performance matter, **ListPool<T>** provides all the goodness of ArrayPool with the usability of `IList` and support for `Span<T>` and **serialization**.
+    
 It has two high-performance variants `ListPool<T>` and `ValueListPool<T>`.
+    
+We recommend to use **ListPool<T>** over **ValueListPool<T>** for most of use-cases. You should use **ValueListPool<T>** when working with small collections of primitive types with stackalloc, or when reusing arrays.    
 
 Differences:
 
@@ -33,10 +36,10 @@ Differences:
 * ValueListPool<T>
   * stack only
   * Allocation-free
-  * Can be created using stackalloc as initial buffer
-  * Cannot be deserialized
-  * Cannot be created with parameterless constructors, otherwise it is created in an invalid state
-  * Because it is ValueType when it is passed to other methods, it is passed by copy, not by reference. It is good for performance, but any modifications don't affect the original instance. In case it is required to be updated, it is required to use the "ref" keyword in the parameter.
+  * Can be created using stackalloc or an array as initial buffer
+  * **Cannot be serialized/deserialized**
+  * **Cannot be created with parameterless constructors**, otherwise it is created in an invalid state
+  * Because it is ValueType when it is passed to other methods, it is passed by copy, not by reference. In case it is required to be updated, it is required to use the "ref" modifier in the parameter.
     
     
  ## Benchmarks
@@ -58,7 +61,6 @@ By indicating the capacity, we avoid regrowing, which is one of the slowest oper
 ListPool enumeration is way faster than List for small and large sizes.
 
 <img src="https://github.com/faustodavid/ListPool/raw/UpdateBenchmarksAndResults/perf/docs/results/graph/ListPoolEnumerateBenchmarks.JPG" />
-
 
 
  ## How to use
