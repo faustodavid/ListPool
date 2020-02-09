@@ -5,7 +5,7 @@ using BenchmarkDotNet.Order;
 
 namespace ListPool.Benchmarks
 {
-    [RPlotExporter, RankColumn]
+    [RankColumn]
     [Orderer(SummaryOrderPolicy.FastestToSlowest)]
     [MemoryDiagnoser]
     [GcServer(true)]
