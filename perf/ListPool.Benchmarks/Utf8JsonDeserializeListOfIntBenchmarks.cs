@@ -6,7 +6,6 @@ using Utf8Json;
 
 namespace ListPool.Benchmarks
 {
-    [RPlotExporter]
     [RankColumn]
     [Orderer(SummaryOrderPolicy.FastestToSlowest)]
     [MemoryDiagnoser]
