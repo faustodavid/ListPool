@@ -91,33 +91,5 @@ namespace ListPool.Benchmarks
 
             return count;
         }
-
-        [Benchmark]
-        public int ValueListPool_AsSpan()
-        {
-            int count = 0;
-            using ValueListPool<int> list = N <= 1024
-                ? new ValueListPool<int>(stackalloc int[N], ValueListPool<int>.SourceType.UseAsInitialBuffer)
-                : new ValueListPool<int>(N);
-
-            for (int i = 0; i < N; i++)
-            {
-                list.Add(i);
-                list.Add(i);
-                list.Add(i);
-                list.Add(i);
-                list.Add(i);
-                list.Add(i);
-                list.Add(i);
-                list.Add(i);
-            }
-
-            foreach (int item in list.AsSpan())
-            {
-                count += item;
-            }
-
-            return count;
-        }
     }
 }
