@@ -134,7 +134,6 @@ namespace ListPool
             return true;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Insert(int index, T item)
         {
             int count = Count;

@@ -43,15 +43,17 @@ namespace ListPool
         }
 
         /// <summary>
-        ///     Construct ListPool from the given source.
+        ///     Construct ListPool and copy the given source into a pooled buffer.
         /// </summary>
         /// <param name="source"></param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool(IEnumerable<T> source)
         {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
             if (source is ICollection<T> collection)
             {
-                T[] buffer = ArrayPool<T>.Shared.Rent(collection.Count > MinimumCapacity ? collection.Count : MinimumCapacity);
+                T[] buffer =
+                    ArrayPool<T>.Shared.Rent(collection.Count > MinimumCapacity ? collection.Count : MinimumCapacity);
 
                 collection.CopyTo(buffer, 0);
 
@@ -75,8 +77,8 @@ namespace ListPool
                     else
                     {
                         Count = count;
-                        count++;
                         AddWithResize(enumerator.Current);
+                        count++;
                         buffer = _buffer;
                     }
                 }
@@ -86,7 +88,37 @@ namespace ListPool
         }
 
         /// <summary>
-        ///     Capacity of the underlying array.
+        ///     Construct ListPool and copy source into new pooled buffer
+        /// </summary>
+        /// <param name="source"></param>
+        public ListPool(T[] source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            int capacity = source.Length > MinimumCapacity ? source.Length : MinimumCapacity;
+            T[] buffer = ArrayPool<T>.Shared.Rent(capacity);
+            source.CopyTo(buffer, 0);
+
+            _buffer = buffer;
+            Count = source.Length;
+        }
+
+        /// <summary>
+        ///     Construct ListPool and copy source into new pooled buffer
+        /// </summary>
+        /// <param name="source"></param>
+        public ListPool(ReadOnlySpan<T> source)
+        {
+            int capacity = source.Length > MinimumCapacity ? source.Length : MinimumCapacity;
+            T[] buffer = ArrayPool<T>.Shared.Rent(capacity);
+            source.CopyTo(buffer);
+
+            _buffer = buffer;
+            Count = source.Length;
+        }
+
+        /// <summary>
+        ///     Capacity of the underlying pooled array.
         /// </summary>
         public int Capacity => _buffer.Length;
 
@@ -113,7 +145,7 @@ namespace ListPool
             {
                 if (_syncRoot is null)
                 {
-                    _ = Interlocked.CompareExchange<object>(ref _syncRoot, new object(), null);
+                    Interlocked.CompareExchange<object>(ref _syncRoot, new object(), null);
                 }
 
                 return _syncRoot;
@@ -240,9 +272,19 @@ namespace ListPool
             }
         }
 
+        /// <summary>
+        ///     Clears the contents of List.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear() => Count = 0;
 
+        /// <summary>
+        ///     Contains returns true if the specified element is in the List.
+        ///     It does a linear, O(n) search.  Equality is determined by calling
+        ///     EqualityComparer&lt;T&gt;.Default.Equals().
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Contains(T item) => IndexOf(item) > -1;
 
@@ -266,7 +308,13 @@ namespace ListPool
             return true;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        /// <summary>
+        ///     Inserts an element into this list at a given index. The size of the list
+        ///     is increased by one. If required, the capacity of the list is doubled
+        ///     before inserting the new element.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="item"></param>
         public void Insert(int index, T item)
         {
             int count = Count;
@@ -325,6 +373,12 @@ namespace ListPool
                 _buffer[index] = value;
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(_buffer, Count);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(_buffer, Count);
 
         public void AddRange(Span<T> items)
         {
@@ -400,9 +454,17 @@ namespace ListPool
             }
         }
 
+        /// <summary>
+        ///     Get span of the items added
+        /// </summary>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Span<T> AsSpan() => _buffer.AsSpan(0, Count);
 
+        /// <summary>
+        ///     Get memory of the items added
+        /// </summary>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Memory<T> AsMemory() => _buffer.AsMemory(0, Count);
 
@@ -434,12 +496,6 @@ namespace ListPool
             _buffer = newBuffer;
             arrayPool.Return(oldBuffer);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(_buffer, Count);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(_buffer, Count);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(_buffer, Count);

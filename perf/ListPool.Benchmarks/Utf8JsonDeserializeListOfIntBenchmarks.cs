@@ -2,6 +2,7 @@
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
+using Utf8Json;
 
 namespace ListPool.Benchmarks
 {
@@ -20,26 +21,28 @@ namespace ListPool.Benchmarks
         [GlobalSetup]
         public void GlobalSetup()
         {
-            _serializedList = Utf8Json.JsonSerializer.Serialize(Enumerable.Range(0, N));
+            _serializedList = JsonSerializer.Serialize(Enumerable.Range(0, N));
         }
 
         [Benchmark(Baseline = true)]
         public int List()
         {
-            List<int> list = Utf8Json.JsonSerializer.Deserialize<List<int>>(_serializedList);
+            List<int> list = JsonSerializer.Deserialize<List<int>>(_serializedList);
             return list.Count;
         }
 
         [Benchmark]
         public int ListPool()
         {
-            using ListPool<int> list = Utf8Json.JsonSerializer.Deserialize<ListPool<int>>(_serializedList);
+            using ListPool<int> list = JsonSerializer.Deserialize<ListPool<int>>(_serializedList);
             return list.Count;
         }
+
         [Benchmark]
         public int ListPool_Spreads()
         {
-            using ListPool<int> list = Spreads.Serialization.Utf8Json.JsonSerializer.Deserialize<ListPool<int>>(_serializedList);
+            using ListPool<int> list =
+                Spreads.Serialization.Utf8Json.JsonSerializer.Deserialize<ListPool<int>>(_serializedList);
             return list.Count;
         }
 
