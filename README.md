@@ -1,6 +1,6 @@
 # ListPool<T>
 
-Allocation-free implementation of IList using ArrayPool with two variants, `ListPool<T>` and `ValueListPool<T>`
+Allocation-free implementation of `IList<T>` using ArrayPool with two variants, `ListPool<T>` and `ValueListPool<T>`
 
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/faustodavid/ListPool/Build)](https://github.com/faustodavid/ListPool/actions)
 [![Coveralls github](https://img.shields.io/coveralls/github/faustodavid/ListPool)](https://coveralls.io/github/faustodavid/ListPool)
@@ -20,20 +20,20 @@ Requirements:
 
 ## Introduction
 
-When performance matter, **ListPool<T>** provides all the goodness of ArrayPool with the usability of `IList` and support for `Span<T>` and **serialization**.
+When performance matter, **ListPool** provides all the goodness of ArrayPool with the usability of `IList<T>` and support for `Span<T>` and **serialization**.
     
 It has two high-performance variants `ListPool<T>` and `ValueListPool<T>`.
     
-We recommend to use **ListPool<T>** over **ValueListPool<T>** for most of use-cases. You should use **ValueListPool<T>** when working with small collections of primitive types with stackalloc, or when reusing arrays.    
+We recommend to use `ListPool<T>` over `ValueListPool<T>` for most of use-cases. You should use `ValueListPool<T>` when working with small collections of primitive types with stackalloc, or when reusing arrays.    
 
 Differences:
 
-* ListPool<T>:
+* `ListPool<T>`:
   * ReferenceType
   * Serializable
   * Because it is a class it has a constant heap allocation of ~56 bytes regardless the size
 
-* ValueListPool<T>
+* `ValueListPool<T>`:
   * stack only
   * Allocation-free
   * Can be created using stackalloc or an array as initial buffer
@@ -47,13 +47,13 @@ To see all the benchmarks and details, please click the following link <a>https:
     
 ### Inserting an item in the middle of the list
 
-You can observe that ListPool Mean is faster and it does not allocate in the heap when resizing. Zero heap allocation is vital to improve throughput by reducing "GC Wait" time.
+You can observe that `ListPool<T>` Mean is faster and it does not allocate in the heap when resizing. Zero heap allocation is vital to improve throughput by reducing "GC Wait" time.
 
 <img src="https://github.com/faustodavid/ListPool/raw/UpdateBenchmarksAndResults/perf/docs/results/graph/ListPoolInsertBenchmarks.JPG" />
 
 ### Create list indicating the capacity, adding N items and performing a foreach
 
-By indicating the capacity, we avoid regrowing, which is one of the slowest operations for List<T>, so we can pay more attention to already well-optimized scenarios by improving the Add and Enumeration time. As you can observe, ListPool Mean is faster and has 40 bytes of heap allocations, which are used to create the class.
+By indicating the capacity, we avoid regrowing, which is one of the slowest operations for `List<T>`, so we can pay more attention to already well-optimized scenarios by improving the Add and Enumeration time. As you can observe, `ListPool<T>` Mean is faster and has 40 bytes of heap allocations, which are used to create the class.
 
 <img src="https://raw.githubusercontent.com/faustodavid/ListPool/UpdateBenchmarksAndResults/perf/docs/results/graph/CreateAndAddAndEnumerateAReferenceBenchmarks.JPG" />
 
