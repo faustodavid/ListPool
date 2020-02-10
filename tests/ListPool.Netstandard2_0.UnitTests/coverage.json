@@ -1,0 +1,677 @@
+{
+    "ListPool.dll": {
+        "C:\\Users\\fsuarez\\source\\repos\\ListPool\\src\\ListPool\\BufferOwner.cs": {
+            "ListPool.BufferOwner`1": {
+                "System.Void ListPool.BufferOwner`1::GrowDoubleSize()": {
+                    "Lines": {
+                        "22": 2,
+                        "23": 2,
+                        "24": 2,
+                        "25": 2,
+                        "27": 2,
+                        "29": 2,
+                        "30": 2,
+                        "31": 2
+                    },
+                    "Branches": []
+                },
+                "System.Void ListPool.BufferOwner`1::Dispose()": {
+                    "Lines": {
+                        "34": 23,
+                        "35": 23,
+                        "36": 23,
+                        "37": 23
+                    },
+                    "Branches": []
+                },
+                "System.Void ListPool.BufferOwner`1::.ctor(System.Int32)": {
+                    "Lines": {
+                        "14": 23,
+                        "15": 23,
+                        "16": 23,
+                        "17": 23,
+                        "18": 23
+                    },
+                    "Branches": []
+                }
+            }
+        },
+        "C:\\Users\\fsuarez\\source\\repos\\ListPool\\src\\ListPool\\Enumerator.cs": {
+            "ListPool.Enumerator`1": {
+                "TSource& modreq(System.Runtime.InteropServices.InAttribute) ListPool.Enumerator`1::get_Current()": {
+                    "Lines": {
+                        "25": 30
+                    },
+                    "Branches": []
+                },
+                "TSource ListPool.Enumerator`1::System.Collections.Generic.IEnumerator<TSource>.get_Current()": {
+                    "Lines": {
+                        "29": 8
+                    },
+                    "Branches": []
+                },
+                "System.Object ListPool.Enumerator`1::System.Collections.IEnumerator.get_Current()": {
+                    "Lines": {
+                        "31": 0
+                    },
+                    "Branches": []
+                },
+                "System.Boolean ListPool.Enumerator`1::MoveNext()": {
+                    "Lines": {
+                        "35": 45,
+                        "36": 45,
+                        "37": 45
+                    },
+                    "Branches": []
+                },
+                "System.Void ListPool.Enumerator`1::Reset()": {
+                    "Lines": {
+                        "40": 1,
+                        "41": 1,
+                        "42": 1
+                    },
+                    "Branches": []
+                },
+                "System.Void ListPool.Enumerator`1::Dispose()": {
+                    "Lines": {
+                        "45": 6,
+                        "46": 6
+                    },
+                    "Branches": []
+                },
+                "System.Void ListPool.Enumerator`1::.ctor(TSource[]&,System.Int32&)": {
+                    "Lines": {
+                        "15": 8,
+                        "16": 8,
+                        "17": 8,
+                        "18": 8,
+                        "19": 8
+                    },
+                    "Branches": []
+                }
+            }
+        },
+        "C:\\Users\\fsuarez\\source\\repos\\ListPool\\src\\ListPool\\ListPool.cs": {
+            "ListPool.ListPool`1": {
+                "System.Int32 ListPool.ListPool`1::get_Capacity()": {
+                    "Lines": {
+                        "14": 2
+                    },
+                    "Branches": [
+                        {
+                            "Line": 14,
+                            "Offset": 11,
+                            "EndOffset": 13,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 0
+                        },
+                        {
+                            "Line": 14,
+                            "Offset": 11,
+                            "EndOffset": 16,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 2
+                        }
+                    ]
+                },
+                "System.Int32 ListPool.ListPool`1::get_Count()": {
+                    "Lines": {
+                        "15": 14
+                    },
+                    "Branches": []
+                },
+                "System.Boolean ListPool.ListPool`1::get_IsReadOnly()": {
+                    "Lines": {
+                        "16": 1
+                    },
+                    "Branches": []
+                },
+                "System.Void ListPool.ListPool`1::Add(TSource)": {
+                    "Lines": {
+                        "52": 305,
+                        "53": 312,
+                        "54": 306,
+                        "56": 305,
+                        "57": 305
+                    },
+                    "Branches": [
+                        {
+                            "Line": 53,
+                            "Offset": 17,
+                            "EndOffset": 19,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 7
+                        },
+                        {
+                            "Line": 53,
+                            "Offset": 17,
+                            "EndOffset": 35,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 305
+                        },
+                        {
+                            "Line": 54,
+                            "Offset": 61,
+                            "EndOffset": 63,
+                            "Path": 0,
+                            "Ordinal": 2,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 54,
+                            "Offset": 61,
+                            "EndOffset": 75,
+                            "Path": 1,
+                            "Ordinal": 3,
+                            "Hits": 305
+                        }
+                    ]
+                },
+                "System.Void ListPool.ListPool`1::Clear()": {
+                    "Lines": {
+                        "59": 1
+                    },
+                    "Branches": []
+                },
+                "System.Boolean ListPool.ListPool`1::Contains(TSource)": {
+                    "Lines": {
+                        "60": 539
+                    },
+                    "Branches": []
+                },
+                "System.Int32 ListPool.ListPool`1::IndexOf(TSource)": {
+                    "Lines": {
+                        "62": 545
+                    },
+                    "Branches": [
+                        {
+                            "Line": 62,
+                            "Offset": 11,
+                            "EndOffset": 13,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 62,
+                            "Offset": 11,
+                            "EndOffset": 16,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 543
+                        }
+                    ]
+                },
+                "System.Void ListPool.ListPool`1::CopyTo(TSource[],System.Int32)": {
+                    "Lines": {
+                        "65": 1
+                    },
+                    "Branches": []
+                },
+                "System.Boolean ListPool.ListPool`1::Remove(TSource)": {
+                    "Lines": {
+                        "68": 3,
+                        "69": 4,
+                        "71": 2,
+                        "73": 3,
+                        "75": 1,
+                        "77": 1,
+                        "78": 3
+                    },
+                    "Branches": [
+                        {
+                            "Line": 69,
+                            "Offset": 12,
+                            "EndOffset": 14,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 69,
+                            "Offset": 12,
+                            "EndOffset": 18,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 73,
+                            "Offset": 32,
+                            "EndOffset": 34,
+                            "Path": 0,
+                            "Ordinal": 2,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 73,
+                            "Offset": 32,
+                            "EndOffset": 38,
+                            "Path": 1,
+                            "Ordinal": 3,
+                            "Hits": 1
+                        }
+                    ]
+                },
+                "System.Void ListPool.ListPool`1::Insert(System.Int32,TSource)": {
+                    "Lines": {
+                        "82": 261,
+                        "83": 263,
+                        "84": 260,
+                        "85": 260,
+                        "86": 259,
+                        "87": 1,
+                        "89": 259,
+                        "90": 259,
+                        "91": 259
+                    },
+                    "Branches": [
+                        {
+                            "Line": 83,
+                            "Offset": 3,
+                            "EndOffset": 5,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 260
+                        },
+                        {
+                            "Line": 83,
+                            "Offset": 3,
+                            "EndOffset": 16,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 83,
+                            "Offset": 19,
+                            "EndOffset": 21,
+                            "Path": 0,
+                            "Ordinal": 2,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 83,
+                            "Offset": 19,
+                            "EndOffset": 32,
+                            "Path": 1,
+                            "Ordinal": 3,
+                            "Hits": 259
+                        },
+                        {
+                            "Line": 84,
+                            "Offset": 48,
+                            "EndOffset": 50,
+                            "Path": 0,
+                            "Ordinal": 4,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 84,
+                            "Offset": 48,
+                            "EndOffset": 66,
+                            "Path": 1,
+                            "Ordinal": 5,
+                            "Hits": 259
+                        },
+                        {
+                            "Line": 85,
+                            "Offset": 87,
+                            "EndOffset": 89,
+                            "Path": 0,
+                            "Ordinal": 6,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 85,
+                            "Offset": 87,
+                            "EndOffset": 101,
+                            "Path": 1,
+                            "Ordinal": 7,
+                            "Hits": 259
+                        },
+                        {
+                            "Line": 86,
+                            "Offset": 112,
+                            "EndOffset": 114,
+                            "Path": 0,
+                            "Ordinal": 8,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 86,
+                            "Offset": 112,
+                            "EndOffset": 154,
+                            "Path": 1,
+                            "Ordinal": 9,
+                            "Hits": 259
+                        }
+                    ]
+                },
+                "System.Void ListPool.ListPool`1::RemoveAt(System.Int32)": {
+                    "Lines": {
+                        "94": 5,
+                        "95": 8,
+                        "97": 2,
+                        "98": 2,
+                        "99": 2
+                    },
+                    "Branches": [
+                        {
+                            "Line": 95,
+                            "Offset": 3,
+                            "EndOffset": 5,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 4
+                        },
+                        {
+                            "Line": 95,
+                            "Offset": 3,
+                            "EndOffset": 19,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 95,
+                            "Offset": 22,
+                            "EndOffset": 24,
+                            "Path": 0,
+                            "Ordinal": 2,
+                            "Hits": 3
+                        },
+                        {
+                            "Line": 95,
+                            "Offset": 22,
+                            "EndOffset": 35,
+                            "Path": 1,
+                            "Ordinal": 3,
+                            "Hits": 2
+                        }
+                    ]
+                },
+                "TSource ListPool.ListPool`1::get_Item(System.Int32)": {
+                    "Lines": {
+                        "107": 16,
+                        "108": 16,
+                        "109": 2,
+                        "111": 14,
+                        "112": 14
+                    },
+                    "Branches": [
+                        {
+                            "Line": 108,
+                            "Offset": 3,
+                            "EndOffset": 5,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 15
+                        },
+                        {
+                            "Line": 108,
+                            "Offset": 19,
+                            "EndOffset": 21,
+                            "Path": 0,
+                            "Ordinal": 2,
+                            "Hits": 15
+                        },
+                        {
+                            "Line": 108,
+                            "Offset": 3,
+                            "EndOffset": 35,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 108,
+                            "Offset": 19,
+                            "EndOffset": 35,
+                            "Path": 1,
+                            "Ordinal": 3,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 108,
+                            "Offset": 38,
+                            "EndOffset": 40,
+                            "Path": 0,
+                            "Ordinal": 4,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 108,
+                            "Offset": 38,
+                            "EndOffset": 51,
+                            "Path": 1,
+                            "Ordinal": 5,
+                            "Hits": 14
+                        }
+                    ]
+                },
+                "System.Void ListPool.ListPool`1::set_Item(System.Int32,TSource)": {
+                    "Lines": {
+                        "115": 3,
+                        "116": 3,
+                        "117": 2,
+                        "119": 1,
+                        "120": 1
+                    },
+                    "Branches": [
+                        {
+                            "Line": 116,
+                            "Offset": 3,
+                            "EndOffset": 5,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 116,
+                            "Offset": 19,
+                            "EndOffset": 21,
+                            "Path": 0,
+                            "Ordinal": 2,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 116,
+                            "Offset": 3,
+                            "EndOffset": 35,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 116,
+                            "Offset": 19,
+                            "EndOffset": 35,
+                            "Path": 1,
+                            "Ordinal": 3,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 116,
+                            "Offset": 38,
+                            "EndOffset": 40,
+                            "Path": 0,
+                            "Ordinal": 4,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 116,
+                            "Offset": 38,
+                            "EndOffset": 51,
+                            "Path": 1,
+                            "Ordinal": 5,
+                            "Hits": 1
+                        }
+                    ]
+                },
+                "ListPool.Enumerator`1<TSource> ListPool.ListPool`1::GetEnumerator()": {
+                    "Lines": {
+                        "126": 6
+                    },
+                    "Branches": []
+                },
+                "System.Collections.Generic.IEnumerator`1<TSource> ListPool.ListPool`1::System.Collections.Generic.IEnumerable<TSource>.GetEnumerator()":
+                {
+                    "Lines": {
+                        "128": 4
+                    },
+                    "Branches": []
+                },
+                "System.Collections.IEnumerator ListPool.ListPool`1::System.Collections.IEnumerable.GetEnumerator()": {
+                    "Lines": {
+                        "130": 1
+                    },
+                    "Branches": []
+                },
+                "System.Void ListPool.ListPool`1::Dispose()": {
+                    "Lines": {
+                        "133": 31,
+                        "134": 31,
+                        "135": 31,
+                        "136": 23,
+                        "137": 31
+                    },
+                    "Branches": [
+                        {
+                            "Line": 135,
+                            "Offset": 21,
+                            "EndOffset": 23,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 23
+                        },
+                        {
+                            "Line": 135,
+                            "Offset": 21,
+                            "EndOffset": 35,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 31
+                        }
+                    ]
+                },
+                "System.Void ListPool.ListPool`1::.ctor(System.Int32)": {
+                    "Lines": {
+                        "23": 12,
+                        "24": 12,
+                        "25": 12,
+                        "26": 12
+                    },
+                    "Branches": [
+                        {
+                            "Line": 24,
+                            "Offset": 8,
+                            "EndOffset": 10,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 24,
+                            "Offset": 8,
+                            "EndOffset": 13,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 10
+                        }
+                    ]
+                },
+                "System.Void ListPool.ListPool`1::.ctor(System.Collections.Generic.IEnumerable`1<TSource>)": {
+                    "Lines": {
+                        "29": 3,
+                        "30": 3,
+                        "31": 2,
+                        "32": 2,
+                        "33": 2,
+                        "35": 2,
+                        "36": 2,
+                        "38": 1,
+                        "39": 1,
+                        "40": 1,
+                        "42": 1,
+                        "43": 11,
+                        "44": 10,
+                        "45": 10,
+                        "46": 10,
+                        "47": 1,
+                        "48": 3
+                    },
+                    "Branches": [
+                        {
+                            "Line": 30,
+                            "Offset": 14,
+                            "EndOffset": 16,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 2
+                        },
+                        {
+                            "Line": 30,
+                            "Offset": 14,
+                            "EndOffset": 68,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 43,
+                            "Offset": 124,
+                            "EndOffset": 101,
+                            "Path": 1,
+                            "Ordinal": 3,
+                            "Hits": 10
+                        },
+                        {
+                            "Line": 43,
+                            "Offset": 124,
+                            "EndOffset": 126,
+                            "Path": 0,
+                            "Ordinal": 2,
+                            "Hits": 1
+                        }
+                    ]
+                }
+            }
+        },
+        "C:\\Users\\fsuarez\\source\\repos\\ListPool\\src\\ListPool\\ListPoolExtensions.cs": {
+            "ListPool.ListPoolExtensions": {
+                "ListPool.ListPool`1<TSource> ListPool.ListPoolExtensions::ToListPool(System.Collections.Generic.IEnumerable`1<TSource>)":
+                {
+                    "Lines": {
+                        "9": 4,
+                        "10": 5,
+                        "11": 3,
+                        "12": 3
+                    },
+                    "Branches": [
+                        {
+                            "Line": 10,
+                            "Offset": 7,
+                            "EndOffset": 9,
+                            "Path": 0,
+                            "Ordinal": 0,
+                            "Hits": 1
+                        },
+                        {
+                            "Line": 10,
+                            "Offset": 7,
+                            "EndOffset": 20,
+                            "Path": 1,
+                            "Ordinal": 1,
+                            "Hits": 3
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

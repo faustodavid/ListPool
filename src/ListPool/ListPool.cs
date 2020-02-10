@@ -219,7 +219,9 @@ namespace ListPool
             Array.Copy(_buffer, 0, array, arrayIndex, Count);
         }
 
+#if NETSTANDARD2_1
         [MaybeNull]
+#endif
         object IList.this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -353,7 +355,9 @@ namespace ListPool
             Count = count;
         }
 
+#if NETSTANDARD2_1
         [MaybeNull]
+#endif
         public T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -514,21 +518,27 @@ namespace ListPool
                 _index = -1;
             }
 
-            [MaybeNull]
+#if NETSTANDARD2_1
+        [MaybeNull]
+#endif
             public readonly ref T Current
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => ref _source[_index];
             }
 
-            [MaybeNull]
+#if NETSTANDARD2_1
+        [MaybeNull]
+#endif
             readonly T IEnumerator<T>.Current
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => _source[_index];
             }
 
-            [MaybeNull]
+#if NETSTANDARD2_1
+        [MaybeNull]
+#endif
             readonly object? IEnumerator.Current
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
