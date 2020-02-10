@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Authors>Fausto David Suarez Rosario</Authors>
     <Title>ListPool</Title>
     <AssemblyName>ListPool</AssemblyName>
