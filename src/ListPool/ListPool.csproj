@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <LangCode>8.0</LangCode>
+    <LangVersion>preview</LangVersion>
     <Authors>Fausto David Suarez Rosario</Authors>
     <Title>ListPool</Title>
     <AssemblyName>ListPool</AssemblyName>
@@ -29,6 +29,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
 
 </Project>

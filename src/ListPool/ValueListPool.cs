@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Buffers;
+#if NETSTANDARD2_1
 using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Runtime.CompilerServices;
 
 namespace ListPool
@@ -172,7 +174,9 @@ namespace ListPool
             Count = count;
         }
 
+#if NETSTANDARD2_1
         [MaybeNull]
+#endif
         public readonly ref T this[int index]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -271,7 +275,9 @@ namespace ListPool
                 _index = -1;
             }
 
-            [MaybeNull]
+#if NETSTANDARD2_1
+        [MaybeNull]
+#endif
             public readonly ref T Current
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
