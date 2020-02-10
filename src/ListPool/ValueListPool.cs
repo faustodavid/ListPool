@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Buffers;
-#if NETSTANDARD2_1
 using System.Diagnostics.CodeAnalysis;
-#endif
 using System.Runtime.CompilerServices;
 
 namespace ListPool

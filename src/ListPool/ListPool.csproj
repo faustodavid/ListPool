@@ -20,7 +20,7 @@
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>2.3.2-beta</PackageVersion>
+    <PackageVersion>2.3.2</PackageVersion>
     <PackageReleaseNotes>
       Changelog:
       * Multitarget frameworks to support netstandard2_0.
