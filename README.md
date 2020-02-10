@@ -44,24 +44,24 @@ Differences:
     
     
  ## Benchmarks
-To see all the benchmarks and details, please click the following link <a>https://github.com/faustodavid/ListPool/tree/UpdateBenchmarksAndResults/perf/docs/results<a/>
+To see all the benchmarks and details, please click the following link <a>https://github.com/faustodavid/ListPool/tree/master/perf/docs/results<a/>
     
 ### Inserting an item in the middle of the list
 
 You can observe that `ListPool<T>` Mean is faster and it does not allocate in the heap when resizing. Zero heap allocation is vital to improve throughput by reducing "GC Wait" time.
 
-<img src="https://github.com/faustodavid/ListPool/raw/UpdateBenchmarksAndResults/perf/docs/results/graph/ListPoolInsertBenchmarks.JPG" />
+<img src="https://github.com/faustodavid/ListPool/raw/master/perf/docs/results/graph/ListPoolInsertBenchmarks.JPG" />
 
 ### Create list indicating the capacity, adding N items and performing a foreach
 
 By indicating the capacity, we avoid regrowing, which is one of the slowest operations for `List<T>`, so we can pay more attention to already well-optimized scenarios by improving the Add and Enumeration time. As you can observe, `ListPool<T>` Mean is faster and has 40 bytes of heap allocations, which are used to create the class.
 
-<img src="https://raw.githubusercontent.com/faustodavid/ListPool/UpdateBenchmarksAndResults/perf/docs/results/graph/CreateAndAddAndEnumerateAReferenceBenchmarks.JPG" />
+<img src="https://raw.githubusercontent.com/faustodavid/ListPool/master/perf/docs/results/graph/CreateAndAddAndEnumerateAReferenceBenchmarks.JPG" />
 
 ### Doing a foreach in a list of N size.
 ListPool enumeration is way faster than List for small and large sizes.
 
-<img src="https://github.com/faustodavid/ListPool/raw/UpdateBenchmarksAndResults/perf/docs/results/graph/ListPoolEnumerateBenchmarks.JPG" />
+<img src="https://github.com/faustodavid/ListPool/raw/master/perf/docs/results/graph/ListPoolEnumerateBenchmarks.JPG" />
 
 
  ## How to use
