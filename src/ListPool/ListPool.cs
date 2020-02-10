@@ -422,23 +422,15 @@ namespace ListPool
             int count = Count;
             T[] buffer = _buffer;
 
-            foreach (T item in array)
+            bool isCapacityEnough = buffer.Length - array.Length - count > 0;
+            if (!isCapacityEnough)
             {
-                if (count < buffer.Length)
-                {
-                    buffer[count] = item;
-                    count++;
-                }
-                else
-                {
-                    Count = count;
-                    AddWithResize(item);
-                    count++;
-                    buffer = _buffer;
-                }
+                GrowBuffer(buffer.Length + array.Length);
+                buffer = _buffer;
             }
 
-            Count = count;
+            array.CopyTo(buffer, count);
+            Count += array.Length;
         }
 
         public void AddRange(IEnumerable<T> items)

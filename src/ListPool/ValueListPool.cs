@@ -215,23 +215,15 @@ namespace ListPool
             int count = Count;
             T[] buffer = _disposableBuffer;
 
-            foreach (T item in array)
+            bool isCapacityEnough = buffer.Length - array.Length - count > 0;
+            if (!isCapacityEnough)
             {
-                if (count < buffer.Length)
-                {
-                    buffer[count] = item;
-                    count++;
-                }
-                else
-                {
-                    Count = count;
-                    AddWithResize(item);
-                    count++;
-                    buffer = _disposableBuffer;
-                }
+                GrowBuffer(buffer.Length + array.Length);
+                buffer = _disposableBuffer;
             }
 
-            Count = count;
+            array.CopyTo(buffer, count);
+            Count += array.Length;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

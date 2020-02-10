@@ -435,6 +435,29 @@ namespace ListPool.UnitTests.ValueListPool
         }
 
         [Fact]
+        public void AddRange_from_array_adds_all_items_as_reference_pool()
+        {
+            int[] expectedValues = Enumerable.Range(0, 10).ToArray();
+
+            Span<int> initialValues = stackalloc int[5] { 11, 22, 33, 44, 55 };
+
+            using var sut = new ValueListPool<int>(initialValues, ValueListPool<int>.SourceType.UseAsReferenceData);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Length + initialValues.Length, sut.Count);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.True(sut.Contains(expectedValue));
+            }
+
+            foreach (int expectedValue in initialValues)
+            {
+                Assert.True(sut.Contains(expectedValue));
+            }
+        }
+
+        [Fact]
         public void AddRange_adds_all_items()
         {
             int[] expectedValues = Enumerable.Range(0, 10).ToArray();
