@@ -35,7 +35,7 @@ Differences:
   * Because it is a class it has a constant heap allocation of ~56 bytes regardless the size
 
 * `ValueListPool<T>`:
-  * stack only
+  * Stack-only (It is a **ref struct**)
   * Allocation-free
   * Can be created using stackalloc or an array as initial buffer
   * **Cannot be serialized/deserialized**
