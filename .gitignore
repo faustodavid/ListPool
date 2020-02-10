@@ -22,3 +22,5 @@
 /tests/ListPool.UnitTests/ListPool.UnitTests.csproj
 /src/ListPool/obj
 /src/ListPool/bin
+/tests/ListPool.Netstandard2_0.UnitTests/bin
+/tests/ListPool.Netstandard2_0.UnitTests/obj

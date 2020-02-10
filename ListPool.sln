@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListPool.Netstandard2_0.UnitTests", "tests\ListPool.Netstandard2_0.UnitTests\ListPool.Netstandard2_0.UnitTests.csproj", "{C1B33D46-A475-410F-B607-6050B19FB4DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{E557B4AB-6DB8-45B2-B4AA-A29AE88604B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E557B4AB-6DB8-45B2-B4AA-A29AE88604B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E557B4AB-6DB8-45B2-B4AA-A29AE88604B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B33D46-A475-410F-B607-6050B19FB4DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B33D46-A475-410F-B607-6050B19FB4DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B33D46-A475-410F-B607-6050B19FB4DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B33D46-A475-410F-B607-6050B19FB4DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{AE46DA39-41FB-4031-A9EA-743A72141068} = {ECBCECD4-2ACC-4A69-BB28-598519319E93}
 		{97668125-1AEA-4DA4-AE89-2A3ACA8C93C6} = {47D1A2D2-74F6-4922-A97C-94C3A1B1C3B3}
 		{E557B4AB-6DB8-45B2-B4AA-A29AE88604B0} = {E95613B4-241A-41D3-BE2E-24B71FBEE8C2}
+		{C1B33D46-A475-410F-B607-6050B19FB4DD} = {E95613B4-241A-41D3-BE2E-24B71FBEE8C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0B084363-52EB-48E1-8364-94F33A57888A}
