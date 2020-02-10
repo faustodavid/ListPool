@@ -206,23 +206,26 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddRange(T[] array)
         {
-            if (_disposableBuffer == null)
-            {
-                AddRange(array.AsSpan());
-                return;
-            }
-
             int count = Count;
-            T[] buffer = _disposableBuffer;
+            T[] disposableBuffer = _disposableBuffer;
+            Span<T> buffer = _buffer;
 
             bool isCapacityEnough = buffer.Length - array.Length - count > 0;
             if (!isCapacityEnough)
             {
                 GrowBuffer(buffer.Length + array.Length);
-                buffer = _disposableBuffer;
+                disposableBuffer = _disposableBuffer;
             }
 
-            array.CopyTo(buffer, count);
+            if (disposableBuffer == null)
+            {
+                array.AsSpan().CopyTo(buffer.Slice(count));
+            }
+            else
+            {
+                array.CopyTo(disposableBuffer, count);
+            }
+
             Count += array.Length;
         }
 
