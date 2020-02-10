@@ -1,5 +1,4 @@
-﻿using System;
-using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Running;
 
 namespace ListPool.Benchmarks
 {
@@ -7,8 +6,10 @@ namespace ListPool.Benchmarks
     {
         private static void Main(string[] args)
         {
-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
-            Console.ReadLine();
+            while (true)
+            {
+                BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
+            }
         }
     }
 }

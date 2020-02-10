@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
 
@@ -13,9 +14,8 @@ namespace ListPool.Benchmarks
     {
         private List<int> _list;
         private ListPool<int> _listPool;
-        private ValueListPool<int> _valueListPool;
 
-        [Params(100, 1000, 10000)]
+        [Params(10, 100, 1_000, 10_000)]
         public int N { get; set; }
 
         [GlobalSetup]
@@ -23,13 +23,11 @@ namespace ListPool.Benchmarks
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
-            _valueListPool = new ValueListPool<int>(N);
 
             for (int i = 0; i < N; i++)
             {
                 _list.Add(1);
                 _listPool.Add(1);
-                _valueListPool.Add(1);
             }
         }
 
@@ -37,7 +35,6 @@ namespace ListPool.Benchmarks
         public void GlobalCleanup()
         {
             _listPool.Dispose();
-            _valueListPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
@@ -68,31 +65,8 @@ namespace ListPool.Benchmarks
         public int ListPoolAsSpan()
         {
             int count = 0;
-            foreach (int value in _listPool.AsSpan())
-            {
-                count += value;
-            }
-
-            return count;
-        }
-
-        [Benchmark]
-        public int ValueListPool()
-        {
-            int count = 0;
-            foreach (int value in _valueListPool)
-            {
-                count += value;
-            }
-
-            return count;
-        }
-
-        [Benchmark]
-        public int ValueListPoolAsSpan()
-        {
-            int count = 0;
-            foreach (int value in _valueListPool.AsSpan())
+            Span<int> span = _listPool.AsSpan();
+            foreach (int value in span)
             {
                 count += value;
             }
