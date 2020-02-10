@@ -21,7 +21,7 @@ Requirements:
 
 ## Introduction
 
-When performance matter, **ListPool** provides all the goodness of ArrayPool with the usability of `IList<T>` and support for `Span<T>` and **serialization**.
+When performance matter, **ListPool** provides all the goodness of ArrayPool with the usability of `IList<T>`, support for `Span<T>` and **serialization**.
     
 It has two high-performance variants `ListPool<T>` and `ValueListPool<T>`.
     
