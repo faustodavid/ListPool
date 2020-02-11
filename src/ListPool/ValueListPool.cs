@@ -203,8 +203,33 @@ namespace ListPool
             Count += items.Length;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddRange(T[] array) => AddRange(array.AsSpan());
+        public void AddRange(T[] array)
+        {
+            int count = Count;
+            T[] disposableBuffer = _disposableBuffer;
+            Span<T> buffer = _buffer;
+
+            bool isCapacityEnough = buffer.Length - array.Length - count > 0;
+            if (!isCapacityEnough)
+            {
+                GrowBuffer(buffer.Length + array.Length);
+                disposableBuffer = _disposableBuffer;
+                array.CopyTo(disposableBuffer, count);
+                Count += array.Length;
+                return;
+            }
+
+            if (disposableBuffer != null)
+            {
+                array.CopyTo(disposableBuffer, count);
+            }
+            else
+            {
+                array.AsSpan().CopyTo(buffer.Slice(count));
+            }
+
+            Count += array.Length;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly Span<T> AsSpan() => _buffer.Slice(0, Count);

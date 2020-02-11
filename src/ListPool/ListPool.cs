@@ -416,8 +416,21 @@ namespace ListPool
             Count += items.Length;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddRange(T[] array) => AddRange(array.AsSpan());
+        public void AddRange(T[] array)
+        {
+            int count = Count;
+            T[] buffer = _buffer;
+
+            bool isCapacityEnough = buffer.Length - array.Length - count > 0;
+            if (!isCapacityEnough)
+            {
+                GrowBuffer(buffer.Length + array.Length);
+                buffer = _buffer;
+            }
+
+            array.CopyTo(buffer, count);
+            Count += array.Length;
+        }
 
         public void AddRange(IEnumerable<T> items)
         {
