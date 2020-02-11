@@ -203,7 +203,6 @@ namespace ListPool
             Count += items.Length;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddRange(T[] array)
         {
             int count = Count;
@@ -215,15 +214,18 @@ namespace ListPool
             {
                 GrowBuffer(buffer.Length + array.Length);
                 disposableBuffer = _disposableBuffer;
+                array.CopyTo(disposableBuffer, count);
+                Count += array.Length;
+                return;
             }
 
-            if (disposableBuffer == null)
+            if (disposableBuffer != null)
             {
-                array.AsSpan().CopyTo(buffer.Slice(count));
+                array.CopyTo(disposableBuffer, count);
             }
             else
             {
-                array.CopyTo(disposableBuffer, count);
+                array.AsSpan().CopyTo(buffer.Slice(count));
             }
 
             Count += array.Length;

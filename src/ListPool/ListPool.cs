@@ -416,7 +416,6 @@ namespace ListPool
             Count += items.Length;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddRange(T[] array)
         {
             int count = Count;
