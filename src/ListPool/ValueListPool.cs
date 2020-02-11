@@ -7,8 +7,6 @@ namespace ListPool
 {
     /// <summary>
     ///     High-performance implementation of IList with zero heap allocations.
-    ///     IMPORTANT:Do not create ValueListPool without indicating a constructor.
-    ///     Otherwise it wont work.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public ref struct ValueListPool<T> where T : IEquatable<T>
@@ -25,7 +23,7 @@ namespace ListPool
         private Span<T> _buffer;
 
         /// <summary>
-        ///     Construct ListPool with the indicated capacity.
+        ///     Construct ValueListPool with the indicated capacity.
         /// </summary>
         /// <param name="capacity">Required initial capacity</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,7 +35,7 @@ namespace ListPool
         }
 
         /// <summary>
-        ///     Construct the ListPool using the giving source.
+        ///     Construct the ValueListPool using the giving source.
         ///     It can use the source as initial buffer in order to reuse the array or
         ///     use the data and wrapper it inside the ListPool or copy the data into new pooled array.
         /// </summary>
