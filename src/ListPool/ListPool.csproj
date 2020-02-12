@@ -21,7 +21,7 @@
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>2.3.3-beta</PackageVersion>
+    <PackageVersion>2.3.3</PackageVersion>
     <PackageReleaseNotes>
       Changelog:
       * Performance enhancement in the method AddRange(T[] items) for ListPool and ValueListPool
