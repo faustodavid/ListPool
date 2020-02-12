@@ -396,7 +396,6 @@ namespace ListPool.UnitTests.ValueListPool
             Assert.True(indexOutOfRangeExceptionThrown);
         }
 
-
         public override void Set_at_existing_index_update_item()
         {
             const int expectedItemsCount = 3;

@@ -469,7 +469,6 @@ namespace ListPool.Netstandard2_0.UnitTests.ValueListPool
             }
         }
 
-
         [Fact]
         public void AddRange_from_array_adds_all_items_as_reference_pool()
         {
