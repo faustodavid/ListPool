@@ -140,7 +140,7 @@ namespace ListPool
             if (buffer.Length == count)
             {
                 int newCapacity = count * 2;
-                GrowBuffer(newCapacity);
+                EnsureCapacity(newCapacity);
                 buffer = _buffer;
             }
 
@@ -190,10 +190,10 @@ namespace ListPool
             int count = Count;
             Span<T> buffer = _buffer;
 
-            bool isCapacityEnough = buffer.Length - items.Length - count > 0;
+            bool isCapacityEnough = buffer.Length - items.Length - count >= 0;
             if (!isCapacityEnough)
             {
-                GrowBuffer(buffer.Length + items.Length);
+                EnsureCapacity(buffer.Length + items.Length);
                 buffer = _disposableBuffer;
             }
 
@@ -207,10 +207,10 @@ namespace ListPool
             T[] disposableBuffer = _disposableBuffer;
             Span<T> buffer = _buffer;
 
-            bool isCapacityEnough = buffer.Length - array.Length - count > 0;
+            bool isCapacityEnough = buffer.Length - array.Length - count >= 0;
             if (!isCapacityEnough)
             {
-                GrowBuffer(buffer.Length + array.Length);
+                EnsureCapacity(buffer.Length + array.Length);
                 disposableBuffer = _disposableBuffer;
                 array.CopyTo(disposableBuffer, count);
                 Count += array.Length;
@@ -264,8 +264,9 @@ namespace ListPool
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private void GrowBuffer(int capacity)
+        public void EnsureCapacity(int capacity)
         {
+            if(capacity <= _buffer.Length) return;
             ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
             T[] newBuffer = arrayPool.Rent(capacity);
             Span<T> oldBuffer = _buffer;

@@ -695,5 +695,29 @@ namespace ListPool.UnitTests.ListPool
 
             Assert.Equal(expectedItem, sut[0]);
         }
+
+        [Fact]
+        public void EnsureCapacity_when_is_lower_than_actual_does_not_update_capacity()
+        {
+            int currentCapacity = 64;
+            int lowerCapacity = currentCapacity / 2;
+            using ListPool<int> sut = new ListPool<int>(currentCapacity);
+
+            sut.EnsureCapacity(lowerCapacity);
+
+            Assert.Equal(currentCapacity, sut.Capacity);
+        }
+
+        [Fact]
+        public void EnsureCapacity_increase_capacity_of_inner_buffer()
+        {
+            int currentCapacity = 64;
+            int biggerCapacity = currentCapacity * 2;
+            using ListPool<int> sut = new ListPool<int>(currentCapacity);
+
+            sut.EnsureCapacity(biggerCapacity);
+
+            Assert.Equal(biggerCapacity, sut.Capacity);
+        }
     }
 }

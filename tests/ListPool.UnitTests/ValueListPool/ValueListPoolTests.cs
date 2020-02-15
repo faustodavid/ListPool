@@ -493,6 +493,22 @@ namespace ListPool.UnitTests.ValueListPool
         }
 
         [Fact]
+        public void AddRange_when_there_is_enoughCapacity_from_buffer_add_all_items_to_buffer()
+        {
+            int[] expectedValues = s_fixture.CreateMany<int>(64).ToArray();
+            using ValueListPool<int> sut = new ValueListPool<int>(stackalloc int [expectedValues.Length],
+                                                                  ValueListPool<int>.SourceType.UseAsInitialBuffer);
+
+            sut.AddRange(expectedValues);
+
+            Assert.Equal(expectedValues.Length, sut.Count);
+            foreach (int expectedValue in expectedValues)
+            {
+                Assert.True(sut.Contains(expectedValue));
+            }
+        }
+
+        [Fact]
         public void AddRange_adds_all_items()
         {
             int[] expectedValues = Enumerable.Range(0, 10).ToArray();
@@ -765,6 +781,30 @@ namespace ListPool.UnitTests.ValueListPool
             {
                 Assert.True(sut.Contains(i));
             }
+        }
+
+        [Fact]
+        public void EnsureCapacity_when_is_lower_than_actual_does_not_update_capacity()
+        {
+            int currentCapacity = 64;
+            int lowerCapacity = currentCapacity / 2;
+            using ValueListPool<int> sut = new ValueListPool<int>(currentCapacity);
+
+            sut.EnsureCapacity(lowerCapacity);
+
+            Assert.Equal(currentCapacity, sut.Capacity);
+        }
+
+        [Fact]
+        public void EnsureCapacity_increase_capacity_of_inner_buffer()
+        {
+            int currentCapacity = 64;
+            int biggerCapacity = currentCapacity * 2;
+            using ValueListPool<int> sut = new ValueListPool<int>(currentCapacity);
+
+            sut.EnsureCapacity(biggerCapacity);
+
+            Assert.Equal(biggerCapacity, sut.Capacity);
         }
     }
 }
