@@ -265,7 +265,7 @@ namespace ListPool
 
         /// <summary>
         /// Ensures that the capacity of this list is the equal or bigger than the requested capacity.
-        /// Indicate the capacity helps to avoid performance degradation produced by auto-growing
+        /// Indicating the capacity helps to avoid performance degradation produced by auto-growing
         /// </summary>
         /// <param name="capacity">Requested capacity</param>
         public void EnsureCapacity(int capacity)
