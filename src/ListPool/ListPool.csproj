@@ -12,8 +12,7 @@
       ListPool and ValueListPool are optimized allocation free implementations of IList using ArrayPool.
 
       Changelog:
-      * Performance enhancement in the method AddRange(T[] items) for ListPool and ValueListPool
-      * ValueListPool now can be created with parameterless constructor 
+      * We made public the method EnsureCapacity
 
       ListPool is the general use of the implementation, we recommend to use ListPool for most of the cases. ValueListPool is the zero heap allocations implementation, it is optimal working along stackalloc initial buffer for small lists. Note, because it is a struct it is passed by value, not by reference.
     </Description>
@@ -21,11 +20,10 @@
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>2.3.3</PackageVersion>
+    <PackageVersion>2.3.4</PackageVersion>
     <PackageReleaseNotes>
       Changelog:
-      * Performance enhancement in the method AddRange(T[] items) for ListPool and ValueListPool
-      * ValueListPool now can be created with parameterless constructor 
+      * We made public the method EnsureCapacity
     </PackageReleaseNotes>
     <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
   </PropertyGroup>

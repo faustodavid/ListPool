@@ -325,7 +325,7 @@ namespace ListPool
             if (buffer.Length == count)
             {
                 int newCapacity = count * 2;
-                GrowBuffer(newCapacity);
+                EnsureCapacity(newCapacity);
                 buffer = _buffer;
             }
 
@@ -389,10 +389,10 @@ namespace ListPool
             int count = Count;
             T[] buffer = _buffer;
 
-            bool isCapacityEnough = buffer.Length - items.Length - count > 0;
+            bool isCapacityEnough = buffer.Length - items.Length - count >= 0;
             if (!isCapacityEnough)
             {
-                GrowBuffer(buffer.Length + items.Length);
+                EnsureCapacity(buffer.Length + items.Length);
                 buffer = _buffer;
             }
 
@@ -405,10 +405,10 @@ namespace ListPool
             int count = Count;
             T[] buffer = _buffer;
 
-            bool isCapacityEnough = buffer.Length - items.Length - count > 0;
+            bool isCapacityEnough = buffer.Length - items.Length - count >= 0;
             if (!isCapacityEnough)
             {
-                GrowBuffer(buffer.Length + items.Length);
+                EnsureCapacity(buffer.Length + items.Length);
                 buffer = _buffer;
             }
 
@@ -421,10 +421,10 @@ namespace ListPool
             int count = Count;
             T[] buffer = _buffer;
 
-            bool isCapacityEnough = buffer.Length - array.Length - count > 0;
+            bool isCapacityEnough = buffer.Length - array.Length - count >= 0;
             if (!isCapacityEnough)
             {
-                GrowBuffer(buffer.Length + array.Length);
+                EnsureCapacity(buffer.Length + array.Length);
                 buffer = _buffer;
             }
 
@@ -439,10 +439,10 @@ namespace ListPool
 
             if (items is ICollection<T> collection)
             {
-                bool isCapacityEnough = buffer.Length - collection.Count - count > 0;
+                bool isCapacityEnough = buffer.Length - collection.Count - count >= 0;
                 if (!isCapacityEnough)
                 {
-                    GrowBuffer(buffer.Length + collection.Count);
+                    EnsureCapacity(buffer.Length + collection.Count);
                     buffer = _buffer;
                 }
 
@@ -501,9 +501,14 @@ namespace ListPool
             arrayPool.Return(oldBuffer);
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void GrowBuffer(int capacity)
+        /// <summary>
+        /// Ensures that the capacity of this list is the equal or bigger than the requested capacity.
+        /// Indicate the capacity helps to avoid performance degradation produced by auto-growing
+        /// </summary>
+        /// <param name="capacity">Requested capacity</param>
+        public void EnsureCapacity(int capacity)
         {
+            if(capacity <= Capacity) return;
             ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
             T[] newBuffer = arrayPool.Rent(capacity);
             T[] oldBuffer = _buffer;
