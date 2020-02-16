@@ -24,7 +24,7 @@
 /src/ListPool/bin
 /tests/ListPool.Netstandard2_0.UnitTests/bin
 /tests/ListPool.Netstandard2_0.UnitTests/obj
-/tests/ListPool.Formatters.Utf8Json.Tests/obj
-/tests/ListPool.Formatters.Utf8Json.Tests/bin/Debug/netcoreapp3.1
-/src/ListPool.Formatters.Utf8Json/obj
-/src/ListPool.Formatters.Utf8Json/bin/Debug/netstandard2.0
+/tests/ListPool.Resolvers.Utf8Json.Tests/obj
+/tests/ListPool.Resolvers.Utf8Json.Tests/bin/Debug/netcoreapp3.1
+/src/ListPool.Resolvers.Utf8Json/obj
+/src/ListPool.Resolvers.Utf8Json/bin/Debug/netstandard2.0
