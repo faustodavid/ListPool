@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Utf8Json;
 using Utf8Json.Resolvers;
 
-namespace ListPool.Formatters.Utf8Json
+namespace ListPool.Resolvers.Utf8Json
 {
     public class ListPoolFormatter<T> : IJsonFormatter<ListPool<T>>
     {

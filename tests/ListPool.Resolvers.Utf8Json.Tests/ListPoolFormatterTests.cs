@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AutoFixture;
+using ListPool.Resolvers.Utf8Json;
 using Xunit;
 
 namespace ListPool.Formatters.Utf8Json.Tests

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ListPool.Formatters.Utf8Json
+namespace ListPool.Resolvers.Utf8Json
 {
     internal static class MemoryPool
     {
