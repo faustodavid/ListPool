@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
+using ListPool.Resolvers.Utf8Json;
 using Utf8Json;
 
 namespace ListPool.Benchmarks
@@ -13,10 +15,11 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class Utf8JsonSerializeListOfIntBenchmarks
     {
+        private readonly ListPoolResolver _resolver = new ListPoolResolver();
         private List<int> _list;
         private ListPool<int> _listPool;
 
-        [Params(100, 1_000, 10_000)]
+        [Params(1_000)]
         public int N { get; set; }
 
         [GlobalSetup]
@@ -33,26 +36,42 @@ namespace ListPool.Benchmarks
             _listPool.Dispose();
         }
 
-        [Benchmark(Baseline = true)]
+        [Benchmark]
         public int List()
         {
-            byte[] serializedItems = JsonSerializer.Serialize(_list);
-            return serializedItems.Length;
+            int count = 0;
+            List<int> list = _list;
+
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+
+            return count;
         }
+
 
         [Benchmark]
         public int ListPool()
         {
-            byte[] serializedItems = JsonSerializer.Serialize(_listPool);
-            return serializedItems.Length;
-        }
+            int count = 0;
+            ListPoolResolver resolver = _resolver;
+            ListPool<int> list = _listPool;
 
+            count += JsonSerializer.Serialize(list, resolver).Length;
+            count += JsonSerializer.Serialize(list, resolver).Length;
+            count += JsonSerializer.Serialize(list, resolver).Length;
+            count += JsonSerializer.Serialize(list, resolver).Length;
+            count += JsonSerializer.Serialize(list, resolver).Length;
+            count += JsonSerializer.Serialize(list, resolver).Length;
+            count += JsonSerializer.Serialize(list, resolver).Length;
+            count += JsonSerializer.Serialize(list, resolver).Length;
 
-        [Benchmark]
-        public int ListPool_Spreads()
-        {
-            byte[] serializedItems = Spreads.Serialization.Utf8Json.JsonSerializer.Serialize(_listPool);
-            return serializedItems.Length;
+            return count;
         }
     }
 }

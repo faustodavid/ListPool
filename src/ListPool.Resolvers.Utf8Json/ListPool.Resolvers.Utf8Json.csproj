@@ -1,8 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <Authors>Fausto David Suarez Rosario</Authors>
+    <Title>ListPool.Resolvers.Utf8Json</Title>
+    <AssemblyName>ListPool.Resolvers.Utf8Json</AssemblyName>
+    <PackageId>ListPool.Resolvers.Utf8Json</PackageId>
+    <Description>
+      This library has the resolver and formatter for ListPool to get the maximum performance when serializing objects type ListPool.
+    </Description>
+    <PackageTags>ASP.NET;List;System.Buffers;ArrayPool;ListPool;Performance;Span;Utf8Json</PackageTags>
+    <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageVersion>0.1-preview1</PackageVersion>
+    <PackageReleaseNotes>
+      Changelog:
+      * Resolvers and Formatters for ListPool.
+    </PackageReleaseNotes>
+    <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

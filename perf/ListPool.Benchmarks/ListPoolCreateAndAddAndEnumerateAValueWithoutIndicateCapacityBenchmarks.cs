@@ -70,7 +70,7 @@ namespace ListPool.Benchmarks
             int count = 0;
             using ValueListPool<int> list = new ValueListPool<int>(0);
 
-            for (int i = 0; i < N;  i += 8)
+            for (int i = 0; i < N; i += 8)
             {
                 list.Add(i);
                 list.Add(i);

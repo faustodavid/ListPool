@@ -28,3 +28,5 @@
 /tests/ListPool.Resolvers.Utf8Json.Tests/bin/Debug/netcoreapp3.1
 /src/ListPool.Resolvers.Utf8Json/obj
 /src/ListPool.Resolvers.Utf8Json/bin/Debug/netstandard2.0
+/src/ListPool.Resolvers.Utf8Json/bin
+/tests/ListPool.Resolvers.Utf8Json.Tests/bin/Release/netcoreapp3.1

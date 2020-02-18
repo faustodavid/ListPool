@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ListPool.Formatters.Utf8Json.Tests
+namespace ListPool.Resolvers.Utf8Json.Tests
 {
     public sealed class CustomObjectWithListPool : CustomObject, IDisposable
     {

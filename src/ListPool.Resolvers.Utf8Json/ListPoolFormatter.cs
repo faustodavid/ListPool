@@ -1,32 +1,33 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using Utf8Json;
-using Utf8Json.Resolvers;
+﻿using Utf8Json;
 
 namespace ListPool.Resolvers.Utf8Json
 {
     public class ListPoolFormatter<T> : IJsonFormatter<ListPool<T>>
     {
-        public void Serialize(ref JsonWriter writer, ListPool<T> values, IJsonFormatterResolver formatterResolver)
+        public void Serialize(ref JsonWriter writer, ListPool<T> value, IJsonFormatterResolver formatterResolver)
         {
-            if (values == null)
+            if (value == null)
             {
                 writer.WriteNull();
                 return;
             }
 
             writer.WriteBeginArray();
-            var formatter = formatterResolver.GetFormatterWithVerify<T>();
 
-            ReadOnlySpan<T> buffer = values.AsSpan();
+            IJsonFormatter<T> formatter = formatterResolver.GetFormatterWithVerify<T>();
 
-            foreach (T item in buffer)
+            if (value.Count != 0)
             {
-                formatter.Serialize(ref writer, item, formatterResolver);
-                writer.WriteValueSeparator();
+                formatter.Serialize(ref writer, value[0], formatterResolver);
             }
 
-            writer.GetBuffer().AsSpan()[writer.CurrentOffset - 1] = (byte)']';
+            foreach (var item in value.AsSpan().Slice(1))
+            {
+                writer.WriteValueSeparator();
+                formatter.Serialize(ref writer, item, formatterResolver);
+            }
+
+            writer.WriteEndArray();
         }
 
         public ListPool<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
@@ -34,38 +35,14 @@ namespace ListPool.Resolvers.Utf8Json
             int count = 0;
             var formatter = formatterResolver.GetFormatterWithVerify<T>();
 
-            var list = new ListPool<T>();
+            ListPool<T> listPool = new ListPool<T>();
             reader.ReadIsBeginArrayWithVerify();
             while (!reader.ReadIsEndArrayWithSkipValueSeparator(ref count))
             {
-                list.Add(formatter.Deserialize(ref reader, formatterResolver));
+                listPool.Add(formatter.Deserialize(ref reader, formatterResolver));
             }
 
-            return list;
-        }
-
-        public ListPool<T> Deserialize(byte[] bytes)
-        {
-            JsonReader reader = new JsonReader(bytes);
-            int count = 0;
-            var formatter = StandardResolver.Default.GetFormatterWithVerify<T>();
-
-            var list = new ListPool<T>();
-            reader.ReadIsBeginArrayWithVerify();
-            while (!reader.ReadIsEndArrayWithSkipValueSeparator(ref count))
-            {
-                list.Add(formatter.Deserialize(ref reader, StandardResolver.Default));
-            }
-
-            return list;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public byte[] Serialize(ListPool<T> listPool)
-        {
-            JsonWriter writer = new JsonWriter(MemoryPool.GetBuffer());
-            Serialize(ref writer, listPool, StandardResolver.Default);
-            return writer.ToUtf8ByteArray();
+            return listPool;
         }
     }
 }
