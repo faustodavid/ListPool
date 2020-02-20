@@ -36,8 +36,26 @@ namespace ListPool.Benchmarks
             _listPool.Dispose();
         }
 
+        [Benchmark(Baseline = true)]
+        public int List_SystemTextJson()
+        {
+            int count = 0;
+            List<int> list = _list;
+
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+
+            return count;
+        }
+
         [Benchmark]
-        public int List()
+        public int List_utf8json()
         {
             int count = 0;
             List<int> list = _list;
@@ -56,7 +74,7 @@ namespace ListPool.Benchmarks
 
 
         [Benchmark]
-        public int ListPool()
+        public int ListPool_utf8json_with_resolver()
         {
             int count = 0;
             ListPoolResolver resolver = _resolver;
@@ -70,6 +88,63 @@ namespace ListPool.Benchmarks
             count += JsonSerializer.Serialize(list, resolver).Length;
             count += JsonSerializer.Serialize(list, resolver).Length;
             count += JsonSerializer.Serialize(list, resolver).Length;
+
+            return count;
+        }
+
+        [Benchmark]
+        public int ListPool_utf8json()
+        {
+            int count = 0;
+            ListPoolResolver resolver = _resolver;
+            ListPool<int> list = _listPool;
+
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list).Length;
+
+            return count;
+        }
+
+        [Benchmark]
+        public int ListPool_SystemTextJson()
+        {
+            int count = 0;
+            ListPoolResolver resolver = _resolver;
+            ListPool<int> list = _listPool;
+
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+            count += System.Text.Json.JsonSerializer.Serialize(list).Length;
+
+            return count;
+        }
+
+        [Benchmark]
+        public int ListPool_ListPoolUtf8Json()
+        {
+            int count = 0;
+            ListPoolResolver resolver = _resolver;
+            ListPool<int> list = _listPool;
+
+            count += Utf8Json.JsonSerializer.Serialize(list).Length;
+            count += Utf8Json.JsonSerializer.Serialize(list).Length;
+            count += Utf8Json.JsonSerializer.Serialize(list).Length;
+            count += Utf8Json.JsonSerializer.Serialize(list).Length;
+            count += Utf8Json.JsonSerializer.Serialize(list).Length;
+            count += Utf8Json.JsonSerializer.Serialize(list).Length;
+            count += Utf8Json.JsonSerializer.Serialize(list).Length;
+            count += Utf8Json.JsonSerializer.Serialize(list).Length;
 
             return count;
         }

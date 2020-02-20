@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Utf8Json\src\Utf8Json\Utf8Json.csproj" />
     <ProjectReference Include="..\..\src\ListPool.Resolvers.Utf8Json\ListPool.Resolvers.Utf8Json.csproj" />
     <ProjectReference Include="..\..\src\ListPool\ListPool.csproj" />
   </ItemGroup>
