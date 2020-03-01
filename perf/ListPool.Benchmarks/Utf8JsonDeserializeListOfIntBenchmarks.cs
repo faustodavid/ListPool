@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
@@ -19,10 +18,11 @@ namespace ListPool.Benchmarks
     {
         private static readonly ListPoolResolver _listPoolResolver = new ListPoolResolver();
 
+        private Stream _buffer;
+
         [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
-        private Stream _buffer;
         private Stream GetStream()
         {
             var stream = new MemoryStream();
@@ -37,7 +37,7 @@ namespace ListPool.Benchmarks
                 writer.Flush();
             }
 
-            writer.Write($"]");
+            writer.Write("]");
             writer.Flush();
 
             stream.Seek(0, SeekOrigin.Begin);
@@ -51,54 +51,24 @@ namespace ListPool.Benchmarks
             _buffer = GetStream();
         }
 
-        [Benchmark]
-        public async Task<int> ListPool_json_pipelines()
+        [Benchmark(Baseline = true)]
+        public async Task<int> List()
         {
             _buffer.Position = 0;
-            using ListPool<int> list = await Utf8Json.JsonSerializer.DeserializeUsingPipesAsync(_buffer);
+            List<int> list = await JsonSerializer.DeserializeAsync<List<int>>(_buffer);
             return list.Count;
         }
 
         [Benchmark]
-        public async Task<int> ListPool_ListPool_Utf8Json()
+        public async Task<int> ListPool()
         {
             _buffer.Position = 0;
-            using ListPool<int> list = await Utf8Json.JsonSerializer.DeserializeAsync<ListPool<int>>(_buffer);
+            using ListPool<int> list = await JsonSerializer.DeserializeAsync<ListPool<int>>(_buffer);
             return list.Count;
         }
 
-      //  [Benchmark(Baseline = true)]
-        public async Task<int> List_SystemTextJson()
-        {
-            _buffer.Position = 0;
-            List<int> list = await System.Text.Json.JsonSerializer.DeserializeAsync<List<int>>(_buffer);
-            return list.Count;
-        }
-
-          [Benchmark(Baseline = true)]
-        public async Task<int> List_utf8json()
-        {
-            _buffer.Position = 0;
-            List<int> list = await Utf8Json.JsonSerializer.DeserializeAsync<List<int>>(_buffer);
-            return list.Count;
-        }
-
-      //  [Benchmark]
-        public async Task<int> ListPool_utf8json()
-        {
-            _buffer.Position = 0;
-            using ListPool<int> list = await Utf8Json.JsonSerializer.DeserializeAsync<ListPool<int>>(_buffer);
-            return list.Count;
-        }
-        //[Benchmark]
-        //public async Task<int> ListPool_SystemTextJson()
-        //{
-        //    _buffer.Position = 0;
-        //    using ListPool<int> list = await System.Text.Json.JsonSerializer.DeserializeAsync<ListPool<int>>(_buffer);
-        //    return list.Count;
-        //}
         [Benchmark]
-        public async Task<int> ListPool_utf8json_with_resolver()
+        public async Task<int> ListPool_with_resolver()
         {
             _buffer.Position = 0;
             using ListPool<int> list = await JsonSerializer.DeserializeAsync<ListPool<int>>(_buffer, _listPoolResolver);
