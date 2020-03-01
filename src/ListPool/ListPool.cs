@@ -17,7 +17,7 @@ namespace ListPool
     public sealed class ListPool<T> : IList<T>, IList, IReadOnlyList<T>, IDisposable
     {
         private const int MinimumCapacity = 32;
-        private T[] _buffer;
+        private T[] _items;
 
         [NonSerialized]
         private object? _syncRoot;
@@ -29,7 +29,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool()
         {
-            _buffer = ArrayPool<T>.Shared.Rent(MinimumCapacity);
+            _items = ArrayPool<T>.Shared.Rent(MinimumCapacity);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool(int capacity)
         {
-            _buffer = ArrayPool<T>.Shared.Rent(capacity < MinimumCapacity ? MinimumCapacity : capacity);
+            _items = ArrayPool<T>.Shared.Rent(capacity < MinimumCapacity ? MinimumCapacity : capacity);
         }
 
         /// <summary>
@@ -57,13 +57,13 @@ namespace ListPool
 
                 collection.CopyTo(buffer, 0);
 
-                _buffer = buffer;
+                _items = buffer;
                 Count = collection.Count;
             }
             else
             {
-                _buffer = ArrayPool<T>.Shared.Rent(MinimumCapacity);
-                T[] buffer = _buffer;
+                _items = ArrayPool<T>.Shared.Rent(MinimumCapacity);
+                T[] buffer = _items;
                 Count = 0;
                 int count = 0;
                 using IEnumerator<T> enumerator = source.GetEnumerator();
@@ -79,7 +79,7 @@ namespace ListPool
                         Count = count;
                         AddWithResize(enumerator.Current);
                         count++;
-                        buffer = _buffer;
+                        buffer = _items;
                     }
                 }
 
@@ -99,7 +99,7 @@ namespace ListPool
             T[] buffer = ArrayPool<T>.Shared.Rent(capacity);
             source.CopyTo(buffer, 0);
 
-            _buffer = buffer;
+            _items = buffer;
             Count = source.Length;
         }
 
@@ -113,14 +113,14 @@ namespace ListPool
             T[] buffer = ArrayPool<T>.Shared.Rent(capacity);
             source.CopyTo(buffer);
 
-            _buffer = buffer;
+            _items = buffer;
             Count = source.Length;
         }
 
         /// <summary>
         ///     Capacity of the underlying pooled array.
         /// </summary>
-        public int Capacity => _buffer.Length;
+        public int Capacity => _items.Length;
 
         /// <summary>
         ///     Returns underlying array to the pool
@@ -129,9 +129,7 @@ namespace ListPool
         public void Dispose()
         {
             Count = 0;
-            T[] buffer = _buffer;
-            if (buffer != null)
-                ArrayPool<T>.Shared.Return(buffer);
+            ArrayPool<T>.Shared.Return(_items);
         }
 
         int ICollection.Count => Count;
@@ -216,7 +214,7 @@ namespace ListPool
 
         void ICollection.CopyTo(Array array, int arrayIndex)
         {
-            Array.Copy(_buffer, 0, array, arrayIndex, Count);
+            Array.Copy(_items, 0, array, arrayIndex, Count);
         }
 
 #if NETSTANDARD2_1
@@ -230,7 +228,7 @@ namespace ListPool
                 if (index >= Count)
                     throw new IndexOutOfRangeException(nameof(index));
 
-                return _buffer[index];
+                return _items[index];
             }
 
             set
@@ -240,7 +238,7 @@ namespace ListPool
 
                 if (value is T valueAsTSource)
                 {
-                    _buffer[index] = valueAsTSource;
+                    _items[index] = valueAsTSource;
                 }
                 else
                 {
@@ -260,7 +258,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(T item)
         {
-            T[] buffer = _buffer;
+            T[] buffer = _items;
             int count = Count;
 
             if (count < buffer.Length)
@@ -291,11 +289,11 @@ namespace ListPool
         public bool Contains(T item) => IndexOf(item) > -1;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int IndexOf(T item) => Array.IndexOf(_buffer, item, 0, Count);
+        public int IndexOf(T item) => Array.IndexOf(_items, item, 0, Count);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void CopyTo(T[] array, int arrayIndex) =>
-            Array.Copy(_buffer, 0, array, arrayIndex, Count);
+            Array.Copy(_items, 0, array, arrayIndex, Count);
 
         public bool Remove(T item)
         {
@@ -320,13 +318,13 @@ namespace ListPool
         public void Insert(int index, T item)
         {
             int count = Count;
-            T[] buffer = _buffer;
+            T[] buffer = _items;
 
             if (buffer.Length == count)
             {
                 int newCapacity = count * 2;
                 EnsureCapacity(newCapacity);
-                buffer = _buffer;
+                buffer = _items;
             }
 
             if (index < count)
@@ -346,7 +344,7 @@ namespace ListPool
         public void RemoveAt(int index)
         {
             int count = Count;
-            T[] buffer = _buffer;
+            T[] buffer = _items;
 
             if (index >= count) throw new IndexOutOfRangeException(nameof(index));
 
@@ -366,7 +364,7 @@ namespace ListPool
                 if (index >= Count)
                     throw new IndexOutOfRangeException(nameof(index));
 
-                return _buffer[index];
+                return _items[index];
             }
 
             set
@@ -374,26 +372,26 @@ namespace ListPool
                 if (index >= Count)
                     throw new IndexOutOfRangeException(nameof(index));
 
-                _buffer[index] = value;
+                _items[index] = value;
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(_buffer, Count);
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(_items, Count);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(_buffer, Count);
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(_items, Count);
 
         public void AddRange(Span<T> items)
         {
             int count = Count;
-            T[] buffer = _buffer;
+            T[] buffer = _items;
 
             bool isCapacityEnough = buffer.Length - items.Length - count >= 0;
             if (!isCapacityEnough)
             {
                 EnsureCapacity(buffer.Length + items.Length);
-                buffer = _buffer;
+                buffer = _items;
             }
 
             items.CopyTo(buffer.AsSpan().Slice(count));
@@ -403,13 +401,13 @@ namespace ListPool
         public void AddRange(ReadOnlySpan<T> items)
         {
             int count = Count;
-            T[] buffer = _buffer;
+            T[] buffer = _items;
 
             bool isCapacityEnough = buffer.Length - items.Length - count >= 0;
             if (!isCapacityEnough)
             {
                 EnsureCapacity(buffer.Length + items.Length);
-                buffer = _buffer;
+                buffer = _items;
             }
 
             items.CopyTo(buffer.AsSpan().Slice(count));
@@ -419,13 +417,13 @@ namespace ListPool
         public void AddRange(T[] array)
         {
             int count = Count;
-            T[] buffer = _buffer;
+            T[] buffer = _items;
 
             bool isCapacityEnough = buffer.Length - array.Length - count >= 0;
             if (!isCapacityEnough)
             {
                 EnsureCapacity(buffer.Length + array.Length);
-                buffer = _buffer;
+                buffer = _items;
             }
 
             array.CopyTo(buffer, count);
@@ -435,7 +433,7 @@ namespace ListPool
         public void AddRange(IEnumerable<T> items)
         {
             int count = Count;
-            T[] buffer = _buffer;
+            T[] buffer = _items;
 
             if (items is ICollection<T> collection)
             {
@@ -443,7 +441,7 @@ namespace ListPool
                 if (!isCapacityEnough)
                 {
                     EnsureCapacity(buffer.Length + collection.Count);
-                    buffer = _buffer;
+                    buffer = _items;
                 }
 
                 collection.CopyTo(buffer, count);
@@ -463,7 +461,7 @@ namespace ListPool
                         Count = count;
                         AddWithResize(item);
                         count++;
-                        buffer = _buffer;
+                        buffer = _items;
                     }
                 }
 
@@ -476,27 +474,27 @@ namespace ListPool
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Span<T> AsSpan() => _buffer.AsSpan(0, Count);
+        public Span<T> AsSpan() => _items.AsSpan(0, Count);
 
         /// <summary>
         ///     Get memory of the items added
         /// </summary>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Memory<T> AsMemory() => _buffer.AsMemory(0, Count);
+        public Memory<T> AsMemory() => _items.AsMemory(0, Count);
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void AddWithResize(T item)
         {
             ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
-            T[] oldBuffer = _buffer;
+            T[] oldBuffer = _items;
             T[] newBuffer = arrayPool.Rent(oldBuffer.Length * 2);
             int count = oldBuffer.Length;
 
             Array.Copy(oldBuffer, 0, newBuffer, 0, count);
 
             newBuffer[count] = item;
-            _buffer = newBuffer;
+            _items = newBuffer;
             Count = count + 1;
             arrayPool.Return(oldBuffer);
         }
@@ -508,19 +506,19 @@ namespace ListPool
         /// <param name="capacity">Requested capacity</param>
         public void EnsureCapacity(int capacity)
         {
-            if(capacity <= Capacity) return;
+            if (capacity <= Capacity) return;
             ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
             T[] newBuffer = arrayPool.Rent(capacity);
-            T[] oldBuffer = _buffer;
+            T[] oldBuffer = _items;
 
             Array.Copy(oldBuffer, 0, newBuffer, 0, oldBuffer.Length);
 
-            _buffer = newBuffer;
+            _items = newBuffer;
             arrayPool.Return(oldBuffer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Enumerator GetEnumerator() => new Enumerator(_buffer, Count);
+        public Enumerator GetEnumerator() => new Enumerator(_items, Count);
 
         public struct Enumerator : IEnumerator<T>
         {
@@ -537,7 +535,7 @@ namespace ListPool
             }
 
 #if NETSTANDARD2_1
-        [MaybeNull]
+            [MaybeNull]
 #endif
             public readonly ref T Current
             {
@@ -546,7 +544,7 @@ namespace ListPool
             }
 
 #if NETSTANDARD2_1
-        [MaybeNull]
+            [MaybeNull]
 #endif
             readonly T IEnumerator<T>.Current
             {
@@ -555,7 +553,7 @@ namespace ListPool
             }
 
 #if NETSTANDARD2_1
-        [MaybeNull]
+            [MaybeNull]
 #endif
             readonly object? IEnumerator.Current
             {

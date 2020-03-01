@@ -3,41 +3,47 @@ using AutoFixture;
 using Utf8Json;
 using Xunit;
 
-namespace ListPool.UnitTests.ListPool.Serializer
+namespace ListPool.Resolvers.Utf8Json.Tests
 {
-    public class ListPoolUtf8JsonTests : ListPoolSerializerTestsBase
+    public class ListPoolResolverTests
     {
-        public override void Serialize_and_deserialize_ListPool_with_value_types()
+        protected static readonly Fixture s_fixture = new Fixture();
+        private readonly ListPoolResolver _sut = new ListPoolResolver();
+
+        [Fact]
+        public void Serialize_and_deserialize_ListPool_with_value_types()
         {
             using ListPool<int> expectedItems = new ListPool<int>
             {
                 s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()
             };
-            string serializedItems = JsonSerializer.ToJsonString(expectedItems);
+            byte[] serializedItems = JsonSerializer.Serialize(expectedItems, _sut);
 
-            using ListPool<int> actualItems = JsonSerializer.Deserialize<ListPool<int>>(serializedItems);
+            using ListPool<int> actualItems = JsonSerializer.Deserialize<ListPool<int>>(serializedItems, _sut);
 
             Assert.Equal(expectedItems.Count, actualItems.Count);
             Assert.All(expectedItems, expectedItem => actualItems.Contains(expectedItem));
         }
 
-        public override void Serialize_and_deserialize_ListPool_with_objects()
+        [Fact]
+        public void Serialize_and_deserialize_ListPool_with_objects()
         {
             using ListPool<CustomObject> expectedItems = new ListPool<CustomObject>
             {
                 s_fixture.Create<CustomObject>(), s_fixture.Create<CustomObject>(), s_fixture.Create<CustomObject>()
             };
-            string serializedItems = JsonSerializer.ToJsonString(expectedItems);
+            byte[] serializedItems = JsonSerializer.Serialize(expectedItems, _sut);
 
             using ListPool<CustomObject> actualItems =
-                JsonSerializer.Deserialize<ListPool<CustomObject>>(serializedItems);
+                JsonSerializer.Deserialize<ListPool<CustomObject>>(serializedItems, _sut);
 
             Assert.Equal(expectedItems.Count, actualItems.Count);
             Assert.All(expectedItems,
                 expectedItem => actualItems.Any(actualItem => actualItem.Property == expectedItem.Property));
         }
 
-        public override void Serialize_and_deserialize_objects_containing_ListPool()
+        [Fact]
+        public void Serialize_and_deserialize_objects_containing_ListPool()
         {
             using ListPool<int> expectedItems = new ListPool<int>
             {
@@ -47,10 +53,10 @@ namespace ListPool.UnitTests.ListPool.Serializer
             {
                 Property = s_fixture.Create<string>(), List = expectedItems
             };
-            string serializedItems = JsonSerializer.ToJsonString(expectedObject);
+            byte[] serializedItems = JsonSerializer.Serialize(expectedObject, _sut);
 
             using CustomObjectWithListPool actualObject =
-                JsonSerializer.Deserialize<CustomObjectWithListPool>(serializedItems);
+                JsonSerializer.Deserialize<CustomObjectWithListPool>(serializedItems, _sut);
 
             Assert.Equal(expectedObject.Property, actualObject.Property);
             Assert.Equal(expectedItems.Count, actualObject.List.Count);

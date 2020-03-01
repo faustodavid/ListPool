@@ -12,7 +12,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             int[] expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToListPool();
+            using ListPool<int> sut = expectedItems.ToListPool();
 
             Assert.All(expectedItems, value => sut.Contains(value));
         }
@@ -22,7 +22,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             ICollection<int> expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToListPool();
+            using ListPool<int> sut = expectedItems.ToListPool();
 
             Assert.All(expectedItems, value => sut.Contains(value));
         }
@@ -32,7 +32,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             IEnumerable<int> expectedItems = Enumerable.Range(0, 10);
 
-            using var sut = expectedItems.ToListPool();
+            using ListPool<int> sut = expectedItems.ToListPool();
 
             Assert.All(expectedItems, value => sut.Contains(value));
         }
@@ -42,7 +42,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             ReadOnlySpan<int> expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToListPool();
+            using ListPool<int> sut = expectedItems.ToListPool();
 
             foreach (int expectedItem in expectedItems)
             {
@@ -56,7 +56,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             ReadOnlySpan<int> expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToListPool();
+            using ListPool<int> sut = expectedItems.ToListPool();
 
             foreach (int expectedItem in expectedItems)
             {
@@ -80,7 +80,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             int[] expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToValueListPool();
+            using ValueListPool<int> sut = expectedItems.ToValueListPool();
 
             foreach (int expectedItem in expectedItems)
             {
@@ -93,7 +93,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             int[] expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToValueListPool(ValueListPool<int>.SourceType.Copy);
+            using ValueListPool<int> sut = expectedItems.ToValueListPool(ValueListPool<int>.SourceType.Copy);
 
             foreach (int expectedItem in expectedItems)
             {
@@ -106,7 +106,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             Span<int> expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToValueListPool(ValueListPool<int>.SourceType.Copy);
+            using ValueListPool<int> sut = expectedItems.ToValueListPool(ValueListPool<int>.SourceType.Copy);
 
             foreach (int expectedItem in expectedItems)
             {
@@ -120,7 +120,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             Span<int> expectedItems = Enumerable.Range(0, 10).ToArray();
 
-            using var sut = expectedItems.ToValueListPool();
+            using ValueListPool<int> sut = expectedItems.ToValueListPool();
 
             foreach (int expectedItem in expectedItems)
             {

@@ -16,7 +16,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             string[] items = s_fixture.CreateMany<string>(10).ToArray();
             IEnumerator expectedEnumerator = items.GetEnumerator();
-            var sut = new ValueListPool<string>.Enumerator(items.AsSpan());
+            ValueListPool<string>.Enumerator sut = new ValueListPool<string>.Enumerator(items.AsSpan());
 
             while (expectedEnumerator.MoveNext())
             {
@@ -48,7 +48,7 @@ namespace ListPool.Netstandard2_0.UnitTests
         {
             string[] items = s_fixture.CreateMany<string>(10).ToArray();
             IEnumerator expectedEnumerator = items.GetEnumerator();
-            var sut = new ValueListPool<string>.Enumerator(items.AsSpan());
+            ValueListPool<string>.Enumerator sut = new ValueListPool<string>.Enumerator(items.AsSpan());
 
             while (expectedEnumerator.MoveNext())
             {

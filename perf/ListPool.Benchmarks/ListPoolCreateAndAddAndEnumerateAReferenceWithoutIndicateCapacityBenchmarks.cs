@@ -12,10 +12,10 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolCreateAndAddAndEnumerateAReferenceWithoutIndicateCapacityBenchmarks
     {
+        private static readonly string _stringToAdd = Guid.NewGuid().ToString();
+
         [Params(48, 1_024, 10_240)]
         public int N { get; set; }
-
-        private static readonly string _stringToAdd = Guid.NewGuid().ToString();
 
         [Benchmark(Baseline = true)]
         public int List()

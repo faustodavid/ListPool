@@ -72,7 +72,7 @@ namespace ListPool.Benchmarks
                 ? new ValueListPool<int>(stackalloc int[N], ValueListPool<int>.SourceType.UseAsInitialBuffer)
                 : new ValueListPool<int>(N);
 
-            for (int i = 0; i < N;  i += 8)
+            for (int i = 0; i < N; i += 8)
             {
                 list.Add(i);
                 list.Add(i);
