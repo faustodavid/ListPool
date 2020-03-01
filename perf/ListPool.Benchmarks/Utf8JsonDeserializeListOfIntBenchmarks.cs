@@ -25,9 +25,9 @@ namespace ListPool.Benchmarks
 
         private Stream GetStream()
         {
-            var stream = new MemoryStream();
+            MemoryStream stream = new MemoryStream();
 
-            using var writer = new StreamWriter(stream, new UTF8Encoding(), leaveOpen: true);
+            using StreamWriter writer = new StreamWriter(stream, new UTF8Encoding(), leaveOpen: true);
 
             writer.Write("[1");
             writer.Flush();

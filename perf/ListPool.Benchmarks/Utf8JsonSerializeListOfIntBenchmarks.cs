@@ -24,7 +24,7 @@ namespace ListPool.Benchmarks
         [GlobalSetup]
         public void GlobalSetup()
         {
-            var items = Enumerable.Range(0, N).ToArray();
+            int[] items = Enumerable.Range(0, N).ToArray();
             _listPool = items.ToListPool();
             _list = items.ToList();
         }

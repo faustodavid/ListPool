@@ -21,7 +21,7 @@ namespace ListPool.Resolvers.Utf8Json
                 formatter.Serialize(ref writer, value[0], formatterResolver);
             }
 
-            foreach (var item in value.AsSpan().Slice(1))
+            foreach (T item in value.AsSpan().Slice(1))
             {
                 writer.WriteValueSeparator();
                 formatter.Serialize(ref writer, item, formatterResolver);
@@ -33,7 +33,7 @@ namespace ListPool.Resolvers.Utf8Json
         public ListPool<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             int count = 0;
-            var formatter = formatterResolver.GetFormatterWithVerify<T>();
+            IJsonFormatter<T> formatter = formatterResolver.GetFormatterWithVerify<T>();
 
             ListPool<T> listPool = new ListPool<T>();
             reader.ReadIsBeginArrayWithVerify();

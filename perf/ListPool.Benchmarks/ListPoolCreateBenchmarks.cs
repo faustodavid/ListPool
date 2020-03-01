@@ -23,13 +23,13 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            using var list = new ListPool<int>(N);
+            using ListPool<int> list = new ListPool<int>(N);
         }
 
         [Benchmark]
         public void ValueListPool()
         {
-            using var list = new ValueListPool<int>(N);
+            using ValueListPool<int> list = new ValueListPool<int>(N);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            using var _ = _items.ToListPool();
+            using ListPool<int> _ = _items.ToListPool();
         }
 
         [Benchmark(Baseline = true)]

@@ -36,13 +36,13 @@ namespace ListPool.Benchmarks
         [Benchmark]
         public void ListPool()
         {
-            using var _ = _array.ToListPool();
+            using ListPool<int> _ = _array.ToListPool();
         }
 
         [Benchmark]
         public void ValueListPool()
         {
-            using var _ = _array.ToValueListPool();
+            using ValueListPool<int> _ = _array.ToValueListPool();
         }
     }
 }

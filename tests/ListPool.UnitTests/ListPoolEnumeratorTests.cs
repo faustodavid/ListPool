@@ -15,7 +15,7 @@ namespace ListPool.UnitTests
         {
             string[] items = s_fixture.CreateMany<string>(10).ToArray();
             IEnumerator expectedEnumerator = items.GetEnumerator();
-            var sut = new ListPool<string>.Enumerator(items, items.Length);
+            ListPool<string>.Enumerator sut = new ListPool<string>.Enumerator(items, items.Length);
 
             while (expectedEnumerator.MoveNext())
             {

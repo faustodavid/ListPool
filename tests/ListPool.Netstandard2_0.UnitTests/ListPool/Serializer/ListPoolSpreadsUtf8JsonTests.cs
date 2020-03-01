@@ -43,7 +43,7 @@ namespace ListPool.Netstandard2_0.UnitTests.ListPool.Serializer
             {
                 s_fixture.Create<int>(), s_fixture.Create<int>(), s_fixture.Create<int>()
             };
-            var expectedObject = new CustomObjectWithListPool
+            CustomObjectWithListPool expectedObject = new CustomObjectWithListPool
             {
                 Property = s_fixture.Create<string>(), List = expectedItems
             };

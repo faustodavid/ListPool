@@ -27,7 +27,7 @@ namespace ListPool.Resolvers.Utf8Json
         };
         public IJsonFormatter<T> GetFormatter<T>()
         {
-            var ti = typeof(T);
+            Type ti = typeof(T);
 
             if (ti.IsGenericType)
             {
@@ -36,7 +36,7 @@ namespace ListPool.Resolvers.Utf8Json
                     return (IJsonFormatter<T>)formatter;
                 }
 
-                var genericType = ti.GetGenericTypeDefinition();
+                Type genericType = ti.GetGenericTypeDefinition();
 
                 if (genericType == typeof(ListPool<>))
                 {
