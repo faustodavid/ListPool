@@ -23,7 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ListPool" Version="2.3.4" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
   </ItemGroup>
 
@@ -32,6 +31,10 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ListPool\ListPool.csproj" />
   </ItemGroup>
 
 </Project>
