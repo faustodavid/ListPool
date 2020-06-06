@@ -1,0 +1,54 @@
+using System;
+using System.Text;
+using BenchmarkDotNet.Attributes;
+using ListPool.Formatters.Utf8Json;
+using Utf8Json;
+
+namespace ListPool.Benchmarks
+{
+    [MemoryDiagnoser]
+    public class DeserializeStringAsListPoolOfChars
+    {
+        private byte[] _json;
+
+        [Params(500, 10000)] public int N { get; set; }
+
+        [GlobalSetup]
+        public void GlobalSetup()
+        {
+            StringBuilder sb = new StringBuilder(N + 10);
+
+            sb.Append("{\"Text\":\"");
+            for (int i = 0; i < N; i++)
+            {
+                sb.Append("a");
+            }
+            sb.Append("\"}");
+
+            _json = Encoding.UTF8.GetBytes(sb.ToString());
+        }
+
+        [Benchmark(Baseline = true)]
+        public int UsingString() => JsonSerializer.Deserialize<DummyClass>(_json).Text.Length;
+
+        [Benchmark]
+        public int UsingListPool()
+        {
+            using var dummyClass = JsonSerializer.Deserialize<DummyClassUsingListPool>(_json);
+            return dummyClass.Text.Count;
+        }
+
+        public class DummyClass
+        {
+            public string Text { get; set; }
+        }
+
+        public class DummyClassUsingListPool : IDisposable
+        {
+            [JsonFormatter(typeof(StringAsListPoolOfCharsFormatter))]
+            public ListPool<char> Text { get; set; }
+
+            public void Dispose() => Text?.Dispose();
+        }
+    }
+}
