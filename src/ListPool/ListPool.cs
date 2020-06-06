@@ -19,8 +19,9 @@ namespace ListPool
         private const int MinimumCapacity = 32;
         private T[] _items;
 
-        [NonSerialized]
-        private object? _syncRoot;
+        [NonSerialized] private object? _syncRoot;
+
+        private readonly ArrayPool<T> _arrayPool = ArrayPool<T>.Shared;
 
         /// <summary>
         ///     Construct ListPool with default capacity.
@@ -29,7 +30,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool()
         {
-            _items = ArrayPool<T>.Shared.Rent(MinimumCapacity);
+            _items = _arrayPool.Rent(MinimumCapacity);
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ListPool(int capacity)
         {
-            _items = ArrayPool<T>.Shared.Rent(capacity < MinimumCapacity ? MinimumCapacity : capacity);
+            _items = _arrayPool.Rent(capacity < MinimumCapacity ? MinimumCapacity : capacity);
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace ListPool
             if (source is ICollection<T> collection)
             {
                 T[] buffer =
-                    ArrayPool<T>.Shared.Rent(collection.Count > MinimumCapacity ? collection.Count : MinimumCapacity);
+                    _arrayPool.Rent(collection.Count > MinimumCapacity ? collection.Count : MinimumCapacity);
 
                 collection.CopyTo(buffer, 0);
 
@@ -62,7 +63,7 @@ namespace ListPool
             }
             else
             {
-                _items = ArrayPool<T>.Shared.Rent(MinimumCapacity);
+                _items = _arrayPool.Rent(MinimumCapacity);
                 T[] buffer = _items;
                 Count = 0;
                 int count = 0;
@@ -96,7 +97,7 @@ namespace ListPool
             if (source == null) throw new ArgumentNullException(nameof(source));
 
             int capacity = source.Length > MinimumCapacity ? source.Length : MinimumCapacity;
-            T[] buffer = ArrayPool<T>.Shared.Rent(capacity);
+            T[] buffer = _arrayPool.Rent(capacity);
             source.CopyTo(buffer, 0);
 
             _items = buffer;
@@ -110,7 +111,7 @@ namespace ListPool
         public ListPool(ReadOnlySpan<T> source)
         {
             int capacity = source.Length > MinimumCapacity ? source.Length : MinimumCapacity;
-            T[] buffer = ArrayPool<T>.Shared.Rent(capacity);
+            T[] buffer = _arrayPool.Rent(capacity);
             source.CopyTo(buffer);
 
             _items = buffer;
@@ -129,7 +130,7 @@ namespace ListPool
         public void Dispose()
         {
             Count = 0;
-            ArrayPool<T>.Shared.Return(_items);
+            _arrayPool.Return(_items);
         }
 
         int ICollection.Count => Count;
@@ -486,7 +487,7 @@ namespace ListPool
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void AddWithResize(T item)
         {
-            ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
+            ArrayPool<T> arrayPool = _arrayPool;
             T[] oldBuffer = _items;
             T[] newBuffer = arrayPool.Rent(oldBuffer.Length * 2);
             int count = oldBuffer.Length;
@@ -507,7 +508,7 @@ namespace ListPool
         public void EnsureCapacity(int capacity)
         {
             if (capacity <= Capacity) return;
-            ArrayPool<T> arrayPool = ArrayPool<T>.Shared;
+            ArrayPool<T> arrayPool = _arrayPool;
             T[] newBuffer = arrayPool.Rent(capacity);
             T[] oldBuffer = _items;
 
@@ -516,6 +517,10 @@ namespace ListPool
             _items = newBuffer;
             arrayPool.Return(oldBuffer);
         }
+
+        public T[] UnsafeGetRawArray() => _items;
+
+        public void UnsafeSetCount(int count) => Count = count;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(_items, Count);
