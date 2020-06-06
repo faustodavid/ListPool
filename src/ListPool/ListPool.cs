@@ -49,7 +49,7 @@ namespace ListPool
         /// <param name="source"></param>
         public ListPool(IEnumerable<T> source)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (source is null) throw new ArgumentNullException(nameof(source));
 
             if (source is ICollection<T> collection)
             {
@@ -94,7 +94,7 @@ namespace ListPool
         /// <param name="source"></param>
         public ListPool(T[] source)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (source is null) throw new ArgumentNullException(nameof(source));
 
             int capacity = source.Length > MinimumCapacity ? source.Length : MinimumCapacity;
             T[] buffer = _arrayPool.Rent(capacity);
@@ -518,7 +518,7 @@ namespace ListPool
             arrayPool.Return(oldBuffer);
         }
 
-        public T[] UnsafeGetRawArray() => _items;
+        public T[] UnsafeGetRawBuffer() => _items;
 
         public void UnsafeAdvanceOffset(int count) => Count = count;
 
