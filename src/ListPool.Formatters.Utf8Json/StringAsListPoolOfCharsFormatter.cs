@@ -9,7 +9,22 @@ namespace ListPool.Formatters.Utf8Json
     {
         public void Serialize(ref JsonWriter writer, ListPool<char> value, IJsonFormatterResolver formatterResolver)
         {
-            throw new NotImplementedException();
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            char[] rawChars = value.UnsafeGetRawArray();
+            int bytesCount = Encoding.UTF8.GetByteCount(rawChars, 0, value.Count);
+
+            writer.WriteQuotation();
+
+            writer.EnsureCapacity(bytesCount + 2);
+            Encoding.UTF8.GetBytes(rawChars, 0, value.Count, writer.GetBuffer().Array, writer.CurrentOffset);
+            writer.AdvanceOffset(bytesCount);
+
+            writer.WriteQuotation();
         }
 
         public ListPool<char> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
@@ -20,7 +35,7 @@ namespace ListPool.Formatters.Utf8Json
             ListPool<char> listPool = new ListPool<char>(Encoding.UTF8.GetCharCount(byteBuffer, 0, writtenBytes.Count));
 
             int charsCount = Encoding.UTF8.GetChars(byteBuffer, 0, writtenBytes.Count, listPool.UnsafeGetRawArray(), 0);
-            listPool.UnsafeSetCount(charsCount);
+            listPool.UnsafeAdvanceOffset(charsCount);
 
             return listPool;
         }

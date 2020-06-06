@@ -520,7 +520,7 @@ namespace ListPool
 
         public T[] UnsafeGetRawArray() => _items;
 
-        public void UnsafeSetCount(int count) => Count = count;
+        public void UnsafeAdvanceOffset(int count) => Count = count;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(_items, Count);
