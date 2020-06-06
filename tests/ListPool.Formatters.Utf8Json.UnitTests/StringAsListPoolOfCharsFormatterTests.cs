@@ -17,7 +17,7 @@ namespace ListPool.Formatters.Utf8Json.UnitTests
         [Fact]
         public void Test1()
         {
-            var dummyClass = new DummyClassUsingListPool();
+            using var dummyClass = new DummyClassUsingListPool();
             dummyClass.Text = new ListPool<char>();
             dummyClass.Text.AddRange(stackalloc char[4] {'h', 'o', 'l', 'a'});
 
