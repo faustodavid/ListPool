@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolCreateAndAddAndEnumerateAValueBenchmarks
+    public class List_Create_Add_Enumerate_ValueType
     {
         [Params(48, 1_024, 10_240)]
         public int N { get; set; }

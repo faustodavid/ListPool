@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolInsertBenchmarks
+    public class List_IndexOf
     {
         private List<int> _list;
         private ListPool<int> _listPool;
@@ -22,6 +22,7 @@ namespace ListPool.Benchmarks
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
+
             for (int i = 1; i <= N; i++)
             {
                 _list.Add(i);
@@ -36,15 +37,15 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark(Baseline = true)]
-        public void List()
+        public int List()
         {
-            _list.Insert(N / 2, 22222);
+            return _list.IndexOf(N / 2);
         }
 
         [Benchmark]
-        public void ListPool()
+        public int ListPool()
         {
-            _listPool.Insert(N / 2, 22222);
+            return _listPool.IndexOf(N / 2);
         }
     }
 }

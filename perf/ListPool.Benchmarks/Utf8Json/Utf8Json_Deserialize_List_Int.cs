@@ -14,7 +14,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class Utf8JsonDeserializeListOfIntBenchmarks
+    public class Utf8Json_Deserialize_List_Int
     {
         private static readonly ListPoolResolver _listPoolResolver = new ListPoolResolver();
 

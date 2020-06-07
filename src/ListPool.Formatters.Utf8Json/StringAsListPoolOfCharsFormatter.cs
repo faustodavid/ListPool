@@ -15,7 +15,7 @@ namespace ListPool.Formatters.Utf8Json
                 return;
             }
 
-            char[] rawChars = value.UnsafeGetRawBuffer();
+            char[] rawChars = value.GetRawBuffer();
             int bytesCount = Encoding.UTF8.GetByteCount(rawChars, 0, value.Count);
 
             writer.WriteQuotation();
@@ -34,8 +34,8 @@ namespace ListPool.Formatters.Utf8Json
 
             ListPool<char> listPool = new ListPool<char>(Encoding.UTF8.GetCharCount(byteBuffer, 0, writtenBytes.Count));
 
-            int charsCount = Encoding.UTF8.GetChars(byteBuffer, 0, writtenBytes.Count, listPool.UnsafeGetRawBuffer(), 0);
-            listPool.UnsafeAdvanceOffset(charsCount);
+            int charsCount = Encoding.UTF8.GetChars(byteBuffer, 0, writtenBytes.Count, listPool.GetRawBuffer(), 0);
+            listPool.SetOffsetManually(charsCount);
 
             return listPool;
         }

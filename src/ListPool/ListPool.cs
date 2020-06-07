@@ -518,9 +518,9 @@ namespace ListPool
             arrayPool.Return(oldBuffer);
         }
 
-        public T[] UnsafeGetRawBuffer() => _items;
+        public T[] GetRawBuffer() => _items;
 
-        public void UnsafeAdvanceOffset(int count) => Count = count;
+        public void SetOffsetManually(int count) => Count = count;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(_items, Count);

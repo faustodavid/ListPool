@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolRemoveBenchmarks
+    public class List_Remove
     {
         private List<int> _list;
         private ListPool<int> _listPool;
