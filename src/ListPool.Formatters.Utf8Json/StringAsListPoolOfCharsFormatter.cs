@@ -1,12 +1,23 @@
 ﻿using System;
-using System.Buffers;
 using System.Text;
 using Utf8Json;
 
 namespace ListPool.Formatters.Utf8Json
 {
+    /// <summary>
+    /// Formatter to serialize string as ListPool<char> and ListPool<char> as string.
+    /// Optimize to work with medium/large string to avoid allocations
+    /// Serialize and deserialize as ListPool<char> is many time faster than with string.
+    /// After finishing with the ListPool<char> you must dispose it to free the memory.
+    /// </summary>
     public class StringAsListPoolOfCharsFormatter : IJsonFormatter<ListPool<char>>
     {
+        /// <summary>
+        /// Serialize ListPool<char> as string
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="formatterResolver"></param>
         public void Serialize(ref JsonWriter writer, ListPool<char> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
@@ -28,6 +39,13 @@ namespace ListPool.Formatters.Utf8Json
             writer.WriteQuotation();
         }
 
+        /// <summary>
+        /// Deserialize string as ListPool<char>.
+        /// You must dispose ListPool<char> after finish it use.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="formatterResolver"></param>
+        /// <returns></returns>
         public ListPool<char> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             ArraySegment<byte> writtenBytes = reader.ReadStringSegmentRaw();
