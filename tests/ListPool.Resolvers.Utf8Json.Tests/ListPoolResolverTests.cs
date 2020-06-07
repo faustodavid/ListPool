@@ -8,7 +8,7 @@ namespace ListPool.Resolvers.Utf8Json.Tests
 {
     public class ListPoolResolverTests
     {
-        protected static readonly Fixture s_fixture = new Fixture();
+        private static readonly Fixture s_fixture = new Fixture();
         private readonly ListPoolResolver _sut = new ListPoolResolver();
 
         [Fact]

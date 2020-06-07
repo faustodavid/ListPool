@@ -9,7 +9,7 @@ namespace ListPool.Resolvers.Utf8Json.Tests
 {
     public class ListPoolFormatterTests
     {
-        protected static readonly Fixture s_fixture = new Fixture();
+        private static readonly Fixture s_fixture = new Fixture();
 
         [Fact]
         public void Serialize_and_deserialize_ListPool_with_objects()
