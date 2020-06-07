@@ -30,11 +30,13 @@ namespace ListPool.Formatters.Utf8Json
         public ListPool<char> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             ArraySegment<byte> writtenBytes = reader.ReadStringSegmentRaw();
+            int writtenBytesOffset = writtenBytes.Offset;
+            int writtenBytesCount = writtenBytes.Count;
             byte[] byteBuffer = writtenBytes.Array;
 
-            ListPool<char> listPool = new ListPool<char>(Encoding.UTF8.GetCharCount(byteBuffer, 0, writtenBytes.Count));
+            ListPool<char> listPool = new ListPool<char>(Encoding.UTF8.GetCharCount(byteBuffer, writtenBytesOffset, writtenBytesCount));
 
-            int charsCount = Encoding.UTF8.GetChars(byteBuffer, 0, writtenBytes.Count, listPool.GetRawBuffer(), 0);
+            int charsCount = Encoding.UTF8.GetChars(byteBuffer, writtenBytesOffset, writtenBytesCount, listPool.GetRawBuffer(), 0);
             listPool.SetOffsetManually(charsCount);
 
             return listPool;
