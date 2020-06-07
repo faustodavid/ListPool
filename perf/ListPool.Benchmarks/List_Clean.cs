@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
 
@@ -11,6 +12,7 @@ namespace ListPool.Benchmarks
     [GcConcurrent]
     public class ListPoolClearBenchmarks
     {
+        private int[] _fakeData;
         private List<int> _list;
         private ListPool<int> _listPool;
 
@@ -20,14 +22,16 @@ namespace ListPool.Benchmarks
         [GlobalSetup]
         public void GlobalSetup()
         {
+            _fakeData = Enumerable.Range(0, N).Select(i => i).ToArray();
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
+        }
 
-            for (int i = 0; i < N; i++)
-            {
-                _list.Add(1);
-                _listPool.Add(1);
-            }
+        [IterationSetup]
+        public void IterationSetup()
+        {
+            _list.AddRange(_fakeData);
+            _listPool.AddRange(_fakeData);
         }
 
         [GlobalCleanup]
