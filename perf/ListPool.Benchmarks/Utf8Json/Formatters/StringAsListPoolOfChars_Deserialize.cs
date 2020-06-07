@@ -27,12 +27,12 @@ namespace ListPool.Benchmarks.Formatters.Utf8Json
         }
 
         [Benchmark(Baseline = true)]
-        public int String() => JsonSerializer.Deserialize<DummyClass>(_json).Text.Length;
+        public int String() => JsonSerializer.Deserialize<FakeClass>(_json).Text.Length;
 
         [Benchmark]
         public int ListPool()
         {
-            using var dummyClass = JsonSerializer.Deserialize<DummyClassUsingListPool>(_json);
+            using var dummyClass = JsonSerializer.Deserialize<FakeClassUsingListPool>(_json);
             return dummyClass.Text.Count;
         }
     }

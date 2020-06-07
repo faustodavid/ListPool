@@ -9,8 +9,8 @@ namespace ListPool.Benchmarks.Formatters.Utf8Json
     {
         [Params(100, 1_000, 10_000)] public int N { get; set; }
 
-        private readonly DummyClass _dummyClass = new DummyClass();
-        private readonly DummyClassUsingListPool _dummyClassUsingListPool = new DummyClassUsingListPool();
+        private readonly FakeClass _fakeClass = new FakeClass();
+        private readonly FakeClassUsingListPool _fakeClassUsingListPool = new FakeClassUsingListPool();
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -21,22 +21,22 @@ namespace ListPool.Benchmarks.Formatters.Utf8Json
                 sb.Append("a");
             }
 
-            _dummyClass.Text = sb.ToString();
-            _dummyClassUsingListPool.Text?.Dispose();
-            _dummyClassUsingListPool.Text = new ListPool<char>(_dummyClass.Text.ToCharArray());
+            _fakeClass.Text = sb.ToString();
+            _fakeClassUsingListPool.Text?.Dispose();
+            _fakeClassUsingListPool.Text = new ListPool<char>(_fakeClass.Text.ToCharArray());
         }
 
         [GlobalCleanup]
         public void GlobalCleanup()
         {
-            _dummyClassUsingListPool.Text?.Dispose();
-            _dummyClassUsingListPool.Text = null;
+            _fakeClassUsingListPool.Text?.Dispose();
+            _fakeClassUsingListPool.Text = null;
         }
 
         [Benchmark(Baseline = true)]
-        public byte[] String() => JsonSerializer.Serialize(_dummyClass);
+        public byte[] String() => JsonSerializer.Serialize(_fakeClass);
 
         [Benchmark]
-        public byte[] ListPool() => JsonSerializer.Serialize(_dummyClassUsingListPool);
+        public byte[] ListPool() => JsonSerializer.Serialize(_fakeClassUsingListPool);
     }
 }
