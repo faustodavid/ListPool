@@ -41,14 +41,14 @@ namespace ListPool.Benchmarks
             int count = 0;
             List<int> list = _list;
 
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
 
             return count;
         }

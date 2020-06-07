@@ -55,7 +55,7 @@ namespace ListPool.Benchmarks
         public async Task<int> List()
         {
             _buffer.Position = 0;
-            List<int> list = await JsonSerializer.DeserializeAsync<List<int>>(_buffer);
+            List<int> list = await JsonSerializer.DeserializeAsync<List<int>>(_buffer, _listPoolResolver);
             return list.Count;
         }
 
