@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks.Formatters.Utf8Json
     {
         private byte[] _json;
 
-        [Params(500, 10_000)] public int N { get; set; }
+        [Params(100, 1_000, 10_000)] public int N { get; set; }
 
         [GlobalSetup]
         public void GlobalSetup()

@@ -7,7 +7,7 @@ namespace ListPool.Benchmarks.Formatters.Utf8Json
     [MemoryDiagnoser]
     public class StringAsListPoolOfChars_Serialize
     {
-        [Params(500, 10_000)] public int N { get; set; }
+        [Params(100, 1_000, 10_000)] public int N { get; set; }
 
         private readonly DummyClass _dummyClass = new DummyClass();
         private readonly DummyClassUsingListPool _dummyClassUsingListPool = new DummyClassUsingListPool();
