@@ -2,6 +2,11 @@ using Utf8Json;
 
 namespace ListPool.Formatters.Utf8Json
 {
+    /// <summary>
+    /// Formatter for ListPool<T>, Utf8Json by default call the add methods via the interface
+    /// with the formatter work directly with the type making it faster.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ListPoolFormatter<T> : IJsonFormatter<ListPool<T>>
     {
         public void Serialize(ref JsonWriter writer, ListPool<T> value, IJsonFormatterResolver formatterResolver)

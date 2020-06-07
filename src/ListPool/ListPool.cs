@@ -518,9 +518,20 @@ namespace ListPool
             arrayPool.Return(oldBuffer);
         }
 
+        /// <summary>
+        /// Returns internal buffer. Use when an array is required, and do not hold the reference.
+        /// When ListPool grows or is disposed it returns the buffer to the pool.
+        /// After updating the internal buffer manually you need update the offset using the method SetOffsetManually(int offset)
+        /// </summary>
+        /// <returns></returns>
         public T[] GetRawBuffer() => _items;
 
-        public void SetOffsetManually(int count) => Count = count;
+        /// <summary>
+        /// Update the ListPool internal offset, use when you update manually the raw buffer to add new items
+        /// or if you want to shrink the content.
+        /// </summary>
+        /// <param name="offset"></param>
+        public void SetOffsetManually(int offset) => Count = offset;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(_items, Count);
