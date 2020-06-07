@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using AutoFixture;
 using Utf8Json;
 using Xunit;
@@ -29,7 +28,7 @@ namespace ListPool.Formatters.Utf8Json.UnitTests
             string expectedText = _fixture.Create<string>();
             string json = string.Concat("{\"Text\":\"", expectedText, "\"}");
 
-            using FakeClass fakeClass = JsonSerializer.Deserialize<FakeClass>(Encoding.UTF8.GetBytes(json));
+            using FakeClass fakeClass = JsonSerializer.Deserialize<FakeClass>(json);
             ListPool<char> actualText = fakeClass.Text;
 
             Assert.Equal(expectedText.Length, actualText.Count);

@@ -15,13 +15,14 @@ namespace ListPool.Formatters.Utf8Json
                 return;
             }
 
+            int valueCount = value.Count;
             char[] rawChars = value.GetRawBuffer();
-            int bytesCount = Encoding.UTF8.GetByteCount(rawChars, 0, value.Count);
+            int bytesCount = Encoding.UTF8.GetByteCount(rawChars, 0, valueCount);
 
             writer.WriteQuotation();
 
             writer.EnsureCapacity(bytesCount + 2);
-            Encoding.UTF8.GetBytes(rawChars, 0, value.Count, writer.GetBuffer().Array, writer.CurrentOffset);
+            Encoding.UTF8.GetBytes(rawChars, 0, valueCount, writer.GetBuffer().Array, writer.CurrentOffset);
             writer.AdvanceOffset(bytesCount);
 
             writer.WriteQuotation();
