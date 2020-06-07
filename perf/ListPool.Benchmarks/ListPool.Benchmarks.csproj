@@ -17,4 +17,16 @@
     <ProjectReference Include="..\..\src\ListPool\ListPool.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="BenchmarkDotNet.Artifacts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="BenchmarkDotNet.Artifacts\**" />
+  </ItemGroup>
+
 </Project>

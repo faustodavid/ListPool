@@ -9,8 +9,8 @@ namespace ListPool.Benchmarks.Formatters.Utf8Json
     {
         [Params(100, 1_000, 10_000)] public int N { get; set; }
 
-        private readonly FakeClass _fakeClass = new FakeClass();
-        private readonly FakeClassUsingListPool _fakeClassUsingListPool = new FakeClassUsingListPool();
+        private FakeClass _fakeClass = new FakeClass();
+        private FakeClassUsingListPool _fakeClassUsingListPool = new FakeClassUsingListPool();
 
         [GlobalSetup]
         public void GlobalSetup()

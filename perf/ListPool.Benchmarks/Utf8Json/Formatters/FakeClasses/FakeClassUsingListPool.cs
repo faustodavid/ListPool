@@ -4,7 +4,7 @@ using Utf8Json;
 
 namespace ListPool.Benchmarks.Formatters.Utf8Json
 {
-    public class FakeClassUsingListPool : IDisposable
+    public struct FakeClassUsingListPool : IDisposable
     {
         [JsonFormatter(typeof(StringAsListPoolOfCharsFormatter))]
         public ListPool<char> Text { get; set; }
