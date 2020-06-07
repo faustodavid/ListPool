@@ -9,10 +9,11 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolContainsBenchmark
+    public class ListPoolCopyToBenchmarks
     {
         private List<int> _list;
         private ListPool<int> _listPool;
+        private int[] _dst;
 
         [Params(100, 1_000, 10_000)]
         public int N { get; set; }
@@ -22,8 +23,9 @@ namespace ListPool.Benchmarks
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
+            _dst = new int[N];
 
-            for (int i = 1; i <= N; i++)
+            for (int i = 0; i < N; i++)
             {
                 _list.Add(i);
                 _listPool.Add(i);
@@ -37,15 +39,15 @@ namespace ListPool.Benchmarks
         }
 
         [Benchmark(Baseline = true)]
-        public bool List()
+        public void List()
         {
-            return _list.Contains(N / 2);
+            _listPool.CopyTo(_dst, 0);
         }
 
         [Benchmark]
-        public bool ListPool()
+        public void ListPool()
         {
-            return _listPool.Contains(N / 2);
+            _listPool.CopyTo(_dst, 0);
         }
     }
 }

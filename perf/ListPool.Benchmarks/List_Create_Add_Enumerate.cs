@@ -10,7 +10,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolCreateAndAddAndEnumerateAReferenceBenchmarks
+    public class List_Create_Add_Enumerate
     {
         private static readonly string _stringToAdd = Guid.NewGuid().ToString();
 

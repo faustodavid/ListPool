@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolRemoveAtBenchmarks
+    public class List_IndexOf
     {
         private List<int> _list;
         private ListPool<int> _listPool;
@@ -17,8 +17,8 @@ namespace ListPool.Benchmarks
         [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
-        [IterationSetup]
-        public void IterationSetup()
+        [GlobalSetup]
+        public void GlobalSetup()
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
@@ -30,22 +30,22 @@ namespace ListPool.Benchmarks
             }
         }
 
-        [IterationCleanup]
-        public void IterationCleanup()
+        [GlobalCleanup]
+        public void GlobalCleanup()
         {
             _listPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
-        public void List()
+        public int List()
         {
-            _list.RemoveAt(N / 2);
+            return _list.IndexOf(N / 2);
         }
 
         [Benchmark]
-        public void ListPool()
+        public int ListPool()
         {
-            _listPool.RemoveAt(N / 2);
+            return _listPool.IndexOf(N / 2);
         }
     }
 }

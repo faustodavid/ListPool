@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
 
@@ -9,10 +10,11 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolClearBenchmarks
+    public class List_RemoveAt
     {
         private List<int> _list;
         private ListPool<int> _listPool;
+        private int[] _fakeData;
 
         [Params(100, 1_000, 10_000)]
         public int N { get; set; }
@@ -22,12 +24,21 @@ namespace ListPool.Benchmarks
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
+            _fakeData = Enumerable.Range(0, N).Select(i => i).ToArray();
+        }
 
-            for (int i = 0; i < N; i++)
-            {
-                _list.Add(1);
-                _listPool.Add(1);
-            }
+        [IterationSetup]
+        public void IterationSetup()
+        {
+            _list.AddRange(_fakeData);
+            _listPool.AddRange(_fakeData);
+        }
+
+        [IterationCleanup]
+        public void IterationCleanup()
+        {
+            _list.Clear();
+            _listPool.Clear();
         }
 
         [GlobalCleanup]
@@ -39,13 +50,13 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _list.Clear();
+            _list.RemoveAt(N / 2);
         }
 
         [Benchmark]
         public void ListPool()
         {
-            _listPool.Clear();
+            _listPool.RemoveAt(N / 2);
         }
     }
 }

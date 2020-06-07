@@ -10,7 +10,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolEnumerateBenchmarks
+    public class List_Enumerate
     {
         private List<int> _list;
         private ListPool<int> _listPool;

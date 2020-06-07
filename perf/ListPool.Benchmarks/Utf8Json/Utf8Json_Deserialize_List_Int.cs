@@ -14,7 +14,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class Utf8JsonDeserializeListOfIntBenchmarks
+    public class Utf8Json_Deserialize_List_Int
     {
         private static readonly ListPoolResolver _listPoolResolver = new ListPoolResolver();
 
@@ -55,7 +55,7 @@ namespace ListPool.Benchmarks
         public async Task<int> List()
         {
             _buffer.Position = 0;
-            List<int> list = await JsonSerializer.DeserializeAsync<List<int>>(_buffer);
+            List<int> list = await JsonSerializer.DeserializeAsync<List<int>>(_buffer, _listPoolResolver);
             return list.Count;
         }
 

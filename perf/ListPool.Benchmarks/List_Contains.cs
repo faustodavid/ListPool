@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolInsertBenchmarks
+    public class List_Contains
     {
         private List<int> _list;
         private ListPool<int> _listPool;
@@ -17,11 +17,12 @@ namespace ListPool.Benchmarks
         [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
-        [IterationSetup]
-        public void IterationSetup()
+        [GlobalSetup]
+        public void GlobalSetup()
         {
             _list = new List<int>(N);
             _listPool = new ListPool<int>(N);
+
             for (int i = 1; i <= N; i++)
             {
                 _list.Add(i);
@@ -29,22 +30,22 @@ namespace ListPool.Benchmarks
             }
         }
 
-        [IterationCleanup]
-        public void IterationCleanup()
+        [GlobalCleanup]
+        public void GlobalCleanup()
         {
             _listPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
-        public void List()
+        public bool List()
         {
-            _list.Insert(N / 2, 22222);
+            return _list.Contains(N / 2);
         }
 
         [Benchmark]
-        public void ListPool()
+        public bool ListPool()
         {
-            _listPool.Insert(N / 2, 22222);
+            return _listPool.Contains(N / 2);
         }
     }
 }

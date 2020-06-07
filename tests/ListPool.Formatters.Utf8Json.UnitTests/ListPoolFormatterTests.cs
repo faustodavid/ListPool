@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoFixture;
+using ListPool.Formatters.Utf8Json;
 using Utf8Json;
 using Xunit;
 
@@ -7,7 +9,7 @@ namespace ListPool.Resolvers.Utf8Json.Tests
 {
     public class ListPoolFormatterTests
     {
-        protected static readonly Fixture s_fixture = new Fixture();
+        private static readonly Fixture s_fixture = new Fixture();
 
         [Fact]
         public void Serialize_and_deserialize_ListPool_with_objects()
@@ -46,6 +48,18 @@ namespace ListPool.Resolvers.Utf8Json.Tests
 
             Assert.Equal(expectedItems.Count, actualItems.Count);
             Assert.All(expectedItems, expectedItem => actualItems.Contains(expectedItem));
+        }
+
+        public class CustomObject
+        {
+            public string Property { get; set; }
+        }
+
+        public sealed class CustomObjectWithListPool : CustomObject, IDisposable
+        {
+            public ListPool<int> List { get; set; }
+
+            public void Dispose() => List?.Dispose();
         }
     }
 }

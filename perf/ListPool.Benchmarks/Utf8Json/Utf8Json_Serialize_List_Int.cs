@@ -12,7 +12,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class Utf8JsonSerializeListOfIntBenchmarks
+    public class Utf8Json_Serialize_List_Of_Int
     {
         private readonly ListPoolResolver _resolver = new ListPoolResolver();
         private List<int> _list;
@@ -41,14 +41,14 @@ namespace ListPool.Benchmarks
             int count = 0;
             List<int> list = _list;
 
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
-            count += JsonSerializer.Serialize(list).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
+            count += JsonSerializer.Serialize(list, _resolver).Length;
 
             return count;
         }

@@ -9,7 +9,7 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ArrayToListPoolBenchmark
+    public class Array_ToList
     {
         private int[] _array;
 

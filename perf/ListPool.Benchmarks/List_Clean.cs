@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
 
@@ -9,43 +10,46 @@ namespace ListPool.Benchmarks
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class ListPoolIndexOfBenchmarks
+    public class ListPoolClearBenchmarks
     {
+        private int[] _fakeData;
         private List<int> _list;
         private ListPool<int> _listPool;
 
         [Params(100, 1_000, 10_000)]
         public int N { get; set; }
 
+        [GlobalSetup]
+        public void GlobalSetup()
+        {
+            _fakeData = Enumerable.Range(0, N).Select(i => i).ToArray();
+            _list = new List<int>(N);
+            _listPool = new ListPool<int>(N);
+        }
+
         [IterationSetup]
         public void IterationSetup()
         {
-            _list = new List<int>(N);
-            _listPool = new ListPool<int>(N);
-
-            for (int i = 1; i <= N; i++)
-            {
-                _list.Add(i);
-                _listPool.Add(i);
-            }
+            _list.AddRange(_fakeData);
+            _listPool.AddRange(_fakeData);
         }
 
-        [IterationCleanup]
-        public void IterationCleanup()
+        [GlobalCleanup]
+        public void GlobalCleanup()
         {
             _listPool.Dispose();
         }
 
         [Benchmark(Baseline = true)]
-        public int List()
+        public void List()
         {
-            return _list.IndexOf(N / 2);
+            _list.Clear();
         }
 
         [Benchmark]
-        public int ListPool()
+        public void ListPool()
         {
-            return _listPool.IndexOf(N / 2);
+            _listPool.Clear();
         }
     }
 }

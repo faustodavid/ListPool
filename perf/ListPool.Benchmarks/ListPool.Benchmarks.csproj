@@ -12,8 +12,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ListPool.Formatters.Utf8Json\ListPool.Formatters.Utf8Json.csproj" />
     <ProjectReference Include="..\..\src\ListPool.Resolvers.Utf8Json\ListPool.Resolvers.Utf8Json.csproj" />
     <ProjectReference Include="..\..\src\ListPool\ListPool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="BenchmarkDotNet.Artifacts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="BenchmarkDotNet.Artifacts\**" />
   </ItemGroup>
 
 </Project>
