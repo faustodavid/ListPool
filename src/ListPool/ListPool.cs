@@ -415,20 +415,20 @@ namespace ListPool
             Count += items.Length;
         }
 
-        public void AddRange(T[] array)
+        public void AddRange(T[] items)
         {
             int count = Count;
             T[] buffer = _items;
 
-            bool isCapacityEnough = buffer.Length - array.Length - count >= 0;
+            bool isCapacityEnough = buffer.Length - items.Length - count >= 0;
             if (!isCapacityEnough)
             {
-                EnsureCapacity(buffer.Length + array.Length);
+                EnsureCapacity(buffer.Length + items.Length);
                 buffer = _items;
             }
 
-            array.CopyTo(buffer, count);
-            Count += array.Length;
+            Array.Copy(items, 0, buffer, count, items.Length);
+            Count += items.Length;
         }
 
         public void AddRange(IEnumerable<T> items)
