@@ -20,10 +20,12 @@
     <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageVersion>2.3.5</PackageVersion>
+    <PackageVersion>2.3.6</PackageVersion>
     <PackageReleaseNotes>
       Changelog:
-      * Improve dispose performance
+      * Improve AddRange for Array
+      * Add method GetRawBuffer
+      * Add method SetOffsetManually
     </PackageReleaseNotes>
     <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
   </PropertyGroup>

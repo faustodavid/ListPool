@@ -10,7 +10,7 @@ namespace ListPool.Formatters.Utf8Json
     /// Serialize and deserialize as ListPool<char> is many time faster than with string.
     /// After finishing with the ListPool<char> you must dispose it to free the memory.
     /// </summary>
-    public class StringAsListPoolOfCharsFormatter : IJsonFormatter<ListPool<char>>
+    public sealed class StringAsListPoolOfCharsFormatter : IJsonFormatter<ListPool<char>>
     {
         /// <summary>
         /// Serialize ListPool<char> as string

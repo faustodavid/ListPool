@@ -7,7 +7,7 @@ namespace ListPool.Formatters.Utf8Json
     /// with the formatter work directly with the type making it faster.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ListPoolFormatter<T> : IJsonFormatter<ListPool<T>>
+    public sealed class ListPoolFormatter<T> : IJsonFormatter<ListPool<T>>
     {
         public void Serialize(ref JsonWriter writer, ListPool<T> value, IJsonFormatterResolver formatterResolver)
         {

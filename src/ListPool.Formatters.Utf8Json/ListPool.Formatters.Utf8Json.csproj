@@ -13,7 +13,7 @@
       <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <PackageLicenseFile>LICENSE</PackageLicenseFile>
-      <PackageVersion>0.0.1</PackageVersion>
+      <PackageVersion>0.0.2</PackageVersion>
       <PackageReleaseNotes></PackageReleaseNotes>
       <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
       <PackageProjectUrl>https://github.com/faustodavid/ListPool</PackageProjectUrl>
