@@ -14,7 +14,7 @@ namespace ListPool.Benchmarks.Serializers
     [MemoryDiagnoser]
     [GcServer(true)]
     [GcConcurrent]
-    public class Utf8Json_Deserialize_List_Int
+    public class Deserialize_List_Int
     {
         private static readonly ListPoolResolver _listPoolResolver = new ListPoolResolver();
 
@@ -52,7 +52,7 @@ namespace ListPool.Benchmarks.Serializers
         }
 
         [Benchmark(Baseline = true)]
-        public async Task<int> List()
+        public async Task<int> Utf8Json_List()
         {
             _buffer.Position = 0;
             List<int> list = await JsonSerializer.DeserializeAsync<List<int>>(_buffer, _listPoolResolver);
@@ -60,7 +60,7 @@ namespace ListPool.Benchmarks.Serializers
         }
 
         [Benchmark]
-        public async Task<int> ListPool()
+        public async Task<int> Utf8Json_ListPool()
         {
             _buffer.Position = 0;
             using ListPool<int> list = await JsonSerializer.DeserializeAsync<ListPool<int>>(_buffer);
@@ -68,10 +68,26 @@ namespace ListPool.Benchmarks.Serializers
         }
 
         [Benchmark]
-        public async Task<int> ListPool_with_resolver()
+        public async Task<int> Utf8Json_ListPool_with_resolver()
         {
             _buffer.Position = 0;
             using ListPool<int> list = await JsonSerializer.DeserializeAsync<ListPool<int>>(_buffer, _listPoolResolver);
+            return list.Count;
+        }
+
+        [Benchmark]
+        public async Task<int> STJ_List()
+        {
+            _buffer.Position = 0;
+            List<int> list = await System.Text.Json.JsonSerializer.DeserializeAsync<List<int>>(_buffer);
+            return list.Count;
+        }
+
+        [Benchmark]
+        public async Task<int> STJ_ListPool()
+        {
+            _buffer.Position = 0;
+            using ListPool<int> list = await System.Text.Json.JsonSerializer.DeserializeAsync<ListPool<int>>(_buffer);
             return list.Count;
         }
     }
