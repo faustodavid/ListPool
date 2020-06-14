@@ -8,12 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
+    <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ListPool.Formatters.Utf8Json\ListPool.Formatters.Utf8Json.csproj" />
-    <ProjectReference Include="..\..\src\ListPool.Resolvers.Utf8Json\ListPool.Resolvers.Utf8Json.csproj" />
+    <ProjectReference Include="..\..\src\ListPool.Serializers.SystemTextJson.Converters\ListPool.Serializers.SystemTextJson.Converters.csproj" />
+    <ProjectReference Include="..\..\src\ListPool.Serializers.Utf8Json.Formatters\ListPool.Serializers.Utf8Json.Formatters.csproj" />
+    <ProjectReference Include="..\..\src\ListPool.Serializers.Utf8Json.Resolvers\ListPool.Serializers.Utf8Json.Resolvers.csproj" />
     <ProjectReference Include="..\..\src\ListPool\ListPool.csproj" />
   </ItemGroup>
 

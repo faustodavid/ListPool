@@ -213,7 +213,8 @@ namespace ListPool.UnitTests.ListPool
         {
             const int expectedCountAfterRemove = 2;
             int expectedAt0 = s_fixture.Create<int>();
-            using ListPool<int> sut = new ListPool<int>(3) {expectedAt0, s_fixture.Create<int>(), s_fixture.Create<int>()};
+            using ListPool<int> sut =
+                new ListPool<int>(3) {expectedAt0, s_fixture.Create<int>(), s_fixture.Create<int>()};
 
             bool wasRemoved = sut.Remove(expectedAt0);
 
@@ -236,7 +237,8 @@ namespace ListPool.UnitTests.ListPool
         {
             const int expectedCountAfterRemove = 2;
             int expectedAt1 = s_fixture.Create<int>();
-            using ListPool<int> sut = new ListPool<int>(3) {s_fixture.Create<int>(), expectedAt1, s_fixture.Create<int>()};
+            using ListPool<int> sut =
+                new ListPool<int>(3) {s_fixture.Create<int>(), expectedAt1, s_fixture.Create<int>()};
 
             sut.RemoveAt(1);
 
@@ -718,6 +720,68 @@ namespace ListPool.UnitTests.ListPool
             sut.EnsureCapacity(biggerCapacity);
 
             Assert.Equal(biggerCapacity, sut.Capacity);
+        }
+
+        [Fact]
+        public void GetRawBuffer_returns_underline_buffer()
+        {
+            int[] expectedItems = s_fixture.CreateMany<int>().ToArray();
+            using ListPool<int> sut = new ListPool<int>(expectedItems);
+
+            int[] actualItems = sut.GetRawBuffer();
+
+            Assert.Equal(sut.Capacity, actualItems.Length);
+            Assert.True(actualItems.Length >= expectedItems.Length);
+            for (int i = 0; i < expectedItems.Length; i++)
+            {
+                Assert.Equal(expectedItems[i], actualItems[i]);
+            }
+        }
+
+        [Fact]
+        public void GetRawBuffer_allows_to_update_items_within_the_offset()
+        {
+            int[] items = s_fixture.CreateMany<int>().ToArray();
+            using ListPool<int> sut = new ListPool<int>(items);
+            int[] actualItems = sut.GetRawBuffer();
+            int expectedItem = s_fixture.Create<int>();
+
+            actualItems[0] = expectedItem;
+
+            Assert.Equal(expectedItem, sut[0]);
+        }
+
+        [Fact]
+        public void SetOffsetManually_allows_to_set_increase_internal_offset()
+        {
+            int[] expectedItems = s_fixture.CreateMany<int>().ToArray();
+            using ListPool<int> sut = new ListPool<int>();
+
+            int[] rawBuffer = sut.GetRawBuffer();
+            expectedItems.CopyTo(rawBuffer, 0);
+            sut.SetOffsetManually(expectedItems.Length);
+
+            Assert.Equal(sut.Capacity, rawBuffer.Length);
+            Assert.True(rawBuffer.Length >= expectedItems.Length);
+            for (int i = 0; i < expectedItems.Length; i++)
+            {
+                Assert.Equal(expectedItems[i], rawBuffer[i]);
+            }
+        }
+
+        [Fact]
+        public void SetOffsetManually_allows_to_set_decrease_internal_offset()
+        {
+            int[] expectedItems = s_fixture.CreateMany<int>().ToArray();
+            using ListPool<int> sut = new ListPool<int>(expectedItems);
+
+            sut.SetOffsetManually(sut.Count - 2);
+
+            Assert.Equal(expectedItems.Length - 2, sut.Count);
+            for (int i = 0; i < expectedItems.Length - 2; i++)
+            {
+                Assert.Equal(expectedItems[i], sut[i]);
+            }
         }
     }
 }

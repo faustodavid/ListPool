@@ -3,7 +3,7 @@ using AutoFixture;
 using Utf8Json;
 using Xunit;
 
-namespace ListPool.Formatters.Utf8Json.UnitTests
+namespace ListPool.Serializers.Utf8Json.Formatters.UnitTests
 {
     public class StringAsListPoolOfCharsFormatterTests
     {

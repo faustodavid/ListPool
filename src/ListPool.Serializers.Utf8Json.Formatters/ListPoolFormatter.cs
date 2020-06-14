@@ -1,6 +1,6 @@
 using Utf8Json;
 
-namespace ListPool.Formatters.Utf8Json
+namespace ListPool.Serializers.Utf8Json.Formatters
 {
     /// <summary>
     /// Formatter for ListPool<T>, Utf8Json by default call the add methods via the interface
@@ -21,7 +21,7 @@ namespace ListPool.Formatters.Utf8Json
 
             IJsonFormatter<T> formatter = formatterResolver.GetFormatterWithVerify<T>();
 
-            if (value.Count != 0)
+            if (value.Count > 0)
             {
                 formatter.Serialize(ref writer, value[0], formatterResolver);
             }

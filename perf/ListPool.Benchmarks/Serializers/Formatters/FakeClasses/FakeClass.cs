@@ -1,4 +1,4 @@
-namespace ListPool.Benchmarks.Formatters.Utf8Json
+namespace ListPool.Benchmarks.Serializers.Formatters.FakeClasses
 {
     public struct FakeClass
     {
