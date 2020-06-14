@@ -1,6 +1,6 @@
 using System;
 using System.Text.Json.Serialization;
-using ListPool.Serializers.System.Text.Json.Converters;
+using ListPool.Serializers.SystemTextJson.Converters;
 using ListPool.Serializers.Utf8Json.Formatters;
 using Utf8Json;
 
