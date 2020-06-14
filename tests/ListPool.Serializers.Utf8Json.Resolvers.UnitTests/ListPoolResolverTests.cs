@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AutoFixture;
+using ListPool.Serializers.Utf8Json.Resolvers;
 using Utf8Json;
 using Xunit;
 

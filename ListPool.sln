@@ -24,13 +24,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListPool.Netstandard2_0.UnitTests", "tests\ListPool.Netstandard2_0.UnitTests\ListPool.Netstandard2_0.UnitTests.csproj", "{C1B33D46-A475-410F-B607-6050B19FB4DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListPool.Resolvers.Utf8Json", "src\ListPool.Resolvers.Utf8Json\ListPool.Resolvers.Utf8Json.csproj", "{6CFBEB42-C954-44B7-A15A-BE4907BCAD88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListPool.Serializers.Utf8Json.Resolvers", "src\ListPool.Serializers.Utf8Json.Resolvers\ListPool.Serializers.Utf8Json.Resolvers.csproj", "{6CFBEB42-C954-44B7-A15A-BE4907BCAD88}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListPool.Resolvers.Utf8Json.Tests", "tests\ListPool.Resolvers.Utf8Json.Tests\ListPool.Resolvers.Utf8Json.Tests.csproj", "{EF9AE1EE-6C50-430E-90A1-54FDB95C9966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ListPool.Serializers.Utf8Json.Resolvers.UnitTests", "tests\ListPool.Serializers.Utf8Json.Resolvers.UnitTests\ListPool.Serializers.Utf8Json.Resolvers.UnitTests.csproj", "{EF9AE1EE-6C50-430E-90A1-54FDB95C9966}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListPool.Formatters.Utf8Json", "src\ListPool.Formatters.Utf8Json\ListPool.Formatters.Utf8Json.csproj", "{69F65B28-0245-43F8-8A66-DDEC5E297E8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListPool.Serializers.Utf8Json.Formatters", "src\ListPool.Serializers.Utf8Json.Formatters\ListPool.Serializers.Utf8Json.Formatters.csproj", "{69F65B28-0245-43F8-8A66-DDEC5E297E8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListPool.Formatters.Utf8Json.UnitTests", "tests\ListPool.Formatters.Utf8Json.UnitTests\ListPool.Formatters.Utf8Json.UnitTests.csproj", "{5C5BD7A0-94D4-4FA7-92A9-3E2443276E2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListPool.Serializers.Utf8Json.Formatters.UnitTests", "tests\ListPool.Serializers.Utf8Json.Formatters.UnitTests\ListPool.Serializers.Utf8Json.Formatters.UnitTests.csproj", "{5C5BD7A0-94D4-4FA7-92A9-3E2443276E2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListPool.Serializers.SystemTextJson.Converters", "src\ListPool.Serializers.SystemTextJson.Converters\ListPool.Serializers.SystemTextJson.Converters.csproj", "{FCB62417-CEF6-40EF-99BF-E3B038D8A245}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListPool.Serializers.SystemTextJson.Converters.UnitTests", "tests\ListPool.Serializers.SystemTextJson.Converters.UnitTests\ListPool.Serializers.SystemTextJson.Converters.UnitTests.csproj", "{568BA657-FA53-41D0-81D7-DC8DBCE701B2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serializers", "Serializers", "{914A78A3-DD8A-4134-85B3-2A280F00CFCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serializers", "Serializers", "{AFE343E6-6994-43D5-B13E-C98BC8D024AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +78,14 @@ Global
 		{5C5BD7A0-94D4-4FA7-92A9-3E2443276E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C5BD7A0-94D4-4FA7-92A9-3E2443276E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C5BD7A0-94D4-4FA7-92A9-3E2443276E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCB62417-CEF6-40EF-99BF-E3B038D8A245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCB62417-CEF6-40EF-99BF-E3B038D8A245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCB62417-CEF6-40EF-99BF-E3B038D8A245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCB62417-CEF6-40EF-99BF-E3B038D8A245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{568BA657-FA53-41D0-81D7-DC8DBCE701B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{568BA657-FA53-41D0-81D7-DC8DBCE701B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{568BA657-FA53-41D0-81D7-DC8DBCE701B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{568BA657-FA53-41D0-81D7-DC8DBCE701B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,10 +95,14 @@ Global
 		{97668125-1AEA-4DA4-AE89-2A3ACA8C93C6} = {47D1A2D2-74F6-4922-A97C-94C3A1B1C3B3}
 		{E557B4AB-6DB8-45B2-B4AA-A29AE88604B0} = {E95613B4-241A-41D3-BE2E-24B71FBEE8C2}
 		{C1B33D46-A475-410F-B607-6050B19FB4DD} = {E95613B4-241A-41D3-BE2E-24B71FBEE8C2}
-		{6CFBEB42-C954-44B7-A15A-BE4907BCAD88} = {ECBCECD4-2ACC-4A69-BB28-598519319E93}
-		{EF9AE1EE-6C50-430E-90A1-54FDB95C9966} = {E95613B4-241A-41D3-BE2E-24B71FBEE8C2}
-		{69F65B28-0245-43F8-8A66-DDEC5E297E8C} = {ECBCECD4-2ACC-4A69-BB28-598519319E93}
-		{5C5BD7A0-94D4-4FA7-92A9-3E2443276E2D} = {E95613B4-241A-41D3-BE2E-24B71FBEE8C2}
+		{914A78A3-DD8A-4134-85B3-2A280F00CFCE} = {ECBCECD4-2ACC-4A69-BB28-598519319E93}
+		{69F65B28-0245-43F8-8A66-DDEC5E297E8C} = {914A78A3-DD8A-4134-85B3-2A280F00CFCE}
+		{6CFBEB42-C954-44B7-A15A-BE4907BCAD88} = {914A78A3-DD8A-4134-85B3-2A280F00CFCE}
+		{FCB62417-CEF6-40EF-99BF-E3B038D8A245} = {914A78A3-DD8A-4134-85B3-2A280F00CFCE}
+		{AFE343E6-6994-43D5-B13E-C98BC8D024AF} = {E95613B4-241A-41D3-BE2E-24B71FBEE8C2}
+		{5C5BD7A0-94D4-4FA7-92A9-3E2443276E2D} = {AFE343E6-6994-43D5-B13E-C98BC8D024AF}
+		{EF9AE1EE-6C50-430E-90A1-54FDB95C9966} = {AFE343E6-6994-43D5-B13E-C98BC8D024AF}
+		{568BA657-FA53-41D0-81D7-DC8DBCE701B2} = {AFE343E6-6994-43D5-B13E-C98BC8D024AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0B084363-52EB-48E1-8364-94F33A57888A}

@@ -2,7 +2,7 @@
 using System.Text;
 using Utf8Json;
 
-namespace ListPool.Formatters.Utf8Json
+namespace ListPool.Serializers.Utf8Json.Formatters
 {
     /// <summary>
     /// Formatter to serialize string as ListPool<char> and ListPool<char> as string.

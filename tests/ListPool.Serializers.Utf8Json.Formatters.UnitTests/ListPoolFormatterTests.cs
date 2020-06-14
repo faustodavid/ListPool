@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using AutoFixture;
-using ListPool.Formatters.Utf8Json;
+using ListPool.Serializers.Utf8Json.Formatters;
 using Utf8Json;
 using Xunit;
 
-namespace ListPool.Resolvers.Utf8Json.Tests
+namespace ListPool.Formatters.Utf8Json.UnitTests
 {
     public class ListPoolFormatterTests
     {

@@ -1,8 +1,9 @@
 using System.Text;
 using BenchmarkDotNet.Attributes;
+using ListPool.Benchmarks.Serializers.Formatters.FakeClasses;
 using Utf8Json;
 
-namespace ListPool.Benchmarks.Formatters.Utf8Json
+namespace ListPool.Benchmarks.Serializers.Formatters
 {
     [MemoryDiagnoser]
     public class StringAsListPoolOfChars_Serialize
@@ -34,9 +35,15 @@ namespace ListPool.Benchmarks.Formatters.Utf8Json
         }
 
         [Benchmark(Baseline = true)]
-        public byte[] String() => JsonSerializer.Serialize(_fakeClass);
+        public byte[] Utf8Json_String() => JsonSerializer.Serialize(_fakeClass);
 
         [Benchmark]
-        public byte[] ListPool() => JsonSerializer.Serialize(_fakeClassUsingListPool);
+        public byte[] STJ_String() => System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(_fakeClass);
+
+        [Benchmark]
+        public byte[] Utf8Json_ListPool() => JsonSerializer.Serialize(_fakeClassUsingListPool);
+
+        [Benchmark]
+        public byte[] STJ_ListPool() => System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(_fakeClassUsingListPool);
     }
 }

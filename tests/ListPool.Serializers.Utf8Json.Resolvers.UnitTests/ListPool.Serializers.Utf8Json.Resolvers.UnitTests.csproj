@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ListPool.Resolvers.Utf8Json\ListPool.Resolvers.Utf8Json.csproj" />
+    <ProjectReference Include="..\..\src\ListPool.Serializers.Utf8Json.Resolvers\ListPool.Serializers.Utf8Json.Resolvers.csproj" />
     <ProjectReference Include="..\..\src\ListPool\ListPool.csproj" />
   </ItemGroup>
 </Project>

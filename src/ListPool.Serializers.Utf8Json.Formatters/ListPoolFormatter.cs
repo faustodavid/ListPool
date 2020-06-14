@@ -1,6 +1,6 @@
 using Utf8Json;
 
-namespace ListPool.Formatters.Utf8Json
+namespace ListPool.Serializers.Utf8Json.Formatters
 {
     /// <summary>
     /// Formatter for ListPool<T>, Utf8Json by default call the add methods via the interface

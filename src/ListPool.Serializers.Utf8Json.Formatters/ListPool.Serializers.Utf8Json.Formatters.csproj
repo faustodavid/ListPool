@@ -1,19 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
       <Nullable>enable</Nullable>
       <LangVersion>latest</LangVersion>
       <Authors>Fausto David Suarez Rosario</Authors>
       <Title>ListPool.Formatters.Utf8Json</Title>
-      <AssemblyName>ListPool.Formatters.Utf8Json</AssemblyName>
       <PackageId>ListPool.Formatters.Utf8Json</PackageId>
       <Description>High-performance formatters for ListPool.</Description>
       <PackageTags>ASP.NET;List;System.Buffers;ArrayPool;ListPool;Performance;Span;Utf8Json</PackageTags>
       <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
       <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
       <PackageLicenseFile>LICENSE</PackageLicenseFile>
-      <PackageVersion>0.0.2</PackageVersion>
+      <PackageVersion>0.0.3</PackageVersion>
       <PackageReleaseNotes></PackageReleaseNotes>
       <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
       <PackageProjectUrl>https://github.com/faustodavid/ListPool</PackageProjectUrl>

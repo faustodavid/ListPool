@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <Authors>Fausto David Suarez Rosario</Authors>
     <Title>ListPool.Resolvers.Utf8Json</Title>
-    <AssemblyName>ListPool.Resolvers.Utf8Json</AssemblyName>
     <PackageId>ListPool.Resolvers.Utf8Json</PackageId>
     <Description>This library has the resolver and formatter for ListPool to get the maximum performance when serializing objects type ListPool.
 </Description>
@@ -34,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ListPool.Formatters.Utf8Json\ListPool.Formatters.Utf8Json.csproj" />
+    <ProjectReference Include="..\ListPool.Serializers.Utf8Json.Formatters\ListPool.Serializers.Utf8Json.Formatters.csproj" />
     <ProjectReference Include="..\ListPool\ListPool.csproj" />
   </ItemGroup>
 

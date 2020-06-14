@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ListPool.Formatters.Utf8Json;
+using ListPool.Serializers.Utf8Json.Formatters;
 using Utf8Json;
 using Utf8Json.Resolvers;
 
-namespace ListPool.Resolvers.Utf8Json
+namespace ListPool.Serializers.Utf8Json.Resolvers
 {
     public class ListPoolResolver : IJsonFormatterResolver
     {

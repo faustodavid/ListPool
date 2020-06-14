@@ -2,10 +2,10 @@
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
-using ListPool.Resolvers.Utf8Json;
+using ListPool.Serializers.Utf8Json.Resolvers;
 using Utf8Json;
 
-namespace ListPool.Benchmarks
+namespace ListPool.Benchmarks.Serializers
 {
     [RankColumn]
     [Orderer(SummaryOrderPolicy.FastestToSlowest)]

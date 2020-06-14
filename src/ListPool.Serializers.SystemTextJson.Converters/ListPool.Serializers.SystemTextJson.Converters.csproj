@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>ListPool.Serializers.System.Text.Json.Converters</RootNamespace>
+        <AssemblyName>ListPool.Serializers.SystemTextJson.Converters</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ListPool\ListPool.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Text.Json" Version="4.7.0" />
+    </ItemGroup>
+
+</Project>
