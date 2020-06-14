@@ -21,7 +21,7 @@ namespace ListPool.Serializers.Utf8Json.Formatters
 
             IJsonFormatter<T> formatter = formatterResolver.GetFormatterWithVerify<T>();
 
-            if (value.Count != 0)
+            if (value.Count > 0)
             {
                 formatter.Serialize(ref writer, value[0], formatterResolver);
             }

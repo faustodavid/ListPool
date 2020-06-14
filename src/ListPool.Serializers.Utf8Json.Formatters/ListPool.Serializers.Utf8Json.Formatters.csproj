@@ -1,30 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-      <Nullable>enable</Nullable>
-      <LangVersion>latest</LangVersion>
-      <Authors>Fausto David Suarez Rosario</Authors>
-      <Title>ListPool.Formatters.Utf8Json</Title>
-      <PackageId>ListPool.Formatters.Utf8Json</PackageId>
-      <Description>High-performance formatters for ListPool.</Description>
-      <PackageTags>ASP.NET;List;System.Buffers;ArrayPool;ListPool;Performance;Span;Utf8Json</PackageTags>
-      <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
-      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-      <PackageLicenseFile>LICENSE</PackageLicenseFile>
-      <PackageVersion>0.0.3</PackageVersion>
-      <PackageReleaseNotes></PackageReleaseNotes>
-      <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
-      <PackageProjectUrl>https://github.com/faustodavid/ListPool</PackageProjectUrl>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Authors>Fausto David Suarez Rosario</Authors>
+    <Title>ListPool.Serializers.Utf8Json.Formatters</Title>
+    <PackageId>ListPool.Serializers.Utf8Json.Formatters</PackageId>
+    <Description>High-performance formatters for ListPool.</Description>
+    <PackageTags>ASP.NET;List;System.Buffers;ArrayPool;ListPool;Performance;Span;Utf8Json</PackageTags>
+    <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
+    <PackageProjectUrl>https://github.com/faustodavid/ListPool</PackageProjectUrl>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Utf8Json" Version="1.3.7" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Utf8Json" Version="1.3.7"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ListPool\ListPool.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ListPool\ListPool.csproj"/>
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\LICENSE">

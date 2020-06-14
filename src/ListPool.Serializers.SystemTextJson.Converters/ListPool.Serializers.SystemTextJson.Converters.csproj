@@ -1,17 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>ListPool.Serializers.System.Text.Json.Converters</RootNamespace>
-        <AssemblyName>ListPool.Serializers.SystemTextJson.Converters</AssemblyName>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Authors>Fausto David Suarez Rosario</Authors>
+    <Title>ListPool.Serializers.SystemTextJson.Converters</Title>
+    <PackageId>ListPool.Serializers.SystemTextJson.Converters</PackageId>
+    <Description>High-performance converters for ListPool.</Description>
+    <PackageTags>ASP.NET;List;System.Buffers;ArrayPool;ListPool;Performance;Span;System.Text.Json</PackageTags>
+    <RepositoryUrl>https://github.com/faustodavid/ListPool</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageVersion>0.1.0</PackageVersion>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <Copyright>Copyright © Fausto David Suarez Rosario 2020</Copyright>
+    <PackageProjectUrl>https://github.com/faustodavid/ListPool</PackageProjectUrl>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ListPool\ListPool.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ListPool\ListPool.csproj"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="System.Text.Json" Version="4.7.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="4.7.0"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
