@@ -41,7 +41,7 @@ namespace ListPool.Benchmarks
         [Benchmark(Baseline = true)]
         public void List()
         {
-            _listPool.CopyTo(_dst, 0);
+            _list.CopyTo(_dst, 0);
         }
 
         [Benchmark]
