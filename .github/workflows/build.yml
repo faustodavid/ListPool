@@ -9,17 +9,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-        matrix:
-            dotnet: [ '2.2', '3.1' ]
     steps:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Setup .NET Core SDK
+    - name: Setup .NET Core 3.1 SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dotnet }}
+        dotnet-version: 3.1
+
+    - name: Setup .NET Core 2.2 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+          dotnet-version: 2.2
 
     - name: dotnet restore
       run: dotnet restore --packages .nuget/packages
