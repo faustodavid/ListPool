@@ -21,11 +21,11 @@ jobs:
     - name: Setup .net core 3.1
       uses: actions/setup-dotnet@v1
       with:
-          dotnet-version: 3.1
+          dotnet-version: 3.1.401
 
     - name: .net SxS
       run: |
-          rsync -a ${DOTNET_ROOT/3.0.100/2.2.402}/* $DOTNET_ROOT/
+          rsync -a ${DOTNET_ROOT/3.1.401/2.2.402}/* $DOTNET_ROOT/
 
     - name: dotnet restore
       run: dotnet restore --packages .nuget/packages
@@ -53,7 +53,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1
+        dotnet-version: 3.1.401
 
     - name: dotnet restore
       run: dotnet restore --packages .nuget/packages
