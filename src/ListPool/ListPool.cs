@@ -533,6 +533,49 @@ namespace ListPool
         /// <param name="offset"></param>
         public void SetOffsetManually(int offset) => Count = offset;
 
+        /// <summary>
+        /// Sorts the elements in the entire ListPool using the default comparer.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Sort() => Sort(0, Count, null);
+
+        /// <summary>
+        /// Sorts the elements in the entire ListPool using the specified comparer.
+        /// </summary>
+        /// <param name="comparer">The IComparer<T> implementation to use when comparing elements, or null to use the default comparer Comparer<T>.Default.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Sort(IComparer<T> comparer) => Sort(0, Count, comparer);
+
+        /// <summary>
+        /// Sorts the elements in a range of elements in the ListPool using the specified comparer.
+        /// </summary>
+        /// <param name="index">The zero-based starting index of the range to sort.</param>
+        /// <param name="count">The length of the range to sort.</param>
+        /// <param name="comparer">The IComparer<T> implementation to use when comparing elements, or null to use the default comparer Comparer<T>.Default.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Sort(int index, int count, IComparer<T> comparer) => Array.Sort<T>(_items, index, count, comparer);
+
+        /// <summary>
+        /// Sorts the elements in the entire ListPool using the specified Comparison<T>.
+        /// </summary>
+        /// <param name="comparison">The Comparison<T> to use when comparing elements.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Sort(Comparison<T> comparison) => Array.Sort<T>(_items, 0, Count, Comparer<T>.Create(comparison));
+
+        /// <summary>
+        /// Reverses the order of the elements in the entire ListPool.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Reverse() => Array.Reverse(_items, 0, Count);
+
+        /// <summary>
+        /// Reverses the order of the elements in the specified range.
+        /// </summary>
+        /// <param name="index">The zero-based starting index of the range to reverse.</param>
+        /// <param name="count">The length of the range to reverse.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Reverse(int index, int count) => Array.Reverse(_items, index, count);
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Enumerator GetEnumerator() => new Enumerator(_items, Count);
 

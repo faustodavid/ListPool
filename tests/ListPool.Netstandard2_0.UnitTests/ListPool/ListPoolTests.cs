@@ -738,7 +738,7 @@ namespace ListPool.Netstandard2_0.UnitTests.ListPool
             Assert.Equal(biggerCapacity, sut.Capacity);
         }
 
-                [Fact]
+        [Fact]
         public void GetRawBuffer_returns_underline_buffer()
         {
             int[] expectedItems = s_fixture.CreateMany<int>().ToArray();
@@ -798,6 +798,111 @@ namespace ListPool.Netstandard2_0.UnitTests.ListPool
             {
                 Assert.Equal(expectedItems[i], sut[i]);
             }
+        }
+
+        // New Sort and Reverse tests
+
+        [Fact]
+        public void Sort_sorts_items_in_ascending_order()
+        {
+            using ListPool<int> sut = new ListPool<int>(20);
+            List<int> unsortedItems = s_fixture.CreateMany<int>(10).ToList();
+            foreach (var item in unsortedItems)
+            {
+                Console.WriteLine(item);
+                sut.Add(item);
+            }
+
+            var sortedItems = unsortedItems.OrderBy(x => x).ToList();
+
+            sut.Sort();
+            Assert.Equal(sortedItems, sut.ToArray());
+        }
+
+        [Fact]
+        public void Sort_with_comparer_sorts_items_in_custom_order()
+        {
+            using ListPool<int> sut = new ListPool<int>(20);
+            List<int> unsortedItems = s_fixture.CreateMany<int>(10).ToList();
+            foreach (var item in unsortedItems)
+            {
+                sut.Add(item);
+            }
+
+            var sortedItems = unsortedItems.OrderByDescending(x => x).ToList();
+
+            sut.Sort(Comparer<int>.Create((x, y) => y.CompareTo(x))); // Descending order
+            Assert.Equal(sortedItems, sut.ToArray());
+        }
+
+        [Fact]
+        public void Sort_with_index_and_count_sorts_specified_range()
+        {
+            using ListPool<int> sut = new ListPool<int>(20);
+            List<int> unsortedItems = s_fixture.CreateMany<int>(10).ToList();
+            foreach (var item in unsortedItems)
+            {
+                sut.Add(item);
+            }
+
+            var sortedItems = unsortedItems.Skip(2).Take(5).OrderBy(x => x).ToList();
+            sortedItems.InsertRange(0, unsortedItems.Take(2));
+            sortedItems.AddRange(unsortedItems.Skip(7));
+
+            sut.Sort(2, 5, null); // Sort a range
+            Assert.Equal(sortedItems, sut.ToArray());
+        }
+
+        [Fact]
+        public void Sort_with_comparison_sorts_items_in_custom_order()
+        {
+            using ListPool<int> sut = new ListPool<int>(20);
+            List<int> unsortedItems = s_fixture.CreateMany<int>(10).ToList();
+            foreach (var item in unsortedItems)
+            {
+                sut.Add(item);
+            }
+
+            var sortedItems = unsortedItems.OrderByDescending(x => x).ToList();
+
+            sut.Sort((x, y) => y.CompareTo(x)); // Descending order
+            Assert.Equal(sortedItems, sut.ToArray());
+        }
+
+        [Fact]
+        public void Reverse_reverses_the_entire_list()
+        {
+            using ListPool<int> sut = new ListPool<int>(20);
+            List<int> items = s_fixture.CreateMany<int>(10).ToList();
+            foreach (var item in items)
+            {
+                sut.Add(item);
+            }
+
+            sut.Reverse();
+
+            var reversedItems = items.AsEnumerable().Reverse().ToList();
+            Assert.Equal(reversedItems, sut.ToArray());
+        }
+
+        [Fact]
+        public void Reverse_with_index_and_count_reverses_specified_range()
+        {
+            using ListPool<int> sut = new ListPool<int>(20);
+            List<int> items = s_fixture.CreateMany<int>(10).ToList();
+            foreach (var item in items)
+            {
+                sut.Add(item);
+            }
+
+            sut.Reverse(2, 5);
+
+            var expectedItems = items.Take(2)
+                                     .Concat(items.Skip(2).Take(5).Reverse())
+                                     .Concat(items.Skip(7))
+                                     .ToList();
+
+            Assert.Equal(expectedItems, sut.ToArray());
         }
     }
 }
